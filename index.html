@@ -1,277 +1,162 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>BulbAI — Browser AI (Hugging Face)</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BulbAI</title>
 <style>
-  :root{
-    --bg:#fffdf8; --panel:#fff; --accent:#f7c948; --muted:#6b6b6b; --text:#1f1f1f;
-    --bubble-bot:#fffaf0; --bubble-user:#fff0b8; --glass:rgba(255,255,255,0.6);
-  }
-  [data-theme="dark"]{
-    --bg:#0f0e0c; --panel:#141210; --accent:#e6bd00; --muted:#c7bfa5; --text:#efeae0;
-    --bubble-bot:#171412; --bubble-user:#201b12; --glass:rgba(255,255,255,0.03);
-  }
-  *{box-sizing:border-box}
-  html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;}
-  body{background:var(--bg);color:var(--text);display:flex;flex-direction:column;min-height:100vh;align-items:center;}
-  .container{width:100%;max-width:1100px;flex:1;display:flex;flex-direction:column;padding:18px;gap:18px;min-height:0;}
-  header{display:flex;align-items:center;justify-content:center;gap:12px;padding:8px 16px;border-radius:14px;background:linear-gradient(90deg,var(--accent),#ffe37f);box-shadow:0 8px 30px rgba(0,0,0,0.08);position:relative;}
-  header h1{margin:0;font-size:20px;font-weight:800;color:#2b2b2b;letter-spacing:0.6px}
-  .avatar{position:absolute;left:18px;top:8px;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#ffd86b);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;color:#2b2b2b;box-shadow:0 6px 18px rgba(0,0,0,0.08)}
-  .theme-btn, .settings-btn {position:absolute;right:18px;top:8px;background:transparent;border:none;padding:6px;border-radius:10px;cursor:pointer;font-weight:700}
-  .settings-btn{right:56px}
-  main{flex:1;width:100%;display:flex;flex-direction:column;gap:12px;min-height:0}
-  .chat-shell{flex:1;display:flex;flex-direction:column;background:var(--panel);border-radius:14px;padding:18px;box-shadow:0 8px 30px rgba(0,0,0,0.06);min-height:0;overflow:hidden}
-  .messages{flex:1;overflow:auto;padding:6px 8px;display:flex;flex-direction:column;gap:12px}
-  .bubble{max-width:78%;padding:12px 14px;border-radius:14px;line-height:1.35;word-break:break-word;box-shadow:0 6px 14px rgba(0,0,0,0.03);opacity:0;transform:translateY(12px);animation:popIn .28s ease forwards}
-  .bubble .meta{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
-  .bubble.bot{align-self:flex-start;background:var(--bubble-bot);border-bottom-left-radius:6px}
-  .bubble.user{align-self:flex-end;background:var(--bubble-user);border-bottom-right-radius:6px}
-  @keyframes popIn{from{opacity:0;transform:translateY(12px) scale(.995)}to{opacity:1;transform:translateY(0) scale(1)}}
-  .composer{display:flex;gap:8px;align-items:end;padding-top:8px}
-  .composer textarea{flex:1;min-height:48px;max-height:160px;padding:10px;border-radius:12px;border:1px solid rgba(0,0,0,0.06);resize:vertical;font-size:15px}
-  .send-btn{background:var(--accent);border:none;padding:12px 16px;border-radius:12px;font-weight:800;cursor:pointer;box-shadow:0 8px 20px rgba(0,0,0,0.08)}
-  .send-btn:active{transform:translateY(1px)}
-  .typing{display:inline-block;padding:8px 10px;border-radius:10px;background:rgba(0,0,0,0.03);font-size:13px;align-self:flex-start}
-  /* quick replies */
-  .quick-replies{display:flex;gap:8px;flex-wrap:wrap;padding-top:6px}
-  .qr-btn{background:transparent;border:1px solid rgba(0,0,0,0.06);padding:6px 10px;border-radius:999px;cursor:pointer;font-weight:700}
-  /* modal */
-  .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.45);display:none;align-items:center;justify-content:center;padding:20px;z-index:60}
-  .modal{background:var(--panel);padding:18px;border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,0.5);width:100%;max-width:720px}
-  .row{display:flex;gap:8px;align-items:center;margin-top:8px}
-  label{font-size:13px;color:var(--muted);min-width:90px}
-  input[type="text"], select{flex:1;padding:10px;border-radius:8px;border:1px solid rgba(0,0,0,0.07)}
-  .danger{color:#d9534f}
-  .small{font-size:13px;color:var(--muted);margin-top:10px}
-  /* responsive */
-  @media(max-width:720px){
-    header h1{font-size:18px}
-    .avatar{left:12px;top:6px;width:40px;height:40px}
-    .theme-btn,.settings-btn{top:6px}
-    df-output { font-size:14px; }
-  }
+:root{
+  --bg:#fff8e6;--panel:#fff2c9;--accent:#f7c948;
+  --text:#1f1f1f;--muted:#6b6b6b;
+}
+[data-theme="dark"]{
+  --bg:#0f0d08;--panel:#171412;--accent:#e6bd00;
+  --text:#efeae0;--muted:#bfb6a1;
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:Inter,sans-serif;}
+body{background:var(--bg);color:var(--text);display:flex;flex-direction:column;height:100vh;}
+.hidden{display:none;}
+#loginScreen,#chatScreen{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+#loginScreen input{padding:10px;margin:6px;width:250px;border-radius:6px;border:1px solid #ccc;}
+#loginScreen button{padding:10px 14px;margin:6px;border-radius:6px;background:var(--accent);border:none;cursor:pointer;font-weight:600;}
+#chatScreen{width:100%;height:100%;display:flex;flex-direction:column;}
+.topbar{padding:12px;background:var(--panel);display:flex;justify-content:space-between;align-items:center;}
+.topbar .title{font-weight:700;font-size:18px;}
+#themeToggle{padding:6px 10px;border-radius:6px;border:none;background:var(--accent);cursor:pointer;font-weight:600;}
+#messages{flex:1;padding:16px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;}
+.msg{max-width:70%;padding:10px 14px;border-radius:14px;opacity:0;transform:translateY(20px);animation:fadeIn 0.3s forwards;}
+.msg.user{align-self:flex-end;background:linear-gradient(90deg,#ffe37f,#fff6c6);}
+.msg.bot{align-self:flex-start;background:linear-gradient(90deg,#fff7e0,#fff);}
+@keyframes fadeIn{to{opacity:1;transform:translateY(0);}}
+.typing{align-self:flex-start;font-style:italic;color:var(--muted);}
+.composer{display:flex;padding:12px;background:var(--panel);gap:8px;}
+.composer textarea{flex:1;border-radius:8px;padding:10px;border:1px solid #ccc;resize:none;}
+.composer button{padding:10px 14px;border-radius:8px;border:none;background:var(--accent);cursor:pointer;font-weight:600;}
 </style>
 </head>
 <body data-theme="light">
-  <div class="container">
-    <header>
-      <div class="avatar" title="BulbAI">💡</div>
-      <h1>BulbAI</h1>
-      <button class="settings-btn" id="openSettings" title="Settings">⚙️</button>
-      <button class="theme-btn" id="themeToggle" title="Toggle theme">🌗</button>
-    </header>
 
-    <main>
-      <div class="chat-shell" role="main" aria-live="polite">
-        <div class="messages" id="messages" aria-live="polite"></div>
+<!-- Login Screen -->
+<div id="loginScreen">
+  <h2>Welcome to BulbAI</h2>
+  <input type="email" id="email" placeholder="Email" />
+  <input type="password" id="password" placeholder="Password" />
+  <button id="loginBtn">Login</button>
+  <button id="signupBtn">Sign Up</button>
+</div>
 
-        <div class="quick-replies" id="quickReplies" aria-hidden="false">
-          <button class="qr-btn" onclick="sendQuick('Hello')">Hello</button>
-          <button class="qr-btn" onclick="sendQuick('Help me')">Help me</button>
-          <button class="qr-btn" onclick="sendQuick('Give me ideas for a candy')">Candy ideas</button>
-        </div>
-
-        <div class="composer" aria-label="Message composer">
-          <textarea id="prompt" placeholder="Type a message and press Send (Shift+Enter = newline)"></textarea>
-          <button class="send-btn" id="sendBtn">Send</button>
-        </div>
-      </div>
-    </main>
-  </div>
-
-  <!-- Settings Modal -->
-  <div class="modal-backdrop" id="modalBackdrop" aria-hidden="true">
-    <div class="modal" role="dialog" aria-modal="true">
-      <h3 style="margin:0">BulbAI Settings</h3>
-      <p class="small">To make BulbAI respond, you can use a free Hugging Face account token. Paste it below. <strong>Warning:</strong> putting the token here is for testing only — it will be saved in your browser storage and visible to anyone using your device. For a public site move the token to a server later.</p>
-
-      <div class="row">
-        <label>HF API Token</label>
-        <input id="hfToken" type="text" placeholder="Paste Hugging Face token (starts with hf_...)"/>
-      </div>
-
-      <div class="row">
-        <label>Model</label>
-        <select id="modelSelect">
-          <option value="google/flan-t5-large">google/flan-t5-large (instruction)</option>
-          <option value="google/flan-t5-small">google/flan-t5-small (smaller)</option>
-          <option value="gpt2">gpt2 (small, less useful)</option>
-          <option value="bigscience/bloomz-560m">bloomz-560m</option>
-        </select>
-      </div>
-
-      <div class="row" style="justify-content:flex-end;margin-top:14px">
-        <button id="saveSettings" class="send-btn">Save</button>
-        <button id="closeSettings" style="margin-left:8px;padding:10px 12px;border-radius:8px;border:1px solid rgba(0,0,0,0.06);background:transparent;cursor:pointer">Close</button>
-      </div>
-
-      <div class="small" style="margin-top:8px">No token? Create one at <a href="https://huggingface.co/settings/tokens" target="_blank">huggingface.co → Settings → Access Tokens</a>. Use the free account token.</div>
+<!-- Chat Screen -->
+<div id="chatScreen" class="hidden">
+  <div class="topbar">
+    <div class="title">💡 BulbAI</div>
+    <div>
+      <button id="themeToggle">🌙</button>
+      <button id="logoutBtn">Logout</button>
     </div>
   </div>
+  <div id="messages"></div>
+  <div class="composer">
+    <textarea id="inputMsg" placeholder="Type a message..."></textarea>
+    <button id="sendBtn">Send</button>
+  </div>
+</div>
 
-<script>
-/* ---------- Simple polished chat UI + HF inference client ---------- */
+<!-- Firebase SDK -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.1/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.6.1/firebase-auth.js";
 
-/* Helpers */
-const $ = sel => document.querySelector(sel);
-const messagesEl = $('#messages');
-const promptEl = $('#prompt');
-const sendBtn = $('#sendBtn');
-const quickReplies = $('#quickReplies');
+const firebaseConfig = {
+  apiKey: "AIzaSyCGFij1pFUVNFP63QHxEq619c9jPnskzxY",
+  authDomain: "bulbai-21f09.firebaseapp.com",
+  projectId: "bulbai-21f09",
+  storageBucket: "bulbai-21f09.firebasestorage.app",
+  messagingSenderId: "366775652166",
+  appId: "1:366775652166:web:9f0633faccbfd7db625f47",
+  measurementId: "G-S7LRRREXNQ"
+};
 
-let hfToken = localStorage.getItem('bulb_hf_token') || '';
-let model = localStorage.getItem('bulb_hf_model') || 'google/flan-t5-large';
-$('#hfToken').value = hfToken;
-$('#modelSelect').value = model;
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 
-/* UI functions */
-function appendMessage(role, text, meta = '') {
-  const wrapper = document.createElement('div');
-  wrapper.className = 'bubble ' + (role === 'user' ? 'user' : 'bot');
-  if (meta) wrapper.innerHTML = `<small class="meta">${meta}</small>` + escapeHtml(text);
-  else wrapper.innerHTML = escapeHtml(text);
-  messagesEl.appendChild(wrapper);
-  scrollToBottom();
-}
+const loginScreen = document.getElementById('loginScreen');
+const chatScreen = document.getElementById('chatScreen');
+const emailInput = document.getElementById('email');
+const passwordInput = document.getElementById('password');
+const loginBtn = document.getElementById('loginBtn');
+const signupBtn = document.getElementById('signupBtn');
+const logoutBtn = document.getElementById('logoutBtn');
+const themeToggle = document.getElementById('themeToggle');
 
-function setTyping(on) {
-  if (on) {
-    if (!$('#__typing')) {
-      const t = document.createElement('div');
-      t.id = '__typing';
-      t.className = 'typing';
-      t.textContent = 'BulbAI is thinking...';
-      messagesEl.appendChild(t);
-      scrollToBottom();
-    }
+loginBtn.onclick = () => {
+  signInWithEmailAndPassword(auth, emailInput.value, passwordInput.value)
+    .catch(err => alert(err.message));
+};
+
+signupBtn.onclick = () => {
+  createUserWithEmailAndPassword(auth, emailInput.value, passwordInput.value)
+    .catch(err => alert(err.message));
+};
+
+logoutBtn.onclick = () => {
+  signOut(auth);
+};
+
+onAuthStateChanged(auth, user => {
+  if(user){
+    loginScreen.classList.add('hidden');
+    chatScreen.classList.remove('hidden');
   } else {
-    const t = $('#__typing');
-    if (t) t.remove();
+    loginScreen.classList.remove('hidden');
+    chatScreen.classList.add('hidden');
   }
-}
-
-function scrollToBottom() {
-  messagesEl.scrollTo({ top: messagesEl.scrollHeight + 200, behavior: 'smooth' });
-}
-
-/* escape HTML */
-function escapeHtml(str){
-  if(!str) return '';
-  return String(str).replace(/[&<>"']/g, (m) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-}
-
-/* Quick send */
-function sendQuick(text){
-  promptEl.value = text;
-  handleSend();
-}
-
-/* Send handler */
-sendBtn.addEventListener('click', handleSend);
-promptEl.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); }
 });
 
-/* Compose a better prompt for instruction models */
-function buildPrompt(userText, history = []) {
-  // You can expand this to include system instructions / memory
-  return `You are BulbAI, a helpful assistant. Reply concisely and helpfully.\nUser: ${userText}\nBulbAI:`;
-}
-
-/* Call Hugging Face Inference API */
-async function callHuggingFace(text) {
-  const endpoint = `https://api-inference.huggingface.co/models/${model}`;
-  // Build payload: many instruction models expect `inputs`, some models expect text
-  let payload = {};
-  // For flan models, we pass simple input string
-  payload = { inputs: buildPrompt(text), parameters: { max_new_tokens: 150, do_sample: false } };
-
-  const headers = {};
-  if (hfToken && hfToken.startsWith('hf_')) headers['Authorization'] = 'Bearer ' + hfToken;
-
-  // Always set content-type
-  headers['Content-Type'] = 'application/json';
-
-  try {
-    const res = await fetch(endpoint, { method: 'POST', headers, body: JSON.stringify(payload) });
-    if (res.status === 401 || res.status === 403) {
-      throw new Error('Authentication error. Check your Hugging Face token in Settings.');
-    }
-    if (!res.ok) {
-      const textErr = await res.text();
-      throw new Error('HF inference error: ' + res.status + ' ' + textErr);
-    }
-    const data = await res.json();
-    // Response varies by model / API:
-    // - For text generation endpoints, some return [{"generated_text": "..."}] or { "generated_text": "..." }
-    // - Hugging Face inference may also return array of objects
-    if (Array.isArray(data) && data.length && data[0].generated_text) return data[0].generated_text;
-    if (data.generated_text) return data.generated_text;
-    // For some models (like token-streaming), response may be different; try to extract text:
-    if (typeof data === 'string') return data;
-    // Sometimes the model returns array of outputs (like {generated_text:...} within array)
-    if (Array.isArray(data) && typeof data[0] === 'string') return data[0];
-    // fallback: stringify
-    return JSON.stringify(data);
-  } catch (err) {
-    throw err;
-  }
-}
-
-/* Main send flow */
-async function handleSend() {
-  const text = promptEl.value.trim();
-  if (!text) return;
-  appendMessage('user', text, 'You');
-  promptEl.value = '';
-  setTyping(true);
-
-  // Try calling HF
-  try {
-    const reply = await callHuggingFace(text);
-    setTyping(false);
-    appendMessage('bot', reply, 'BulbAI');
-  } catch (err) {
-    setTyping(false);
-    console.error(err);
-    appendMessage('bot', "Sorry — I couldn't get a response. " + (err.message || ''), 'BulbAI');
-  }
-}
-
-/* Settings modal */
-const modal = $('#modalBackdrop');
-$('#openSettings').addEventListener('click', ()=>{ modal.style.display = 'flex'; modal.setAttribute('aria-hidden','false'); });
-$('#closeSettings').addEventListener('click', ()=>{ modal.style.display = 'none'; modal.setAttribute('aria-hidden','true'); });
-$('#saveSettings').addEventListener('click', ()=>{
-  hfToken = $('#hfToken').value.trim();
-  model = $('#modelSelect').value;
-  localStorage.setItem('bulb_hf_token', hfToken);
-  localStorage.setItem('bulb_hf_model', model);
-  modal.style.display = 'none';
-  appendMessage('bot', 'Settings saved. Try sending a message now.', 'System');
-});
-
-/* Theme toggle */
-$('#themeToggle').addEventListener('click', ()=>{
-  if (document.body.getAttribute('data-theme') === 'dark') {
-    document.body.setAttribute('data-theme','light');
-    localStorage.removeItem('bulb_theme');
-  } else {
+// Theme toggle
+themeToggle.onclick = () => {
+  if(document.body.getAttribute('data-theme')==='light'){
     document.body.setAttribute('data-theme','dark');
-    localStorage.setItem('bulb_theme','dark');
+    themeToggle.textContent='☀️';
+  } else {
+    document.body.setAttribute('data-theme','light');
+    themeToggle.textContent='🌙';
   }
-});
+};
 
-/* Load saved theme */
-if (localStorage.getItem('bulb_theme') === 'dark') document.body.setAttribute('data-theme','dark');
+// Chat functionality (placeholder AI)
+const messagesDiv = document.getElementById('messages');
+const inputMsg = document.getElementById('inputMsg');
+const sendBtn = document.getElementById('sendBtn');
 
-/* Initial greeting */
-appendMessage('bot', 'Hi — I am BulbAI. Paste a Hugging Face token in Settings and hit Send, or try the quick replies!', 'System');
-scrollToBottom();
+function addMessage(content, type='bot'){
+  const msg = document.createElement('div');
+  msg.classList.add('msg', type);
+  msg.textContent = content;
+  messagesDiv.appendChild(msg);
+  messagesDiv.scrollTop = messagesDiv.scrollHeight;
+}
+
+function showTyping(){
+  const typing = document.createElement('div');
+  typing.className='typing';
+  typing.textContent='💡 BulbAI is thinking...';
+  messagesDiv.appendChild(typing);
+  messagesDiv.scrollTop = messagesDiv.scrollHeight;
+  return typing;
+}
+
+sendBtn.onclick = () => {
+  const text = inputMsg.value.trim();
+  if(!text) return;
+  addMessage(text,'user');
+  inputMsg.value='';
+  const typingIndicator = showTyping();
+  setTimeout(() => {
+    messagesDiv.removeChild(typingIndicator);
+    addMessage('💡 BulbAI reply here (AI not set up yet)');
+  }, 1000 + Math.random()*1000);
+};
 </script>
+
 </body>
 </html>

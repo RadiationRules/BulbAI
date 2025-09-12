@@ -15,40 +15,49 @@
   --text:#efeae0;--muted:#bfb6a1;
 }
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Inter',sans-serif;}
-body{background:var(--bg);color:var(--text);height:100vh;display:flex;flex-direction:column;}
+body{background:var(--bg);color:var(--text);height:100vh;display:flex;flex-direction:column;overflow:hidden;}
 .hidden{display:none;}
-/* Fullscreen login modal */
+
+/* Login Modal */
 #loginScreen{
   position:fixed;top:0;left:0;width:100%;height:100%;
   display:flex;align-items:center;justify-content:center;
-  backdrop-filter:blur(8px);background:rgba(0,0,0,0.1);z-index:50;
+  backdrop-filter:blur(8px);background:rgba(0,0,0,0.15);z-index:50;
+  animation:fadeIn 0.5s;
 }
 #loginCard{
-  background:var(--panel);padding:30px;border-radius:16px;
-  min-width:300px;max-width:400px;width:90%;box-shadow:0 8px 30px rgba(0,0,0,0.25);
-  display:flex;flex-direction:column;align-items:center;gap:12px;
+  background:var(--panel);padding:30px;border-radius:20px;
+  width:90%;max-width:400px;display:flex;flex-direction:column;align-items:center;gap:14px;
+  box-shadow:0 12px 40px rgba(0,0,0,0.3);transform:translateY(-30px);animation:slideDown 0.5s forwards;
 }
-#loginCard h2{margin-bottom:10px;font-size:24px;}
-#loginCard input{width:100%;padding:12px;border-radius:8px;border:1px solid #ccc;}
-#loginCard button{width:100%;padding:12px;border-radius:8px;border:none;background:var(--accent);color:#2b2b2b;font-weight:600;cursor:pointer;transition:0.2s;}
+#loginCard h2{font-size:26px;margin-bottom:4px;}
+#loginCard input{width:100%;padding:12px;border-radius:10px;border:1px solid #ccc;font-size:16px;}
+#loginCard button{width:100%;padding:12px;border-radius:10px;border:none;background:var(--accent);color:#2b2b2b;font-weight:700;cursor:pointer;font-size:16px;transition:0.2s;}
 #loginCard button:hover{transform:scale(1.05);}
 #loginCard .googleBtn{background:#4285F4;color:white;}
-#errorMsg{color:red;font-size:14px;min-height:18px;}
+#errorMsg{color:red;font-size:14px;min-height:18px;text-align:center;}
+
 /* Chat Screen */
-#chatScreen{flex:1;display:flex;flex-direction:column;height:100vh;}
+#chatScreen{flex:1;display:flex;flex-direction:column;height:100vh;animation:fadeIn 0.5s;}
 .topbar{padding:12px;background:var(--panel);display:flex;justify-content:space-between;align-items:center;box-shadow:0 4px 20px rgba(0,0,0,0.1);}
-.topbar .title{font-weight:700;font-size:20px;}
-#themeToggle,#logoutBtn{padding:6px 10px;border-radius:6px;border:none;background:var(--accent);cursor:pointer;font-weight:600;margin-left:6px;transition:0.2s;}
+.topbar .title{font-weight:700;font-size:22px;display:flex;align-items:center;gap:6px;}
+#themeToggle,#logoutBtn{padding:6px 12px;border-radius:8px;border:none;background:var(--accent);cursor:pointer;font-weight:600;margin-left:6px;transition:0.2s;}
 #themeToggle:hover,#logoutBtn:hover{transform:scale(1.05);}
-#messages{flex:1;padding:16px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;background:var(--bg);}
-.msg{max-width:70%;padding:10px 14px;border-radius:14px;opacity:0;transform:translateY(20px);animation:fadeIn 0.3s forwards;}
+#messages{flex:1;padding:20px;overflow-y:auto;display:flex;flex-direction:column;gap:14px;background:var(--bg);}
+.msg{max-width:75%;padding:12px 18px;border-radius:16px;opacity:0;transform:translateY(30px);animation:fadeSlide 0.4s forwards;}
 .msg.user{align-self:flex-end;background:linear-gradient(90deg,#ffe37f,#fff6c6);}
 .msg.bot{align-self:flex-start;background:linear-gradient(90deg,#fff7e0,#fff);}
-@keyframes fadeIn{to{opacity:1;transform:translateY(0);}}
-.typing{align-self:flex-start;font-style:italic;color:var(--muted);}
-.composer{display:flex;padding:12px;background:var(--panel);gap:8px;}
-.composer textarea{flex:1;border-radius:8px;padding:10px;border:1px solid #ccc;resize:none;}
-.composer button{padding:10px 14px;border-radius:8px;border:none;background:var(--accent);cursor:pointer;font-weight:600;transition:0.2s;}
+.typing{align-self:flex-start;font-style:italic;color:var(--muted);display:flex;gap:4px;}
+.dot{width:8px;height:8px;background:var(--muted);border-radius:50%;animation:blink 1.4s infinite;}
+.dot:nth-child(2){animation-delay:0.2s;}
+.dot:nth-child(3){animation-delay:0.4s;}
+@keyframes blink{0%,80%,100%{opacity:0;}40%{opacity:1;}}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+@keyframes slideDown{to{transform:translateY(0);}}
+@keyframes fadeSlide{to{opacity:1;transform:translateY(0);}}
+.composer{display:flex;padding:14px;background:var(--panel);gap:10px;align-items:center;}
+.composer textarea{flex:1;border-radius:12px;padding:12px;border:1px solid #ccc;resize:none;font-size:16px;}
+.composer button{padding:10px 16px;border-radius:12px;border:none;background:var(--accent);cursor:pointer;font-weight:700;font-size:16px;transition:0.2s;}
 .composer button:hover{transform:scale(1.05);}
 </style>
 </head>
@@ -57,7 +66,7 @@ body{background:var(--bg);color:var(--text);height:100vh;display:flex;flex-direc
 <!-- Login Modal -->
 <div id="loginScreen">
   <div id="loginCard">
-    <h2>Welcome to BulbAI</h2>
+    <h2>💡 BulbAI</h2>
     <div id="errorMsg"></div>
     <input type="email" id="email" placeholder="Email" />
     <input type="password" id="password" placeholder="Password" />
@@ -84,7 +93,6 @@ body{background:var(--bg);color:var(--text);height:100vh;display:flex;flex-direc
 </div>
 
 <script type="module">
-// Firebase imports
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.1/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.6.1/firebase-auth.js";
 
@@ -166,7 +174,7 @@ function addMessage(content,type='bot'){
 function showTyping(){
   const typing = document.createElement('div');
   typing.className='typing';
-  typing.textContent='💡 BulbAI is thinking...';
+  typing.innerHTML = '💡 BulbAI is thinking <span class="dot"></span><span class="dot"></span><span class="dot"></span>';
   messagesDiv.appendChild(typing);
   messagesDiv.scrollTop = messagesDiv.scrollHeight;
   return typing;

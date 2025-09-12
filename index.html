@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BulbAI</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#fff8e6;--panel:#fff2c9;--accent:#f7c948;
@@ -13,17 +14,33 @@
   --bg:#0f0d08;--panel:#171412;--accent:#e6bd00;
   --text:#efeae0;--muted:#bfb6a1;
 }
-*{box-sizing:border-box;margin:0;padding:0;font-family:Inter,sans-serif;}
-body{background:var(--bg);color:var(--text);display:flex;flex-direction:column;height:100vh;}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Inter',sans-serif;}
+body{background:var(--bg);color:var(--text);height:100vh;display:flex;flex-direction:column;}
 .hidden{display:none;}
-#loginScreen,#chatScreen{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;}
-#loginScreen input{padding:10px;margin:6px;width:250px;border-radius:6px;border:1px solid #ccc;}
-#loginScreen button{padding:10px 14px;margin:6px;border-radius:6px;background:var(--accent);border:none;cursor:pointer;font-weight:600;}
-#chatScreen{width:100%;height:100%;display:flex;flex-direction:column;}
-.topbar{padding:12px;background:var(--panel);display:flex;justify-content:space-between;align-items:center;}
-.topbar .title{font-weight:700;font-size:18px;}
-#themeToggle{padding:6px 10px;border-radius:6px;border:none;background:var(--accent);cursor:pointer;font-weight:600;}
-#messages{flex:1;padding:16px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;}
+/* Fullscreen login modal */
+#loginScreen{
+  position:fixed;top:0;left:0;width:100%;height:100%;
+  display:flex;align-items:center;justify-content:center;
+  backdrop-filter:blur(8px);background:rgba(0,0,0,0.1);z-index:50;
+}
+#loginCard{
+  background:var(--panel);padding:30px;border-radius:16px;
+  min-width:300px;max-width:400px;width:90%;box-shadow:0 8px 30px rgba(0,0,0,0.25);
+  display:flex;flex-direction:column;align-items:center;gap:12px;
+}
+#loginCard h2{margin-bottom:10px;font-size:24px;}
+#loginCard input{width:100%;padding:12px;border-radius:8px;border:1px solid #ccc;}
+#loginCard button{width:100%;padding:12px;border-radius:8px;border:none;background:var(--accent);color:#2b2b2b;font-weight:600;cursor:pointer;transition:0.2s;}
+#loginCard button:hover{transform:scale(1.05);}
+#loginCard .googleBtn{background:#4285F4;color:white;}
+#errorMsg{color:red;font-size:14px;min-height:18px;}
+/* Chat Screen */
+#chatScreen{flex:1;display:flex;flex-direction:column;height:100vh;}
+.topbar{padding:12px;background:var(--panel);display:flex;justify-content:space-between;align-items:center;box-shadow:0 4px 20px rgba(0,0,0,0.1);}
+.topbar .title{font-weight:700;font-size:20px;}
+#themeToggle,#logoutBtn{padding:6px 10px;border-radius:6px;border:none;background:var(--accent);cursor:pointer;font-weight:600;margin-left:6px;transition:0.2s;}
+#themeToggle:hover,#logoutBtn:hover{transform:scale(1.05);}
+#messages{flex:1;padding:16px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;background:var(--bg);}
 .msg{max-width:70%;padding:10px 14px;border-radius:14px;opacity:0;transform:translateY(20px);animation:fadeIn 0.3s forwards;}
 .msg.user{align-self:flex-end;background:linear-gradient(90deg,#ffe37f,#fff6c6);}
 .msg.bot{align-self:flex-start;background:linear-gradient(90deg,#fff7e0,#fff);}
@@ -31,18 +48,23 @@ body{background:var(--bg);color:var(--text);display:flex;flex-direction:column;h
 .typing{align-self:flex-start;font-style:italic;color:var(--muted);}
 .composer{display:flex;padding:12px;background:var(--panel);gap:8px;}
 .composer textarea{flex:1;border-radius:8px;padding:10px;border:1px solid #ccc;resize:none;}
-.composer button{padding:10px 14px;border-radius:8px;border:none;background:var(--accent);cursor:pointer;font-weight:600;}
+.composer button{padding:10px 14px;border-radius:8px;border:none;background:var(--accent);cursor:pointer;font-weight:600;transition:0.2s;}
+.composer button:hover{transform:scale(1.05);}
 </style>
 </head>
 <body data-theme="light">
 
-<!-- Login Screen -->
+<!-- Login Modal -->
 <div id="loginScreen">
-  <h2>Welcome to BulbAI</h2>
-  <input type="email" id="email" placeholder="Email" />
-  <input type="password" id="password" placeholder="Password" />
-  <button id="loginBtn">Login</button>
-  <button id="signupBtn">Sign Up</button>
+  <div id="loginCard">
+    <h2>Welcome to BulbAI</h2>
+    <div id="errorMsg"></div>
+    <input type="email" id="email" placeholder="Email" />
+    <input type="password" id="password" placeholder="Password" />
+    <button id="loginBtn">Login</button>
+    <button id="signupBtn">Sign Up</button>
+    <button id="googleBtn" class="googleBtn">Sign in with Google</button>
+  </div>
 </div>
 
 <!-- Chat Screen -->
@@ -61,10 +83,10 @@ body{background:var(--bg);color:var(--text);display:flex;flex-direction:column;h
   </div>
 </div>
 
-<!-- Firebase SDK -->
 <script type="module">
+// Firebase imports
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.1/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.6.1/firebase-auth.js";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.6.1/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCGFij1pFUVNFP63QHxEq619c9jPnskzxY",
@@ -75,37 +97,44 @@ const firebaseConfig = {
   appId: "1:366775652166:web:9f0633faccbfd7db625f47",
   measurementId: "G-S7LRRREXNQ"
 };
-
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const provider = new GoogleAuthProvider();
 
+// DOM Elements
 const loginScreen = document.getElementById('loginScreen');
 const chatScreen = document.getElementById('chatScreen');
 const emailInput = document.getElementById('email');
 const passwordInput = document.getElementById('password');
 const loginBtn = document.getElementById('loginBtn');
 const signupBtn = document.getElementById('signupBtn');
+const googleBtn = document.getElementById('googleBtn');
 const logoutBtn = document.getElementById('logoutBtn');
 const themeToggle = document.getElementById('themeToggle');
+const errorMsg = document.getElementById('errorMsg');
 
+// Auth functions
 loginBtn.onclick = () => {
-  signInWithEmailAndPassword(auth, emailInput.value, passwordInput.value)
-    .catch(err => alert(err.message));
+  const email = emailInput.value.trim(), pass = passwordInput.value.trim();
+  if(!email || !pass){ errorMsg.textContent='Please enter email and password'; return; }
+  signInWithEmailAndPassword(auth,email,pass).catch(err=>errorMsg.textContent=err.message);
 };
-
 signupBtn.onclick = () => {
-  createUserWithEmailAndPassword(auth, emailInput.value, passwordInput.value)
-    .catch(err => alert(err.message));
+  const email = emailInput.value.trim(), pass = passwordInput.value.trim();
+  if(!email || !pass){ errorMsg.textContent='Please enter email and password'; return; }
+  createUserWithEmailAndPassword(auth,email,pass).catch(err=>errorMsg.textContent=err.message);
 };
-
-logoutBtn.onclick = () => {
-  signOut(auth);
+googleBtn.onclick = () => {
+  signInWithPopup(auth, provider).catch(err=>errorMsg.textContent=err.message);
 };
+logoutBtn.onclick = () => signOut(auth);
 
-onAuthStateChanged(auth, user => {
+// Monitor auth state
+onAuthStateChanged(auth,user=>{
   if(user){
     loginScreen.classList.add('hidden');
     chatScreen.classList.remove('hidden');
+    errorMsg.textContent='';
   } else {
     loginScreen.classList.remove('hidden');
     chatScreen.classList.add('hidden');
@@ -115,22 +144,20 @@ onAuthStateChanged(auth, user => {
 // Theme toggle
 themeToggle.onclick = () => {
   if(document.body.getAttribute('data-theme')==='light'){
-    document.body.setAttribute('data-theme','dark');
-    themeToggle.textContent='☀️';
+    document.body.setAttribute('data-theme','dark'); themeToggle.textContent='☀️';
   } else {
-    document.body.setAttribute('data-theme','light');
-    themeToggle.textContent='🌙';
+    document.body.setAttribute('data-theme','light'); themeToggle.textContent='🌙';
   }
 };
 
-// Chat functionality (placeholder AI)
+// Chat functionality
 const messagesDiv = document.getElementById('messages');
 const inputMsg = document.getElementById('inputMsg');
 const sendBtn = document.getElementById('sendBtn');
 
-function addMessage(content, type='bot'){
+function addMessage(content,type='bot'){
   const msg = document.createElement('div');
-  msg.classList.add('msg', type);
+  msg.classList.add('msg',type);
   msg.textContent = content;
   messagesDiv.appendChild(msg);
   messagesDiv.scrollTop = messagesDiv.scrollHeight;
@@ -151,12 +178,11 @@ sendBtn.onclick = () => {
   addMessage(text,'user');
   inputMsg.value='';
   const typingIndicator = showTyping();
-  setTimeout(() => {
+  setTimeout(()=>{
     messagesDiv.removeChild(typingIndicator);
     addMessage('💡 BulbAI reply here (AI not set up yet)');
-  }, 1000 + Math.random()*1000);
+  },1000+Math.random()*1000);
 };
 </script>
-
 </body>
 </html>

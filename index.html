@@ -7,21 +7,33 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#fff8e6; --panel:#fff2c9; --accent:#f7c948; --text:#1f1f1f; --muted:#6b6b6b;
+  --bg:#fff8e6; --panel:#fff2c9; --panel2:#fff0b8; --accent:#f7c948; 
+  --text:#1f1f1f; --muted:#6b6b6b; --shadow:rgba(0,0,0,0.08);
 }
 [data-theme="dark"]{
-  --bg:#0f0d08; --panel:#171412; --accent:#e6bd00; --text:#efeae0; --muted:#bfb6a1;
+  --bg:#0f0d08; --panel:#171412; --panel2:#201b12; --accent:#e6bd00;
+  --text:#efeae0; --muted:#bfb6a1; --shadow:rgba(0,0,0,0.6);
 }
 *{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);height:100vh;display:flex;flex-direction:column;}
-header{padding:1rem;background:var(--panel);display:flex;justify-content:space-between;align-items:center;box-shadow:0 4px 12px rgba(0,0,0,0.05);}
-header h1{display:flex;align-items:center;gap:0.5rem;font-size:1.6rem;}
+body{font-family:'Inter',sans-serif;height:100vh;display:flex;flex-direction:column;background:var(--bg);color:var(--text);}
+header{display:flex;align-items:center;justify-content:space-between;padding:1rem;background:var(--panel);box-shadow:0 4px 12px var(--shadow);}
+header h1{display:flex;align-items:center;gap:0.5rem;font-size:1.6rem;font-weight:700;}
 header h1 span{font-weight:800;}
 header button{padding:0.5rem 1rem;border:none;border-radius:8px;background:var(--accent);color:#1f1f1f;font-weight:600;cursor:pointer;transition:0.3s;}
 header button:hover{transform:scale(1.05);}
-main{flex:1;display:flex;flex-direction:column;justify-content:flex-end;padding:1rem;overflow-y:auto;position:relative;}
-#messages{display:flex;flex-direction:column;gap:0.5rem;}
-.msg{max-width:70%;padding:0.75rem 1rem;border-radius:1rem;box-shadow:0 2px 8px rgba(0,0,0,0.05);opacity:0; transform:translateY(20px);animation:fadeUp 0.5s forwards;}
+.app{display:grid;grid-template-columns:280px 1fr;flex:1;overflow:hidden;gap:1rem;}
+.sidebar{background:var(--panel);padding:1rem;border-radius:12px;display:flex;flex-direction:column;gap:1rem;overflow-y:auto;box-shadow:0 6px 18px var(--shadow);}
+.brand{display:flex;align-items:center;gap:0.5rem;}
+.logo{width:40px;height:40px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:800;color:#2b2b2b;font-size:18px;}
+.sidebar button{padding:0.5rem;border:none;border-radius:8px;background:var(--accent);cursor:pointer;font-weight:600;transition:0.3s;}
+.sidebar button:hover{transform:scale(1.05);}
+.conversations{display:flex;flex-direction:column;gap:0.5rem;overflow-y:auto;max-height:50vh;}
+.conv{padding:0.5rem;border-radius:8px;cursor:pointer;transition:0.2s;background:linear-gradient(90deg, rgba(0,0,0,0.02), transparent);}
+.conv:hover{background:linear-gradient(90deg, rgba(0,0,0,0.05), transparent);}
+.conv.active{outline:2px solid var(--accent);}
+.main{display:flex;flex-direction:column;gap:0.5rem;background:var(--panel2);border-radius:12px;padding:1rem;overflow:hidden;position:relative;}
+#messages{display:flex;flex-direction:column;gap:0.5rem;overflow-y:auto;flex:1;}
+.msg{max-width:70%;padding:0.75rem 1rem;border-radius:1rem;box-shadow:0 2px 8px rgba(0,0,0,0.05);opacity:0;transform:translateY(20px);animation:fadeUp 0.4s forwards;}
 .msg.user{align-self:flex-end;background:linear-gradient(90deg,#ffe37f,#fff6c6);}
 .msg.bot{align-self:flex-start;background:linear-gradient(90deg,#fff7e0,#fff);}
 @keyframes fadeUp{to{opacity:1;transform:translateY(0);}}
@@ -29,16 +41,19 @@ main{flex:1;display:flex;flex-direction:column;justify-content:flex-end;padding:
 #composer textarea{flex:1;padding:0.75rem;border-radius:10px;border:1px solid rgba(0,0,0,0.1);resize:none;}
 #composer button{padding:0.75rem 1rem;border:none;border-radius:10px;background:var(--accent);cursor:pointer;font-weight:700;transition:0.3s;}
 #composer button:hover{transform:scale(1.05);}
-.login-screen{position:absolute;inset:0;background:rgba(0,0,0,0.6);display:flex;justify-content:center;align-items:center;backdrop-filter:blur(4px);}
+.profile-panel{display:flex;flex-direction:column;gap:0.5rem;margin-top:1rem;}
+.profile-panel input{padding:0.5rem;border-radius:8px;border:1px solid rgba(0,0,0,0.1);}
+.profile-panel button{padding:0.5rem;border-radius:8px;border:none;background:var(--accent);cursor:pointer;transition:0.3s;}
+.profile-panel button:hover{transform:scale(1.05);}
+.login-screen{position:absolute;inset:0;background:rgba(0,0,0,0.6);display:flex;justify-content:center;align-items:center;backdrop-filter:blur(4px);z-index:50;}
 .login-box{background:var(--panel);padding:2rem;border-radius:12px;display:flex;flex-direction:column;gap:1rem;min-width:280px;animation:fadeIn 0.5s ease forwards;}
-.login-box h2{text-align:center;}
 .login-box input{padding:0.75rem;border-radius:10px;border:1px solid rgba(0,0,0,0.1);}
-.login-box button{padding:0.75rem 1rem;border:none;border-radius:10px;cursor:pointer;font-weight:700;transition:0.3s;}
-.login-box button:hover{transform:scale(1.05);}
+.login-box button{padding:0.75rem;border-radius:10px;border:none;cursor:pointer;font-weight:700;transition:0.3s;}
 .google-btn{background:#4285f4;color:#fff;display:flex;align-items:center;justify-content:center;gap:0.5rem;}
 .google-btn img{height:20px;}
 @keyframes fadeIn{from{opacity:0;transform:scale(0.95);}to{opacity:1;transform:scale(1);}}
-footer{padding:1rem;text-align:center;background:var(--panel);box-shadow:0 -4px 12px rgba(0,0,0,0.05);}
+img.uploaded{max-width:200px;border-radius:8px;border:1px solid rgba(0,0,0,0.05);}
+@media(max-width:768px){.app{grid-template-columns:1fr;}.sidebar{order:2;max-height:30vh;}.main{order:1;}}
 </style>
 </head>
 <body data-theme="light">
@@ -48,13 +63,30 @@ footer{padding:1rem;text-align:center;background:var(--panel);box-shadow:0 -4px 
   <button id="themeToggle">Dark Mode</button>
 </header>
 
-<main>
-  <div id="messages"></div>
-  <div id="composer">
-    <textarea id="inputMsg" placeholder="Type a message..."></textarea>
-    <button id="sendBtn">Send</button>
-  </div>
-</main>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="logo">💡</div>
+      <div>BulbAI</div>
+    </div>
+    <button id="newChatBtn">+ New Chat</button>
+    <div class="conversations" id="conversationsList"></div>
+    <div class="profile-panel">
+      <input type="text" id="profileName" placeholder="Your Name">
+      <button id="saveProfileBtn">Save Profile</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div id="messages"></div>
+    <div id="composer">
+      <textarea id="inputMsg" placeholder="Type a message..."></textarea>
+      <button id="sendBtn">Send</button>
+      <input type="file" id="fileInput" style="display:none">
+      <button id="uploadBtn">📷</button>
+    </div>
+  </main>
+</div>
 
 <div class="login-screen" id="loginScreen">
   <div class="login-box">
@@ -72,104 +104,100 @@ footer{padding:1rem;text-align:center;background:var(--panel);box-shadow:0 -4px 
 <footer>© 2025 BulbAI. All Rights Reserved.</footer>
 
 <script type="module">
-  // Firebase SDK
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-analytics.js";
-  import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged } 
-  from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-analytics.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyCGFij1pFUVNFP63QHxEq619c9jPnskzxY",
-    authDomain: "bulbai-21f09.firebaseapp.com",
-    projectId: "bulbai-21f09",
-    storageBucket: "bulbai-21f09.firebasestorage.app",
-    messagingSenderId: "366775652166",
-    appId: "1:366775652166:web:22db16f4f87f9a60625f47",
-    measurementId: "G-G09FQQ53XP"
-  };
+const firebaseConfig = {
+  apiKey: "AIzaSyCGFij1pFUVNFP63QHxEq619c9jPnskzxY",
+  authDomain: "bulbai-21f09.firebaseapp.com",
+  projectId: "bulbai-21f09",
+  storageBucket: "bulbai-21f09.firebasestorage.app",
+  messagingSenderId: "366775652166",
+  appId: "1:366775652166:web:22db16f4f87f9a60625f47",
+  measurementId: "G-G09FQQ53XP"
+};
 
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-  const auth = getAuth(app);
-  const provider = new GoogleAuthProvider();
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+const auth = getAuth(app);
+const provider = new GoogleAuthProvider();
 
-  // Elements
-  const googleBtn = document.getElementById('googleBtn');
-  const loginScreen = document.getElementById('loginScreen');
-  const messagesDiv = document.getElementById('messages');
-  const inputMsg = document.getElementById('inputMsg');
-  const sendBtn = document.getElementById('sendBtn');
-  const themeToggle = document.getElementById('themeToggle');
+// Elements
+const googleBtn = document.getElementById('googleBtn');
+const loginScreen = document.getElementById('loginScreen');
+const messagesDiv = document.getElementById('messages');
+const inputMsg = document.getElementById('inputMsg');
+const sendBtn = document.getElementById('sendBtn');
+const themeToggle = document.getElementById('themeToggle');
+const newChatBtn = document.getElementById('newChatBtn');
+const conversationsList = document.getElementById('conversationsList');
+const fileInput = document.getElementById('fileInput');
+const uploadBtn = document.getElementById('uploadBtn');
 
-  const emailInput = document.getElementById('emailInput');
-  const passwordInput = document.getElementById('passwordInput');
-  const signInBtn = document.getElementById('emailSignInBtn');
-  const signUpBtn = document.getElementById('emailSignUpBtn');
+const emailInput = document.getElementById('emailInput');
+const passwordInput = document.getElementById('passwordInput');
+const signInBtn = document.getElementById('emailSignInBtn');
+const signUpBtn = document.getElementById('emailSignUpBtn');
 
-  // Google login
-  googleBtn.onclick = () => {
-    signInWithPopup(auth, provider)
-      .then(result => {
-        loginScreen.style.display = 'none';
-        addMessage(`💡 Welcome, ${result.user.displayName}!`, 'bot');
-      })
-      .catch(err => alert(err.message));
-  };
+const profileName = document.getElementById('profileName');
+const saveProfileBtn = document.getElementById('saveProfileBtn');
 
-  // Email/Password Sign In
-  signInBtn.onclick = () => {
-    signInWithEmailAndPassword(auth, emailInput.value, passwordInput.value)
-      .then(user => {
-        loginScreen.style.display = 'none';
-        addMessage(`💡 Welcome, ${user.user.email}!`, 'bot');
-      })
-      .catch(err => alert(err.message));
-  };
+// Authentication
+googleBtn.onclick = ()=> signInWithPopup(auth, provider).then(res=>{
+  loginScreen.style.display='none';
+  addMessage(`💡 Welcome, ${res.user.displayName}!`,'bot');
+}).catch(err=>alert(err.message));
 
-  // Email/Password Sign Up
-  signUpBtn.onclick = () => {
-    createUserWithEmailAndPassword(auth, emailInput.value, passwordInput.value)
-      .then(user => {
-        loginScreen.style.display = 'none';
-        addMessage(`💡 Account created: ${user.user.email}`, 'bot');
-      })
-      .catch(err => alert(err.message));
-  };
+signInBtn.onclick = ()=> signInWithEmailAndPassword(auth,emailInput.value,passwordInput.value)
+.then(u=>{loginScreen.style.display='none';addMessage(`💡 Welcome, ${u.user.email}!`,'bot');}).catch(err=>alert(err.message));
 
-  // Keep user logged in
-  onAuthStateChanged(auth, user => {
-    if(user){
-      loginScreen.style.display = 'none';
-      addMessage(`💡 Welcome back, ${user.displayName || user.email}!`, 'bot');
-    }
-  });
+signUpBtn.onclick = ()=> createUserWithEmailAndPassword(auth,emailInput.value,passwordInput.value)
+.then(u=>{loginScreen.style.display='none';addMessage(`💡 Account created: ${u.user.email}`,'bot');}).catch(err=>alert(err.message));
 
-  // Chat functions
-  function addMessage(content,type='bot'){
-    const msg = document.createElement('div');
-    msg.classList.add('msg',type);
-    msg.textContent = content;
-    messagesDiv.appendChild(msg);
-    messagesDiv.scrollTop = messagesDiv.scrollHeight;
-  }
+onAuthStateChanged(auth,user=>{if(user){loginScreen.style.display='none';addMessage(`💡 Welcome back, ${user.displayName||user.email}!`,'bot');}});
 
-  sendBtn.onclick = () => {
-    const text = inputMsg.value.trim();
-    if(!text) return;
-    addMessage(text,'user');
-    inputMsg.value='';
-    setTimeout(()=>{
-      addMessage('💡 BulbAI reply here (AI integration pending)','bot');
-    },1000+Math.random()*1000);
-  };
+// Chat
+function addMessage(content,type='bot',imgSrc=''){
+  const msg=document.createElement('div');
+  msg.classList.add('msg',type);
+  if(imgSrc){const img=document.createElement('img');img.src=imgSrc;img.className='uploaded';msg.appendChild(img);}
+  msg.appendChild(document.createTextNode(content));
+  messagesDiv.appendChild(msg);
+  messagesDiv.scrollTop = messagesDiv.scrollHeight;
+}
 
-  // Theme toggle
-  themeToggle.onclick = () => {
-    const body = document.body;
-    if(body.dataset.theme==='light'){body.dataset.theme='dark'; themeToggle.textContent='Light Mode';}
-    else{body.dataset.theme='light'; themeToggle.textContent='Dark Mode';}
-  };
+// Send
+sendBtn.onclick = ()=>{
+  const text=inputMsg.value.trim();if(!text)return;
+  addMessage(text,'user');inputMsg.value='';
+  setTimeout(()=>addMessage('💡 BulbAI reply here (AI integration pending)','bot'),1000+Math.random()*1000);
+};
+
+// Image upload
+uploadBtn.onclick = ()=>fileInput.click();
+fileInput.onchange = ()=>{const file=fileInput.files[0];if(file){const reader=new FileReader();reader.onload=e=>addMessage('', 'user', e.target.result);reader.readAsDataURL(file);fileInput.value='';}}
+
+// New chat
+newChatBtn.onclick = ()=>{
+  messagesDiv.innerHTML='';addMessage('💡 New chat started','bot');
+  // Optional: add to conversations list
+  const conv=document.createElement('div');conv.classList.add('conv');conv.textContent='Chat '+(conversationsList.children.length+1);
+  conversationsList.appendChild(conv);
+  conv.onclick = ()=>{messagesDiv.innerHTML='';addMessage(`💡 Loaded ${conv.textContent}`,'bot');}
+};
+
+// Theme toggle
+themeToggle.onclick = ()=>{
+  if(document.body.getAttribute('data-theme')==='light'){document.body.setAttribute('data-theme','dark');themeToggle.textContent='Light Mode';}
+  else{document.body.setAttribute('data-theme','light');themeToggle.textContent='Dark Mode';}
+};
+
+// Save profile
+saveProfileBtn.onclick = ()=>{
+  alert(`Profile saved: ${profileName.value}`); // Future: save to Firebase
+};
+
 </script>
-
 </body>
 </html>

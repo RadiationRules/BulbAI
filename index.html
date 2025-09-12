@@ -72,104 +72,103 @@ footer{padding:1rem;text-align:center;background:var(--panel);box-shadow:0 -4px 
 <footer>© 2025 BulbAI. All Rights Reserved.</footer>
 
 <script type="module">
-// Firebase imports
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.1/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged } 
-from "https://www.gstatic.com/firebasejs/10.6.1/firebase-auth.js";
+  // Firebase SDK
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-analytics.js";
+  import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged } 
+  from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
 
-// Firebase config
-const firebaseConfig = {
-  apiKey: "AIzaSyCGFij1pFUVNFP63QHxEq619c9jPnskzxY",
-  authDomain: "bulbai-21f09.firebaseapp.com",
-  projectId: "bulbai-21f09",
-  storageBucket: "bulbai-21f09.firebasestorage.app",
-  messagingSenderId: "366775652166",
-  appId: "1:366775652166:web:9f0633faccbfd7db625f47",
-  measurementId: "G-S7LRRREXNQ"
-};
+  const firebaseConfig = {
+    apiKey: "AIzaSyCGFij1pFUVNFP63QHxEq619c9jPnskzxY",
+    authDomain: "bulbai-21f09.firebaseapp.com",
+    projectId: "bulbai-21f09",
+    storageBucket: "bulbai-21f09.firebasestorage.app",
+    messagingSenderId: "366775652166",
+    appId: "1:366775652166:web:22db16f4f87f9a60625f47",
+    measurementId: "G-G09FQQ53XP"
+  };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const provider = new GoogleAuthProvider();
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+  const auth = getAuth(app);
+  const provider = new GoogleAuthProvider();
 
-// DOM elements
-const googleBtn = document.getElementById('googleBtn');
-const loginScreen = document.getElementById('loginScreen');
-const messagesDiv = document.getElementById('messages');
-const inputMsg = document.getElementById('inputMsg');
-const sendBtn = document.getElementById('sendBtn');
-const themeToggle = document.getElementById('themeToggle');
+  // Elements
+  const googleBtn = document.getElementById('googleBtn');
+  const loginScreen = document.getElementById('loginScreen');
+  const messagesDiv = document.getElementById('messages');
+  const inputMsg = document.getElementById('inputMsg');
+  const sendBtn = document.getElementById('sendBtn');
+  const themeToggle = document.getElementById('themeToggle');
 
-const emailInput = document.getElementById('emailInput');
-const passwordInput = document.getElementById('passwordInput');
-const signInBtn = document.getElementById('emailSignInBtn');
-const signUpBtn = document.getElementById('emailSignUpBtn');
+  const emailInput = document.getElementById('emailInput');
+  const passwordInput = document.getElementById('passwordInput');
+  const signInBtn = document.getElementById('emailSignInBtn');
+  const signUpBtn = document.getElementById('emailSignUpBtn');
 
-// Google login
-googleBtn.onclick = () => {
-  signInWithPopup(auth, provider)
-    .then(result => {
+  // Google login
+  googleBtn.onclick = () => {
+    signInWithPopup(auth, provider)
+      .then(result => {
+        loginScreen.style.display = 'none';
+        addMessage(`💡 Welcome, ${result.user.displayName}!`, 'bot');
+      })
+      .catch(err => alert(err.message));
+  };
+
+  // Email/Password Sign In
+  signInBtn.onclick = () => {
+    signInWithEmailAndPassword(auth, emailInput.value, passwordInput.value)
+      .then(user => {
+        loginScreen.style.display = 'none';
+        addMessage(`💡 Welcome, ${user.user.email}!`, 'bot');
+      })
+      .catch(err => alert(err.message));
+  };
+
+  // Email/Password Sign Up
+  signUpBtn.onclick = () => {
+    createUserWithEmailAndPassword(auth, emailInput.value, passwordInput.value)
+      .then(user => {
+        loginScreen.style.display = 'none';
+        addMessage(`💡 Account created: ${user.user.email}`, 'bot');
+      })
+      .catch(err => alert(err.message));
+  };
+
+  // Keep user logged in
+  onAuthStateChanged(auth, user => {
+    if(user){
       loginScreen.style.display = 'none';
-      addMessage(`💡 Welcome, ${result.user.displayName}!`, 'bot');
-    })
-    .catch(err => alert(err.message));
-};
+      addMessage(`💡 Welcome back, ${user.displayName || user.email}!`, 'bot');
+    }
+  });
 
-// Email/Password Sign In
-signInBtn.onclick = () => {
-  signInWithEmailAndPassword(auth, emailInput.value, passwordInput.value)
-    .then(user => {
-      loginScreen.style.display = 'none';
-      addMessage(`💡 Welcome, ${user.user.email}!`, 'bot');
-    })
-    .catch(err => alert(err.message));
-};
-
-// Email/Password Sign Up
-signUpBtn.onclick = () => {
-  createUserWithEmailAndPassword(auth, emailInput.value, passwordInput.value)
-    .then(user => {
-      loginScreen.style.display = 'none';
-      addMessage(`💡 Account created: ${user.user.email}`, 'bot');
-    })
-    .catch(err => alert(err.message));
-};
-
-// Keep user logged in
-onAuthStateChanged(auth, user => {
-  if(user){
-    loginScreen.style.display = 'none';
-    addMessage(`💡 Welcome back, ${user.displayName || user.email}!`, 'bot');
+  // Chat functions
+  function addMessage(content,type='bot'){
+    const msg = document.createElement('div');
+    msg.classList.add('msg',type);
+    msg.textContent = content;
+    messagesDiv.appendChild(msg);
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
   }
-});
 
-// Chat functions
-function addMessage(content,type='bot'){
-  const msg = document.createElement('div');
-  msg.classList.add('msg',type);
-  msg.textContent = content;
-  messagesDiv.appendChild(msg);
-  messagesDiv.scrollTop = messagesDiv.scrollHeight;
-}
+  sendBtn.onclick = () => {
+    const text = inputMsg.value.trim();
+    if(!text) return;
+    addMessage(text,'user');
+    inputMsg.value='';
+    setTimeout(()=>{
+      addMessage('💡 BulbAI reply here (AI integration pending)','bot');
+    },1000+Math.random()*1000);
+  };
 
-// Send message
-sendBtn.onclick = () => {
-  const text = inputMsg.value.trim();
-  if(!text) return;
-  addMessage(text,'user');
-  inputMsg.value='';
-  setTimeout(()=>{
-    addMessage('💡 BulbAI reply here (AI integration pending)','bot');
-  },1000+Math.random()*1000);
-};
-
-// Theme toggle
-themeToggle.onclick = () => {
-  const body = document.body;
-  if(body.dataset.theme==='light'){body.dataset.theme='dark'; themeToggle.textContent='Light Mode';}
-  else{body.dataset.theme='light'; themeToggle.textContent='Dark Mode';}
-};
+  // Theme toggle
+  themeToggle.onclick = () => {
+    const body = document.body;
+    if(body.dataset.theme==='light'){body.dataset.theme='dark'; themeToggle.textContent='Light Mode';}
+    else{body.dataset.theme='light'; themeToggle.textContent='Dark Mode';}
+  };
 </script>
 
 </body>

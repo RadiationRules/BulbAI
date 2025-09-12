@@ -4,112 +4,150 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BulbAI</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
+/* ========================
+   VARIABLES & RESET
+======================== */
 :root {
-  --bg:#fff; --panel:#f7f7f8; --accent:#f7c948; --text:#1f1f1f; --muted:#6b6b6b; --shadow:rgba(0,0,0,0.1);
+  --bg: #f8f9fa;
+  --panel: #ffffff;
+  --accent: #f7c948;
+  --accent-dark: #e6bd00;
+  --text: #1f1f1f;
+  --muted: #6b6b6b;
+  --shadow: rgba(0,0,0,0.1);
+  --radius: 12px;
 }
-[data-theme="dark"] {
-  --bg:#0f0f0f; --panel:#1a1a1a; --accent:#e6bd00; --text:#f5f5f5; --muted:#bfbfbf; --shadow:rgba(0,0,0,0.6);
+*{box-sizing:border-box;margin:0;padding:0;}
+body, html{height:100%;font-family:'Inter',sans-serif;background:var(--bg);}
+a{text-decoration:none;color:var(--accent);}
+a:hover{text-decoration:underline;}
+
+/* ========================
+   LOGIN SCREEN
+======================== */
+#loginScreen {
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100%;
+  width:100%;
+  background:var(--bg);
 }
-* {margin:0;padding:0;box-sizing:border-box;}
-body {font-family:'Inter',sans-serif;height:100vh;display:flex;background:var(--bg);color:var(--text);}
-header {display:flex;align-items:center;justify-content:space-between;padding:1rem;background:var(--panel);box-shadow:0 2px 8px var(--shadow);}
-header h1 {font-size:1.5rem;font-weight:700;display:flex;align-items:center;gap:0.5rem;}
-header button {padding:0.5rem 1rem;border:none;border-radius:8px;background:var(--accent);cursor:pointer;transition:0.3s;}
-header button:hover {transform:scale(1.05);}
-.app {display:grid;grid-template-columns:300px 1fr;flex:1;overflow:hidden;}
-.sidebar {background:var(--panel);padding:1rem;display:flex;flex-direction:column;gap:1rem;overflow-y:auto;}
-.brand {display:flex;align-items:center;gap:0.5rem;margin-bottom:1rem;}
-.logo {width:40px;height:40px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:800;color:#2b2b2b;}
-.sidebar button {padding:0.5rem;border:none;border-radius:8px;background:var(--accent);cursor:pointer;transition:0.3s;}
-.sidebar button:hover {transform:scale(1.05);}
-.conversations {display:flex;flex-direction:column;gap:0.5rem;overflow-y:auto;flex:1;}
-.conv {padding:0.5rem;border-radius:8px;cursor:pointer;transition:0.2s;background:linear-gradient(90deg, rgba(0,0,0,0.02), transparent);}
-.conv:hover {background:linear-gradient(90deg, rgba(0,0,0,0.05), transparent);}
-.conv.active {outline:2px solid var(--accent);}
-.main {display:flex;flex-direction:column;gap:0.5rem;background:var(--bg);padding:1rem;overflow:hidden;position:relative;}
-#messages {flex:1;display:flex;flex-direction:column;gap:0.5rem;overflow-y:auto;padding-right:0.5rem;}
-.msg {max-width:70%;padding:0.75rem 1rem;border-radius:1rem;box-shadow:0 2px 8px rgba(0,0,0,0.05);opacity:0;transform:translateY(20px);animation:fadeUp 0.3s forwards;}
-.msg.user {align-self:flex-end;background:linear-gradient(90deg,#ffe37f,#fff6c6);}
-.msg.bot {align-self:flex-start;background:linear-gradient(90deg,#fff7e0,#fff);}
-@keyframes fadeUp {to {opacity:1;transform:translateY(0);}}
-#composer {display:flex;gap:0.5rem;margin-top:0.5rem;}
-#composer textarea {flex:1;padding:0.75rem;border-radius:10px;border:1px solid rgba(0,0,0,0.1);resize:none;}
-#composer button {padding:0.75rem 1rem;border:none;border-radius:10px;background:var(--accent);cursor:pointer;font-weight:700;transition:0.3s;}
-#composer button:hover {transform:scale(1.05);}
-.settings-panel {position:absolute;top:0;right:-350px;width:300px;height:100%;background:var(--panel);box-shadow:-4px 0 12px var(--shadow);padding:1rem;display:flex;flex-direction:column;gap:1rem;transition:right 0.4s;z-index:10;}
-.settings-panel.active {right:0;}
-.settings-panel h2 {margin-bottom:0.5rem;}
-.settings-panel button {padding:0.5rem;border-radius:8px;border:none;background:var(--accent);cursor:pointer;transition:0.3s;}
-.settings-panel button:hover {transform:scale(1.05);}
-.login-screen {position:absolute;inset:0;background:rgba(0,0,0,0.6);display:flex;justify-content:center;align-items:center;backdrop-filter:blur(4px);z-index:50;}
-.login-box {background:var(--panel);padding:2rem;border-radius:12px;display:flex;flex-direction:column;gap:1rem;min-width:280px;animation:fadeIn 0.5s ease forwards;}
-.login-box input {padding:0.75rem;border-radius:10px;border:1px solid rgba(0,0,0,0.1);}
-.login-box button {padding:0.75rem;border-radius:10px;border:none;cursor:pointer;font-weight:700;transition:0.3s;}
-.google-btn {background:#4285f4;color:#fff;display:flex;align-items:center;justify-content:center;gap:0.5rem;}
+.login-container {
+  background: var(--panel);
+  padding:2rem;
+  border-radius: var(--radius);
+  box-shadow:0 8px 24px var(--shadow);
+  width:100%;
+  max-width:400px;
+  display:flex;
+  flex-direction:column;
+  gap:1.5rem;
+  animation:fadeIn 0.5s ease forwards;
+}
+.login-container h1 {
+  text-align:center;
+  font-size:2rem;
+  color:var(--text);
+}
+.login-container p {
+  text-align:center;
+  color:var(--muted);
+  font-size:0.9rem;
+}
+.input-group {display:flex;flex-direction:column;gap:0.5rem;}
+.input-group input {
+  padding:0.75rem;
+  border-radius: var(--radius);
+  border:1px solid rgba(0,0,0,0.1);
+  font-size:1rem;
+}
+.button {
+  padding:0.75rem;
+  border-radius: var(--radius);
+  border:none;
+  background:var(--accent);
+  color:#2b2b2b;
+  font-weight:700;
+  cursor:pointer;
+  transition:0.3s;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:0.5rem;
+}
+.button:hover {transform:scale(1.03);}
+.google-btn {background:#fff;border:1px solid #ddd;color:#000;}
 .google-btn img {height:20px;}
-img.uploaded {max-width:200px;border-radius:8px;border:1px solid rgba(0,0,0,0.05);}
-@keyframes fadeIn {from{opacity:0;transform:scale(0.95);}to{opacity:1;transform:scale(1);}}
-@media(max-width:768px){.app{grid-template-columns:1fr;}.sidebar{order:2;max-height:30vh;}.main{order:1;}}
+.divider {
+  text-align:center;
+  color:var(--muted);
+  margin:0.5rem 0;
+  position:relative;
+}
+.divider::before, .divider::after {
+  content:"";
+  position:absolute;
+  top:50%;
+  width:40%;
+  height:1px;
+  background:var(--shadow);
+}
+.divider::before {left:0;}
+.divider::after {right:0;}
+
+/* ========================
+   ANIMATIONS
+======================== */
+@keyframes fadeIn {
+  from {opacity:0; transform:scale(0.95);}
+  to {opacity:1; transform:scale(1);}
+}
+
+/* ========================
+   RESPONSIVE
+======================== */
+@media(max-width:500px){
+  .login-container {padding:1.5rem;}
+  .login-container h1 {font-size:1.75rem;}
+  .input-group input {font-size:0.95rem;}
+}
 </style>
 </head>
-<body data-theme="light">
+<body>
 
-<header>
-  <h1>💡<span>BulbAI</span></h1>
-  <button id="themeToggle">Dark Mode</button>
-</header>
+<!-- LOGIN SCREEN -->
+<div id="loginScreen">
+  <div class="login-container">
+    <h1>💡 BulbAI</h1>
+    <p>Sign in to continue</p>
 
-<div class="app">
-  <aside class="sidebar">
-    <div class="brand">
-      <div class="logo">💡</div>
-      <div>BulbAI</div>
-    </div>
-    <button id="newChatBtn">+ New Chat</button>
-    <div class="conversations" id="conversationsList"></div>
-    <button id="openSettingsBtn">Settings ⚙️</button>
-  </aside>
-
-  <main class="main">
-    <div id="messages"></div>
-    <div id="composer">
-      <textarea id="inputMsg" placeholder="Type a message..."></textarea>
-      <button id="sendBtn">Send</button>
-      <input type="file" id="fileInput" style="display:none">
-      <button id="uploadBtn">📷</button>
-    </div>
-  </main>
-</div>
-
-<div class="settings-panel" id="settingsPanel">
-  <h2>Settings</h2>
-  <button id="settingsThemeToggle">Toggle Theme</button>
-  <button id="clearChatBtn">Clear Chat</button>
-  <button id="closeSettingsBtn">Close</button>
-</div>
-
-<div class="login-screen" id="loginScreen">
-  <div class="login-box">
-    <h2>Welcome to BulbAI</h2>
-    <button id="googleBtn" class="google-btn">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"> Sign in with Google
+    <button id="googleSignInBtn" class="button google-btn">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google Logo"> Sign in with Google
     </button>
-    <input type="email" id="emailInput" placeholder="Email">
-    <input type="password" id="passwordInput" placeholder="Password">
-    <button id="emailSignInBtn">Sign In</button>
-    <button id="emailSignUpBtn">Sign Up</button>
+
+    <div class="divider">OR</div>
+
+    <div class="input-group">
+      <input type="email" id="emailInput" placeholder="Email">
+      <input type="password" id="passwordInput" placeholder="Password">
+    </div>
+    <button id="emailSignInBtn" class="button">Sign In</button>
+    <button id="emailSignUpBtn" class="button">Sign Up</button>
+    <p style="text-align:center;">Don't have an account? <a href="#">Sign up</a></p>
   </div>
 </div>
 
-<footer>© 2025 BulbAI</footer>
-
+<!-- ========================
+   FIREBASE SCRIPT
+======================== -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-analytics.js";
-import { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+import { getAuth, signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
 
+// Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyCGFij1pFUVNFP63QHxEq619c9jPnskzxY",
   authDomain: "bulbai-21f09.firebaseapp.com",
@@ -121,61 +159,645 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
 const auth = getAuth(app);
 
 // Elements
-const loginScreen = document.getElementById('loginScreen');
-const googleBtn = document.getElementById('googleBtn');
+const googleBtn = document.getElementById('googleSignInBtn');
 const emailSignInBtn = document.getElementById('emailSignInBtn');
 const emailSignUpBtn = document.getElementById('emailSignUpBtn');
 const emailInput = document.getElementById('emailInput');
 const passwordInput = document.getElementById('passwordInput');
+const loginScreen = document.getElementById('loginScreen');
 
-const themeToggle = document.getElementById('themeToggle');
-const settingsThemeToggle = document.getElementById('settingsThemeToggle');
-const newChatBtn = document.getElementById('newChatBtn');
-const conversationsList = document.getElementById('conversationsList');
-const messagesDiv = document.getElementById('messages');
-const sendBtn = document.getElementById('sendBtn');
-const inputMsg = document.getElementById('inputMsg');
-const settingsPanel = document.getElementById('settingsPanel');
-const openSettingsBtn = document.getElementById('openSettingsBtn');
-const closeSettingsBtn = document.getElementById('closeSettingsBtn');
-const clearChatBtn = document.getElementById('clearChatBtn');
-const uploadBtn = document.getElementById('uploadBtn');
-const fileInput = document.getElementById('fileInput');
-
-// Auth
-googleBtn.onclick = ()=>{
+// Google Sign-In
+googleBtn.onclick = () => {
   const provider = new GoogleAuthProvider();
-  signInWithPopup(auth,provider).then(()=>loginScreen.style.display='none').catch(e=>alert(e.message));
+  signInWithPopup(auth, provider)
+    .then((result) => {
+      alert(`Welcome ${result.user.displayName}`);
+      loginScreen.style.display = 'none';
+      // Proceed to main BulbAI chat interface
+    })
+    .catch((error) => alert(error.message));
 };
-emailSignUpBtn.onclick = ()=>{
-  createUserWithEmailAndPassword(auth,emailInput.value,passwordInput.value).then(()=>loginScreen.style.display='none').catch(e=>alert(e.message));
+
+// Email Sign-In
+emailSignInBtn.onclick = () => {
+  signInWithEmailAndPassword(auth, emailInput.value, passwordInput.value)
+    .then((userCredential) => {
+      alert(`Welcome ${userCredential.user.email}`);
+      loginScreen.style.display = 'none';
+      // Proceed to main BulbAI chat interface
+    })
+    .catch((error) => alert(error.message));
 };
-emailSignInBtn.onclick = ()=>{
-  signInWithEmailAndPassword(auth,emailInput.value,passwordInput.value).then(()=>loginScreen.style.display='none').catch(e=>alert(e.message));
+
+// Email Sign-Up
+emailSignUpBtn.onclick = () => {
+  createUserWithEmailAndPassword(auth, emailInput.value, passwordInput.value)
+    .then((userCredential) => {
+      alert(`Account created: ${userCredential.user.email}`);
+      loginScreen.style.display = 'none';
+      // Proceed to main BulbAI chat interface
+    })
+    .catch((error) => alert(error.message));
 };
-
-// Theme toggle
-themeToggle.onclick = ()=>{document.body.dataset.theme=document.body.dataset.theme==='light'?'dark':'light';themeToggle.textContent=document.body.dataset.theme==='light'?'Dark Mode':'Light Mode';};
-settingsThemeToggle.onclick=()=>themeToggle.click();
-
-// Chat functions
-const addMessage=(text,sender='bot')=>{const d=document.createElement('div');d.classList.add('msg',sender);d.textContent=text;messagesDiv.appendChild(d);messagesDiv.scrollTop=messagesDiv.scrollHeight;};
-sendBtn.onclick=()=>{if(inputMsg.value.trim()==='')return;addMessage(inputMsg.value,'user');setTimeout(()=>addMessage("💡 This is a sample AI response", 'bot'),600);inputMsg.value='';};
-newChatBtn.onclick=()=>{messagesDiv.innerHTML='';const c=document.createElement('div');c.classList.add('conv');c.textContent=`Conversation ${conversationsList.children.length+1}`;conversationsList.appendChild(c);c.onclick=()=>{messagesDiv.innerHTML='';addMessage(`💡 Loaded ${c.textContent}`,'bot');};};
-
-// Settings
-openSettingsBtn.onclick=()=>settingsPanel.classList.add('active');
-closeSettingsBtn.onclick=()=>settingsPanel.classList.remove('active');
-clearChatBtn.onclick=()=>messagesDiv.innerHTML='';
-
-// Image upload
-uploadBtn.onclick=()=>fileInput.click();
-fileInput.onchange=()=>{const f=fileInput.files[0];if(f){const img=document.createElement('img');img.src=URL.createObjectURL(f);img.classList.add('uploaded');messagesDiv.appendChild(img);messagesDiv.scrollTop=messagesDiv.scrollHeight;}};
 </script>
 
 </body>
 </html>
+<!-- ========================
+     BULBAI MAIN CHAT INTERFACE
+======================== -->
+<div id="mainApp" style="display:none;height:100vh;width:100%;flex-direction:column;">
+
+  <div class="app" style="display:grid;grid-template-columns:320px 1fr;gap:16px;height:100%;">
+    <!-- Sidebar -->
+    <aside class="sidebar" style="background:#fff;padding:16px;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,0.08);display:flex;flex-direction:column;">
+      <div class="brand" style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+        <div class="logo" style="width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,#f7c948,#ffd86b);display:flex;align-items:center;justify-content:center;font-weight:800;color:#2b2b2b;font-size:18px;">💡</div>
+        <div>
+          <h2 style="font-size:16px;margin:0;">BulbAI</h2>
+          <div style="font-size:12px;color:#6b6b6b;">Your yellow assistant</div>
+        </div>
+      </div>
+
+      <button id="newChatBtn" class="button" style="margin-bottom:16px;">+ New Chat</button>
+
+      <div id="conversationsList" style="flex:1;overflow:auto;display:flex;flex-direction:column;gap:8px;"></div>
+
+      <div class="sidebar-footer" style="margin-top:16px;display:flex;gap:8px;justify-content:space-between;">
+        <button id="themeToggle" class="button google-btn">Dark Mode</button>
+      </div>
+    </aside>
+
+    <!-- Main Chat Window -->
+    <main class="main" style="display:flex;flex-direction:column;gap:12px;">
+      <div class="topbar" style="display:flex;align-items:center;justify-content:space-between;padding:12px;border-radius:12px;background:#fff;box-shadow:0 6px 18px rgba(0,0,0,0.08);">
+        <div class="left">
+          <div class="title" id="convTitle" style="font-weight:700;">New Chat</div>
+          <div class="tiny muted" id="convSubtitle" style="font-size:12px;color:#6b6b6b;">No messages yet</div>
+        </div>
+      </div>
+
+      <div id="chatWindow" class="chat-window" style="flex:1;background:#fef8e6;border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:12px;overflow:auto;box-shadow:0 6px 18px rgba(0,0,0,0.08);">
+        <div class="messages" id="messages" style="display:flex;flex-direction:column;gap:12px;"></div>
+      </div>
+
+      <div class="composer" style="display:flex;gap:8px;align-items:center;padding:12px;border-radius:12px;background:#fff;">
+        <input id="prompt" placeholder="Type a message..." style="flex:1;padding:12px;border-radius:12px;border:1px solid rgba(0,0,0,0.1);" />
+        <button id="sendBtn" class="button">Send</button>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script>
+const loginScreenEl = document.getElementById('loginScreen');
+const mainAppEl = document.getElementById('mainApp');
+const newChatBtn = document.getElementById('newChatBtn');
+const messagesEl = document.getElementById('messages');
+const promptEl = document.getElementById('prompt');
+const sendBtn = document.getElementById('sendBtn');
+const convTitle = document.getElementById('convTitle');
+const conversationsList = document.getElementById('conversationsList');
+let conversations = [];
+
+function createMessageElement(content, type='bot') {
+  const msg = document.createElement('div');
+  msg.className = `msg ${type}`;
+  msg.style.maxWidth = '72%';
+  msg.style.padding = '10px 14px';
+  msg.style.borderRadius = '14px';
+  msg.style.boxShadow = '0 6px 14px rgba(0,0,0,0.03)';
+  msg.style.alignSelf = type==='user'?'flex-end':'flex-start';
+  msg.textContent = content;
+  return msg;
+}
+
+// Simulate AI response
+function sendMessage(content) {
+  const userMsg = createMessageElement(content,'user');
+  messagesEl.appendChild(userMsg);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+
+  setTimeout(() => {
+    const botMsg = createMessageElement("This is a BulbAI response","bot");
+    messagesEl.appendChild(botMsg);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+  },1000);
+}
+
+sendBtn.onclick = () => {
+  if(promptEl.value.trim()!==''){
+    sendMessage(promptEl.value);
+    promptEl.value='';
+  }
+};
+
+newChatBtn.onclick = () => {
+  messagesEl.innerHTML='';
+  convTitle.textContent='New Chat';
+};
+
+// Show main app after login
+function showMainApp() {
+  loginScreenEl.style.display='none';
+  mainAppEl.style.display='flex';
+}
+</script>
+
+<style>
+/* ========================
+   CHAT MESSAGES
+======================== */
+.msg.user {background:linear-gradient(90deg,#ffe37f,#fff6c6);}
+.msg.bot {background:linear-gradient(90deg,#fff7e0,#fff);}
+</style>
+<!-- ========================
+     CHAT SETTINGS, IMAGE UPLOAD, HISTORY
+======================== -->
+<style>
+/* ========================
+   IMAGE UPLOAD
+======================== */
+.msg img.uploaded {max-width:280px;border-radius:8px;display:block;margin-top:8px;border:1px solid rgba(0,0,0,0.05);}
+
+/* ========================
+   COMPOSER ANIMATIONS
+======================== */
+.composer button {transition:0.3s;cursor:pointer;}
+.composer button:hover {transform:scale(1.05);}
+#fileInput {display:none;}
+
+/* ========================
+   SETTINGS MODAL
+======================== */
+.modal-backdrop {
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.35);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:50;
+}
+.modal {
+  background:#fff;
+  padding:18px;
+  border-radius:12px;
+  min-width:320px;
+  max-width:90%;
+  box-shadow:0 8px 30px rgba(0,0,0,0.25);
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+.modal h3 {margin:0 0 8px 0;}
+.modal .row {display:flex;gap:8px;align-items:center;margin-top:8px;}
+.small {font-size:13px;color:#6b6b6b;}
+.flex {display:flex;align-items:center;gap:8px;}
+.hidden {display:none;}
+</style>
+
+<!-- SETTINGS MODAL -->
+<div id="modalBackdrop" class="modal-backdrop">
+  <div class="modal">
+    <h3>Settings & Utilities</h3>
+    <div class="row">
+      <label class="small" style="min-width:84px;">Theme</label>
+      <button id="toggleThemeBtn" class="button google-btn">Toggle Dark/Light</button>
+    </div>
+    <div class="row">
+      <button id="clearChatsBtn" class="button google-btn">Clear All Conversations</button>
+      <button id="closeModalBtn" class="button google-btn">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const fileInput = document.createElement('input');
+fileInput.type='file';
+fileInput.accept='image/*';
+fileInput.className='hidden';
+document.body.appendChild(fileInput);
+
+const attachBtn = document.createElement('button');
+attachBtn.textContent='📷';
+attachBtn.className='button';
+attachBtn.style.marginRight='8px';
+document.querySelector('.composer').insertBefore(attachBtn, promptEl);
+
+attachBtn.onclick = () => fileInput.click();
+
+fileInput.onchange = (e) => {
+  const file = e.target.files[0];
+  if(file){
+    const reader = new FileReader();
+    reader.onload = function(ev){
+      const img = document.createElement('img');
+      img.src = ev.target.result;
+      img.className='uploaded';
+      messagesEl.appendChild(img);
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+    }
+    reader.readAsDataURL(file);
+  }
+};
+
+// ========================
+// SETTINGS MODAL LOGIC
+// ========================
+const modalBackdrop = document.getElementById('modalBackdrop');
+const toggleThemeBtn = document.getElementById('toggleThemeBtn');
+const clearChatsBtn = document.getElementById('clearChatsBtn');
+const closeModalBtn = document.getElementById('closeModalBtn');
+
+document.getElementById('themeToggle').onclick = () => modalBackdrop.style.display='flex';
+closeModalBtn.onclick = () => modalBackdrop.style.display='none';
+
+// Toggle Dark/Light Theme
+let darkMode=false;
+toggleThemeBtn.onclick = () => {
+  darkMode = !darkMode;
+  document.body.style.background = darkMode ? '#0f0d08' : '#f8f9fa';
+  document.querySelectorAll('.main, .sidebar, .composer, .chat-window').forEach(el=>{
+    el.style.background = darkMode ? '#171412' : '#fff';
+    el.style.color = darkMode ? '#efeae0' : '#1f1f1f';
+  });
+}
+
+// Clear chats
+clearChatsBtn.onclick = () => {
+  messagesEl.innerHTML='';
+  conversationsList.innerHTML='';
+  convTitle.textContent='New Chat';
+  modalBackdrop.style.display='none';
+};
+
+// ========================
+// Conversation Management
+// ========================
+function addConversation(title){
+  const div = document.createElement('div');
+  div.textContent=title;
+  div.style.padding='8px';
+  div.style.borderRadius='8px';
+  div.style.background='#fef8e6';
+  div.style.cursor='pointer';
+  div.onmouseenter = ()=>div.style.background='#fff6c6';
+  div.onmouseleave = ()=>div.style.background='#fef8e6';
+  div.onclick = ()=>{
+    messagesEl.innerHTML=''; 
+    convTitle.textContent=title;
+    alert('Conversation loaded (simulate loading messages)');
+  }
+  conversationsList.appendChild(div);
+  conversations.push(title);
+}
+
+newChatBtn.onclick = () => {
+  messagesEl.innerHTML='';
+  convTitle.textContent='New Chat';
+  const newTitle='Chat '+(conversations.length+1);
+  addConversation(newTitle);
+}
+
+// Load initial conversation
+addConversation('Welcome Chat');
+</script>
+<!-- ========================
+     POLISHED ANIMATIONS & CHAT STORAGE
+======================== -->
+<style>
+/* ========================
+   MESSAGE ANIMATIONS
+======================== */
+.msg {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.4s forwards;
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Smooth scrolling */
+.chat-window {
+  scroll-behavior: smooth;
+}
+</style>
+
+<script>
+// ========================
+// CHAT PERSISTENCE USING LOCALSTORAGE
+// ========================
+const STORAGE_KEY = 'bulbai_conversations';
+
+// Load conversations from storage
+function loadConversations(){
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if(saved){
+    const data = JSON.parse(saved);
+    conversations = data.map(c => c.title);
+    conversationsList.innerHTML='';
+    data.forEach(c=>{
+      addConversation(c.title);
+      c.messages.forEach(m=>{
+        const msgEl = createMessageElement(m.content, m.type);
+        messagesEl.appendChild(msgEl);
+      });
+    });
+  }
+}
+
+// Save conversations to storage
+function saveConversation(title){
+  let data = JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');
+  const messagesArray = Array.from(messagesEl.children)
+    .filter(el=>el.classList.contains('msg'))
+    .map(el=>{
+      return {content:el.textContent,type:el.classList.contains('user')?'user':'bot'};
+    });
+  const existing = data.find(d=>d.title===title);
+  if(existing){
+    existing.messages = messagesArray;
+  }else{
+    data.push({title:title,messages:messagesArray});
+  }
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+
+// Save on sending message
+sendBtn.onclick = () => {
+  if(promptEl.value.trim()!==''){
+    sendMessage(promptEl.value);
+    saveConversation(convTitle.textContent);
+    promptEl.value='';
+  }
+};
+
+// Save when switching chats
+function addConversation(title){
+  const div = document.createElement('div');
+  div.textContent=title;
+  div.style.padding='8px';
+  div.style.borderRadius='8px';
+  div.style.background='#fef8e6';
+  div.style.cursor='pointer';
+  div.onmouseenter = ()=>div.style.background='#fff6c6';
+  div.onmouseleave = ()=>div.style.background='#fef8e6';
+  div.onclick = ()=>{
+    messagesEl.innerHTML='';
+    convTitle.textContent=title;
+    const data = JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');
+    const convo = data.find(d=>d.title===title);
+    if(convo){
+      convo.messages.forEach(m=>{
+        const msgEl = createMessageElement(m.content,m.type);
+        messagesEl.appendChild(msgEl);
+      });
+    }
+  }
+  conversationsList.appendChild(div);
+  conversations.push(title);
+}
+
+// Initial load
+loadConversations();
+
+// Auto-scroll when new message added
+const observer = new MutationObserver(()=>{messagesEl.scrollTop = messagesEl.scrollHeight;});
+observer.observe(messagesEl,{childList:true});
+
+</script>
+<!-- ========================
+     PROFILE MANAGEMENT & EXPORT/IMPORT
+======================== -->
+<style>
+/* ========================
+   PROFILE AVATAR
+======================== */
+.profile-section {
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom:16px;
+}
+.profile-section img {
+  width:48px;
+  height:48px;
+  border-radius:50%;
+  cursor:pointer;
+  transition:0.3s;
+}
+.profile-section img:hover {
+  transform:scale(1.1);
+}
+
+/* Export/Import buttons */
+.export-btn, .import-btn {
+  padding:8px 12px;
+  border-radius:8px;
+  cursor:pointer;
+  border:none;
+  background:#f7c948;
+  color:#2b2b2b;
+  font-weight:600;
+  transition:0.3s;
+}
+.export-btn:hover, .import-btn:hover {
+  background:#ffd86b;
+}
+</style>
+
+<!-- PROFILE SECTION -->
+<div class="profile-section">
+  <img id="userAvatar" src="https://i.ibb.co/2NwXcMz/lightbulb.png" alt="Avatar">
+  <div>
+    <div id="userName" style="font-weight:700;">User</div>
+    <input type="text" id="changeNameInput" placeholder="Change Name" style="padding:6px;border-radius:6px;border:1px solid #ccc;margin-top:4px;width:150px;">
+    <button id="changeNameBtn" class="export-btn" style="margin-top:4px;">Save Name</button>
+  </div>
+</div>
+
+<!-- Export/Import -->
+<div style="margin-top:16px;display:flex;gap:8px;">
+  <button id="exportConvsBtn" class="export-btn">Export Conversations</button>
+  <button id="importConvsBtn" class="import-btn">Import Conversations</button>
+  <input type="file" id="importFile" style="display:none;">
+</div>
+
+<script>
+// ========================
+// PROFILE MANAGEMENT
+// ========================
+const userAvatar = document.getElementById('userAvatar');
+const userName = document.getElementById('userName');
+const changeNameInput = document.getElementById('changeNameInput');
+const changeNameBtn = document.getElementById('changeNameBtn');
+
+changeNameBtn.onclick = () => {
+  const newName = changeNameInput.value.trim();
+  if(newName!==''){
+    userName.textContent = newName;
+    changeNameInput.value='';
+    alert('Username changed!');
+  }
+};
+
+// Change avatar
+userAvatar.onclick = () => {
+  const url = prompt('Enter avatar image URL:');
+  if(url){
+    userAvatar.src = url;
+  }
+};
+
+// ========================
+// EXPORT/IMPORT CONVERSATIONS
+// ========================
+const exportBtn = document.getElementById('exportConvsBtn');
+const importBtn = document.getElementById('importConvsBtn');
+const importFile = document.getElementById('importFile');
+
+exportBtn.onclick = () => {
+  const data = localStorage.getItem('bulbai_conversations');
+  if(data){
+    const blob = new Blob([data],{type:'application/json'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'BulbAI_Conversations.json';
+    a.click();
+  }else{
+    alert('No conversations to export');
+  }
+}
+
+importBtn.onclick = () => importFile.click();
+importFile.onchange = (e)=>{
+  const file = e.target.files[0];
+  if(file){
+    const reader = new FileReader();
+    reader.onload = function(ev){
+      localStorage.setItem('bulbai_conversations',ev.target.result);
+      loadConversations();
+      alert('Conversations imported!');
+    }
+    reader.readAsText(file);
+  }
+}
+</script>
+<!-- ========================
+     TYPING INDICATOR & MESSAGE ANIMATIONS
+======================== -->
+<style>
+/* Typing indicator animation */
+.typing {
+  display:flex;
+  gap:6px;
+  align-items:center;
+  background:rgba(0,0,0,0.05);
+  padding:8px 12px;
+  border-radius:12px;
+  width:max-content;
+  animation: pulse 1s infinite;
+}
+.typing span {
+  width:6px;
+  height:6px;
+  background:#f7c948;
+  border-radius:50%;
+  display:inline-block;
+  animation: bounce 1s infinite;
+}
+.typing span:nth-child(2) { animation-delay:0.2s; }
+.typing span:nth-child(3) { animation-delay:0.4s; }
+
+@keyframes bounce {
+  0%, 80%, 100% { transform: scale(0); }
+  40% { transform: scale(1); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity:0.8; }
+  50% { opacity:1; }
+}
+
+/* Smooth fade-in for images */
+.msg img.uploaded {
+  opacity:0;
+  transform:translateY(10px);
+  animation: fadeInUp 0.4s forwards;
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+/* Message bubble pop animation */
+.msg {
+  transform:scale(0.95);
+  opacity:0;
+  animation: popIn 0.25s forwards;
+}
+
+@keyframes popIn {
+  to {
+    transform:scale(1);
+    opacity:1;
+  }
+}
+</style>
+
+<script>
+// ========================
+// TYPING INDICATOR LOGIC
+// ========================
+const typingIndicator = document.createElement('div');
+typingIndicator.className='typing';
+typingIndicator.innerHTML='<span></span><span></span><span></span>';
+typingIndicator.style.margin='6px 0';
+
+function showTyping(){
+  messagesEl.appendChild(typingIndicator);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+}
+
+function hideTyping(){
+  if(messagesEl.contains(typingIndicator)){
+    messagesEl.removeChild(typingIndicator);
+  }
+}
+
+// Simulated AI response
+function sendMessage(text){
+  const msgEl = createMessageElement(text,'user');
+  messagesEl.appendChild(msgEl);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+
+  showTyping();
+  setTimeout(()=>{
+    hideTyping();
+    const botMsg = createMessageElement('This is BulbAI replying to: '+text,'bot');
+    messagesEl.appendChild(botMsg);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+    saveConversation(convTitle.textContent);
+  },1200+Math.random()*1000); // simulate typing delay
+}
+
+// Helper to create message elements
+function createMessageElement(text,type){
+  const div = document.createElement('div');
+  div.className='msg '+type;
+  div.textContent=text;
+  return div;
+}
+</script>

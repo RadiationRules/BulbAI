@@ -1,195 +1,166 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BulbAI</title>
-<style>
-:root{
-  --bg:#fff8e6;
-  --text:#1f1f1f;
-  --accent:#f7c948;
-  --bot-msg:#fff7e0;
-  --user-msg:#fff6c6;
-  --shadow:rgba(0,0,0,0.08);
-}
-[data-theme="dark"]{
-  --bg:#0f0d08;
-  --text:#efeae0;
-  --accent:#e6bd00;
-  --bot-msg:#171412;
-  --user-msg:#201b12;
-  --shadow:rgba(0,0,0,0.6);
-}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BulbAI - Your Smart Idea Assistant</title>
 
-html, body{
-  margin:0;
-  padding:0;
-  height:100%;
-  width:100%;
-  font-family:Inter,sans-serif;
-  background:var(--bg);
-  color:var(--text);
-  display:flex;
-  flex-direction:column;
-  overflow:hidden;
-}
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 
-body::before{
-  content:"";
-  position:fixed;
-  inset:0;
-  background:linear-gradient(270deg,#f7c948,#ffe37f,#f7c948,#ffe37f);
-  background-size:800% 800%;
-  z-index:-1;
-  animation:gradientBG 15s ease infinite;
-}
-@keyframes gradientBG{
-  0%{background-position:0% 50%;}
-  50%{background-position:100% 50%;}
-  100%{background-position:0% 50%;}
-}
+  <!-- Dialogflow Messenger -->
+  <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
 
-header{
-  height:60px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:var(--accent);
-  color:#2b2b2b;
-  font-size:24px;
-  font-weight:700;
-  box-shadow:0 4px 10px var(--shadow);
-  position:relative;
-  z-index:2;
-}
+  <style>
+    :root {
+      --bg-light: #fffef9;
+      --bg-dark: #0e0e0e;
+      --primary: #f7c948;
+      --text-light: #1c1c1c;
+      --text-dark: #f1f1f1;
+      --shadow: rgba(0,0,0,0.15);
+    }
 
-.theme-toggle{
-  position:absolute;
-  top:12px;
-  right:12px;
-  background:var(--bg);
-  border:none;
-  padding:8px 14px;
-  border-radius:12px;
-  font-weight:600;
-  cursor:pointer;
-  z-index:3;
-  transition:transform 0.2s ease;
-}
-.theme-toggle:hover{transform:scale(1.05);}
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-family: "Inter", sans-serif;
+      background: var(--bg-light);
+      color: var(--text-light);
+      transition: background 0.4s ease, color 0.4s ease;
+    }
 
-.avatar{
-  position:absolute;
-  top:12px;
-  left:12px;
-  width:45px;
-  height:45px;
-  border-radius:50%;
-  background:linear-gradient(135deg,var(--accent),#ffe37f);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:24px;
-  color:#2b2b2b;
-  box-shadow:0 4px 14px var(--shadow);
-  cursor:pointer;
-  z-index:3;
-}
-.avatar::before{content:"💡";}
+    body.dark {
+      background: var(--bg-dark);
+      color: var(--text-dark);
+    }
 
-main{
-  flex:1;
-  position:relative;
-  width:100%;
-  height:100%;
-}
+    header {
+      text-align: center;
+      padding: 20px;
+      animation: fadeInDown 0.8s ease;
+    }
 
-df-messenger{
-  width:100%;
-  height:100%;
-  border-radius:0 !important;
-  --df-messenger-bot-message: var(--bot-msg);
-  --df-messenger-user-message: var(--user-msg);
-  --df-messenger-font-color: var(--text);
-  --df-messenger-send-icon: var(--accent);
-}
+    header h1 {
+      margin: 0;
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
 
-/* Slide-in messages */
-df-messenger::part(bot-message), df-messenger::part(user-message){
-  border-radius:16px;
-  box-shadow:0 3px 10px var(--shadow);
-  animation:slideFade 0.4s ease forwards;
-}
-@keyframes slideFade{
-  from{opacity:0;transform:translateY(20px);}
-  to{opacity:1;transform:translateY(0);}
-}
+    header p {
+      margin: 6px 0 0;
+      font-size: 1.1rem;
+      opacity: 0.8;
+    }
 
-.quick-replies{
-  position:absolute;
-  bottom:90px;
-  left:50%;
-  transform:translateX(-50%);
-  display:flex;
-  flex-wrap:wrap;
-  gap:10px;
-  z-index:4;
-}
-.quick-replies button{
-  background:var(--accent);
-  color:#2b2b2b;
-  border:none;
-  padding:8px 16px;
-  border-radius:20px;
-  cursor:pointer;
-  font-weight:600;
-  box-shadow:0 3px 8px var(--shadow);
-  transition:transform 0.2s ease;
-}
-.quick-replies button:hover{transform:scale(1.05);}
+    .avatar {
+      width: 80px;
+      height: 80px;
+      margin: 20px auto;
+      background: var(--primary);
+      border-radius: 50%;
+      box-shadow: 0 6px 20px var(--shadow);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 36px;
+      font-weight: bold;
+      color: #fff;
+      animation: bounce 2s infinite;
+    }
 
-/* Fade-in */
-@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
-</style>
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+
+    main {
+      flex: 1;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    df-messenger {
+      --df-messenger-bot-message: #fdf6d6;
+      --df-messenger-user-message: #f7c948;
+      --df-messenger-font-color: #000;
+      --df-messenger-chat-background-color: #fffef9;
+      --df-messenger-send-icon: var(--primary);
+      width: 100%;
+      height: 80vh;
+      max-width: 900px;
+      border-radius: 16px;
+      box-shadow: 0 8px 25px var(--shadow);
+      overflow: hidden;
+      animation: fadeInUp 0.8s ease;
+    }
+
+    footer {
+      padding: 12px;
+      font-size: 0.8rem;
+      opacity: 0.6;
+      text-align: center;
+    }
+
+    #themeToggle {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      background: var(--primary);
+      border: none;
+      border-radius: 50%;
+      width: 42px;
+      height: 42px;
+      cursor: pointer;
+      box-shadow: 0 6px 12px var(--shadow);
+      font-size: 20px;
+    }
+
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </head>
-<body data-theme="light">
+<body>
+  <button id="themeToggle">💡</button>
+  <header>
+    <div class="avatar">💡</div>
+    <h1>BulbAI</h1>
+    <p>Your bright idea assistant, powered by AI.</p>
+  </header>
 
-<header>BulbAI</header>
-<div class="avatar"></div>
-<button class="theme-toggle" id="themeToggle">Dark/Light</button>
+  <main>
+    <!-- Replace agent-id with your own Dialogflow agent ID -->
+    <df-messenger
+      chat-title="BulbAI"
+      agent-id="c3f3c818-72e2-4b69-bc4d-78c3f910fc11"
+      language-code="en">
+    </df-messenger>
+  </main>
 
-<main>
-  <df-messenger
-    chat-title="BulbAI"
-    agent-id="c3f3c818-72e2-4b69-bc4d-78c3f910fc11"
-    language-code="en"
-    chat-icon="https://link-to-your-icon.png"
-    primary-color="#f7c948"
-    accent-color="#ffe37f"
-  ></df-messenger>
+  <footer>
+    © 2025 BulbAI – Powered by Dialogflow
+  </footer>
 
-  <div class="quick-replies">
-    <button onclick="sendQuick('Hello')">Hello</button>
-    <button onclick="sendQuick('Help me')">Help me</button>
-    <button onclick="sendQuick('Tell me a joke')">Tell me a joke</button>
-  </div>
-</main>
-
-<script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
-<script>
-const body = document.body;
-document.getElementById('themeToggle').addEventListener('click', ()=>{
-  body.dataset.theme = body.dataset.theme === 'light' ? 'dark' : 'light';
-});
-
-function sendQuick(text){
-  const df = document.querySelector('df-messenger');
-  if(df && df.shadowRoot){
-    const input = df.shadowRoot.querySelector('df-messenger-chat');
-    if(input) input.send(text);
-  }
-}
-</script>
+  <script>
+    // Toggle dark mode
+    const toggle = document.getElementById("themeToggle");
+    toggle.addEventListener("click", () => {
+      document.body.classList.toggle("dark");
+    });
+  </script>
 </body>
 </html>

@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BulbAI - Your AI Assistant</title>
+<title>BulbAI - Your Smart AI Assistant</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#fff8e6; --panel:#fff2c9; --panel2:#fff0b8; --accent:#f7c948; 
-  --text:#1f1f1f; --muted:#6b6b6b; --shadow:rgba(0,0,0,0.08);
+  --text:#1f1f1f; --muted:#6b6b6b; --shadow:rgba(0,0,0,0.08); --success:#07a05b; --danger:#d9534f;
 }
 [data-theme="dark"]{
   --bg:#0f0d08; --panel:#171412; --panel2:#201b12; --accent:#e6bd00;
@@ -51,8 +51,14 @@ header button:hover{transform:scale(1.05);}
 .login-box button{padding:0.75rem;border-radius:10px;border:none;cursor:pointer;font-weight:700;transition:0.3s;}
 .google-btn{background:#4285f4;color:#fff;display:flex;align-items:center;justify-content:center;gap:0.5rem;}
 .google-btn img{height:20px;}
-@keyframes fadeIn{from{opacity:0;transform:scale(0.95);}to{opacity:1;transform:scale(1);}}
+.settings-panel{position:absolute;top:0;right:-350px;width:300px;height:100%;background:var(--panel);box-shadow:-4px 0 12px var(--shadow);padding:1rem;display:flex;flex-direction:column;gap:1rem;transition:right 0.4s;}
+.settings-panel.active{right:0;}
+.settings-panel h2{margin-bottom:0.5rem;}
+.settings-panel button{padding:0.5rem;border-radius:8px;border:none;background:var(--accent);cursor:pointer;transition:0.3s;}
+.settings-panel button:hover{transform:scale(1.05);}
 img.uploaded{max-width:200px;border-radius:8px;border:1px solid rgba(0,0,0,0.05);}
+footer{padding:0.5rem;text-align:center;color:var(--muted);}
+@keyframes fadeIn{from{opacity:0;transform:scale(0.95);}to{opacity:1;transform:scale(1);}}
 @media(max-width:768px){.app{grid-template-columns:1fr;}.sidebar{order:2;max-height:30vh;}.main{order:1;}}
 </style>
 </head>
@@ -74,6 +80,7 @@ img.uploaded{max-width:200px;border-radius:8px;border:1px solid rgba(0,0,0,0.05)
     <div class="profile-panel">
       <input type="text" id="profileName" placeholder="Your Name">
       <button id="saveProfileBtn">Save Profile</button>
+      <button id="openSettingsBtn">Settings ⚙️</button>
     </div>
   </aside>
 
@@ -86,6 +93,20 @@ img.uploaded{max-width:200px;border-radius:8px;border:1px solid rgba(0,0,0,0.05)
       <button id="uploadBtn">📷</button>
     </div>
   </main>
+</div>
+
+<div class="settings-panel" id="settingsPanel">
+  <h2>Settings</h2>
+  <label>Theme:</label>
+  <button id="settingsThemeToggle">Toggle Theme</button>
+  <label>Profile Name:</label>
+  <input type="text" id="settingsProfileName">
+  <button id="settingsSaveProfile">Save Profile</button>
+  <label>Clear Chat:</label>
+  <button id="clearChatBtn">Clear All Messages</button>
+  <label>Export Chat:</label>
+  <button id="exportChatBtn">Export</button>
+  <button id="closeSettingsBtn">Close</button>
 </div>
 
 <div class="login-screen" id="loginScreen">
@@ -101,13 +122,14 @@ img.uploaded{max-width:200px;border-radius:8px;border:1px solid rgba(0,0,0,0.05)
   </div>
 </div>
 
-<footer>© 2025 BulbAI. All Rights Reserved.</footer>
+<footer>© 2025 BulbAI</footer>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-analytics.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+import { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
 
+// Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyCGFij1pFUVNFP63QHxEq619c9jPnskzxY",
   authDomain: "bulbai-21f09.firebaseapp.com",
@@ -121,83 +143,119 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const auth = getAuth(app);
-const provider = new GoogleAuthProvider();
 
 // Elements
-const googleBtn = document.getElementById('googleBtn');
 const loginScreen = document.getElementById('loginScreen');
-const messagesDiv = document.getElementById('messages');
-const inputMsg = document.getElementById('inputMsg');
-const sendBtn = document.getElementById('sendBtn');
-const themeToggle = document.getElementById('themeToggle');
-const newChatBtn = document.getElementById('newChatBtn');
-const conversationsList = document.getElementById('conversationsList');
-const fileInput = document.getElementById('fileInput');
-const uploadBtn = document.getElementById('uploadBtn');
-
+const googleBtn = document.getElementById('googleBtn');
+const emailSignInBtn = document.getElementById('emailSignInBtn');
+const emailSignUpBtn = document.getElementById('emailSignUpBtn');
 const emailInput = document.getElementById('emailInput');
 const passwordInput = document.getElementById('passwordInput');
-const signInBtn = document.getElementById('emailSignInBtn');
-const signUpBtn = document.getElementById('emailSignUpBtn');
 
+const themeToggle = document.getElementById('themeToggle');
+const settingsThemeToggle = document.getElementById('settingsThemeToggle');
+const newChatBtn = document.getElementById('newChatBtn');
+const conversationsList = document.getElementById('conversationsList');
+const messagesDiv = document.getElementById('messages');
+const sendBtn = document.getElementById('sendBtn');
+const inputMsg = document.getElementById('inputMsg');
 const profileName = document.getElementById('profileName');
 const saveProfileBtn = document.getElementById('saveProfileBtn');
+const settingsPanel = document.getElementById('settingsPanel');
+const openSettingsBtn = document.getElementById('openSettingsBtn');
+const closeSettingsBtn = document.getElementById('closeSettingsBtn');
+const settingsProfileName = document.getElementById('settingsProfileName');
+const settingsSaveProfile = document.getElementById('settingsSaveProfile');
+const clearChatBtn = document.getElementById('clearChatBtn');
+const uploadBtn = document.getElementById('uploadBtn');
+const fileInput = document.getElementById('fileInput');
+const exportChatBtn = document.getElementById('exportChatBtn');
 
-// Authentication
-googleBtn.onclick = ()=> signInWithPopup(auth, provider).then(res=>{
-  loginScreen.style.display='none';
-  addMessage(`💡 Welcome, ${res.user.displayName}!`,'bot');
-}).catch(err=>alert(err.message));
-
-signInBtn.onclick = ()=> signInWithEmailAndPassword(auth,emailInput.value,passwordInput.value)
-.then(u=>{loginScreen.style.display='none';addMessage(`💡 Welcome, ${u.user.email}!`,'bot');}).catch(err=>alert(err.message));
-
-signUpBtn.onclick = ()=> createUserWithEmailAndPassword(auth,emailInput.value,passwordInput.value)
-.then(u=>{loginScreen.style.display='none';addMessage(`💡 Account created: ${u.user.email}`,'bot');}).catch(err=>alert(err.message));
-
-onAuthStateChanged(auth,user=>{if(user){loginScreen.style.display='none';addMessage(`💡 Welcome back, ${user.displayName||user.email}!`,'bot');}});
-
-// Chat
-function addMessage(content,type='bot',imgSrc=''){
-  const msg=document.createElement('div');
-  msg.classList.add('msg',type);
-  if(imgSrc){const img=document.createElement('img');img.src=imgSrc;img.className='uploaded';msg.appendChild(img);}
-  msg.appendChild(document.createTextNode(content));
-  messagesDiv.appendChild(msg);
-  messagesDiv.scrollTop = messagesDiv.scrollHeight;
-}
-
-// Send
-sendBtn.onclick = ()=>{
-  const text=inputMsg.value.trim();if(!text)return;
-  addMessage(text,'user');inputMsg.value='';
-  setTimeout(()=>addMessage('💡 BulbAI reply here (AI integration pending)','bot'),1000+Math.random()*1000);
+// Auth
+googleBtn.onclick = ()=>{
+  const provider = new GoogleAuthProvider();
+  signInWithPopup(auth,provider)
+  .then(res=>loginScreen.style.display='none')
+  .catch(err=>alert(err.message));
 };
 
-// Image upload
-uploadBtn.onclick = ()=>fileInput.click();
-fileInput.onchange = ()=>{const file=fileInput.files[0];if(file){const reader=new FileReader();reader.onload=e=>addMessage('', 'user', e.target.result);reader.readAsDataURL(file);fileInput.value='';}}
+emailSignUpBtn.onclick = ()=>{
+  createUserWithEmailAndPassword(auth,emailInput.value,passwordInput.value)
+  .then(res=>loginScreen.style.display='none')
+  .catch(err=>alert(err.message));
+};
 
-// New chat
-newChatBtn.onclick = ()=>{
-  messagesDiv.innerHTML='';addMessage('💡 New chat started','bot');
-  // Optional: add to conversations list
-  const conv=document.createElement('div');conv.classList.add('conv');conv.textContent='Chat '+(conversationsList.children.length+1);
-  conversationsList.appendChild(conv);
-  conv.onclick = ()=>{messagesDiv.innerHTML='';addMessage(`💡 Loaded ${conv.textContent}`,'bot');}
+emailSignInBtn.onclick = ()=>{
+  signInWithEmailAndPassword(auth,emailInput.value,passwordInput.value)
+  .then(res=>loginScreen.style.display='none')
+  .catch(err=>alert(err.message));
 };
 
 // Theme toggle
 themeToggle.onclick = ()=>{
-  if(document.body.getAttribute('data-theme')==='light'){document.body.setAttribute('data-theme','dark');themeToggle.textContent='Light Mode';}
-  else{document.body.setAttribute('data-theme','light');themeToggle.textContent='Dark Mode';}
+  document.body.dataset.theme = document.body.dataset.theme==='light'?'dark':'light';
+  themeToggle.textContent = document.body.dataset.theme==='light'?'Dark Mode':'Light Mode';
+};
+settingsThemeToggle.onclick = ()=>themeToggle.click();
+
+// Chat messages
+const addMessage = (text, sender='bot')=>{
+  const div = document.createElement('div');
+  div.classList.add('msg',sender);
+  div.textContent = text;
+  messagesDiv.appendChild(div);
+  messagesDiv.scrollTop = messagesDiv.scrollHeight;
 };
 
-// Save profile
-saveProfileBtn.onclick = ()=>{
-  alert(`Profile saved: ${profileName.value}`); // Future: save to Firebase
+// Send message
+sendBtn.onclick = ()=>{
+  if(inputMsg.value.trim()==='') return;
+  addMessage(inputMsg.value,'user');
+  setTimeout(()=>addMessage("This is a sample AI response 💡",'bot'),600);
+  inputMsg.value='';
 };
 
+// New Chat
+newChatBtn.onclick = ()=>{
+  messagesDiv.innerHTML='';
+  const conv = document.createElement('div');
+  conv.classList.add('conv');
+  conv.textContent=`Conversation ${conversationsList.children.length+1}`;
+  conversationsList.appendChild(conv);
+  conv.onclick = ()=>{messagesDiv.innerHTML='';addMessage(`💡 Loaded ${conv.textContent}`,'bot');};
+};
+
+// Settings panel
+openSettingsBtn.onclick = ()=>settingsPanel.classList.add('active');
+closeSettingsBtn.onclick = ()=>settingsPanel.classList.remove('active');
+settingsSaveProfile.onclick = ()=>{alert(`Profile saved: ${settingsProfileName.value}`);};
+saveProfileBtn.onclick = ()=>{alert(`Profile saved: ${profileName.value}`);};
+
+// Clear chat
+clearChatBtn.onclick = ()=>messagesDiv.innerHTML='';
+
+// Upload image
+uploadBtn.onclick = ()=>fileInput.click();
+fileInput.onchange = ()=>{
+  const file = fileInput.files[0];
+  if(file){
+    const img = document.createElement('img');
+    img.src = URL.createObjectURL(file);
+    img.classList.add('uploaded');
+    messagesDiv.appendChild(img);
+  }
+};
+
+// Export chat
+exportChatBtn.onclick = ()=>{
+  let text = '';
+  messagesDiv.querySelectorAll('.msg').forEach(m=>text+=m.textContent+'\n');
+  const blob = new Blob([text],{type:'text/plain'});
+  const link = document.createElement('a');
+  link.href=URL.createObjectURL(blob);
+  link.download='chat.txt';
+  link.click();
+};
 </script>
 </body>
 </html>

@@ -3,62 +3,54 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BulbAI - Your Smart AI Assistant</title>
+<title>BulbAI</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-:root{
-  --bg:#fff8e6; --panel:#fff2c9; --panel2:#fff0b8; --accent:#f7c948; 
-  --text:#1f1f1f; --muted:#6b6b6b; --shadow:rgba(0,0,0,0.08); --success:#07a05b; --danger:#d9534f;
+:root {
+  --bg:#fff; --panel:#f7f7f8; --accent:#f7c948; --text:#1f1f1f; --muted:#6b6b6b; --shadow:rgba(0,0,0,0.1);
 }
-[data-theme="dark"]{
-  --bg:#0f0d08; --panel:#171412; --panel2:#201b12; --accent:#e6bd00;
-  --text:#efeae0; --muted:#bfb6a1; --shadow:rgba(0,0,0,0.6);
+[data-theme="dark"] {
+  --bg:#0f0f0f; --panel:#1a1a1a; --accent:#e6bd00; --text:#f5f5f5; --muted:#bfbfbf; --shadow:rgba(0,0,0,0.6);
 }
-*{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Inter',sans-serif;height:100vh;display:flex;flex-direction:column;background:var(--bg);color:var(--text);}
-header{display:flex;align-items:center;justify-content:space-between;padding:1rem;background:var(--panel);box-shadow:0 4px 12px var(--shadow);}
-header h1{display:flex;align-items:center;gap:0.5rem;font-size:1.6rem;font-weight:700;}
-header h1 span{font-weight:800;}
-header button{padding:0.5rem 1rem;border:none;border-radius:8px;background:var(--accent);color:#1f1f1f;font-weight:600;cursor:pointer;transition:0.3s;}
-header button:hover{transform:scale(1.05);}
-.app{display:grid;grid-template-columns:280px 1fr;flex:1;overflow:hidden;gap:1rem;}
-.sidebar{background:var(--panel);padding:1rem;border-radius:12px;display:flex;flex-direction:column;gap:1rem;overflow-y:auto;box-shadow:0 6px 18px var(--shadow);}
-.brand{display:flex;align-items:center;gap:0.5rem;}
-.logo{width:40px;height:40px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:800;color:#2b2b2b;font-size:18px;}
-.sidebar button{padding:0.5rem;border:none;border-radius:8px;background:var(--accent);cursor:pointer;font-weight:600;transition:0.3s;}
-.sidebar button:hover{transform:scale(1.05);}
-.conversations{display:flex;flex-direction:column;gap:0.5rem;overflow-y:auto;max-height:50vh;}
-.conv{padding:0.5rem;border-radius:8px;cursor:pointer;transition:0.2s;background:linear-gradient(90deg, rgba(0,0,0,0.02), transparent);}
-.conv:hover{background:linear-gradient(90deg, rgba(0,0,0,0.05), transparent);}
-.conv.active{outline:2px solid var(--accent);}
-.main{display:flex;flex-direction:column;gap:0.5rem;background:var(--panel2);border-radius:12px;padding:1rem;overflow:hidden;position:relative;}
-#messages{display:flex;flex-direction:column;gap:0.5rem;overflow-y:auto;flex:1;}
-.msg{max-width:70%;padding:0.75rem 1rem;border-radius:1rem;box-shadow:0 2px 8px rgba(0,0,0,0.05);opacity:0;transform:translateY(20px);animation:fadeUp 0.4s forwards;}
-.msg.user{align-self:flex-end;background:linear-gradient(90deg,#ffe37f,#fff6c6);}
-.msg.bot{align-self:flex-start;background:linear-gradient(90deg,#fff7e0,#fff);}
-@keyframes fadeUp{to{opacity:1;transform:translateY(0);}}
-#composer{display:flex;gap:0.5rem;margin-top:0.5rem;}
-#composer textarea{flex:1;padding:0.75rem;border-radius:10px;border:1px solid rgba(0,0,0,0.1);resize:none;}
-#composer button{padding:0.75rem 1rem;border:none;border-radius:10px;background:var(--accent);cursor:pointer;font-weight:700;transition:0.3s;}
-#composer button:hover{transform:scale(1.05);}
-.profile-panel{display:flex;flex-direction:column;gap:0.5rem;margin-top:1rem;}
-.profile-panel input{padding:0.5rem;border-radius:8px;border:1px solid rgba(0,0,0,0.1);}
-.profile-panel button{padding:0.5rem;border-radius:8px;border:none;background:var(--accent);cursor:pointer;transition:0.3s;}
-.profile-panel button:hover{transform:scale(1.05);}
-.login-screen{position:absolute;inset:0;background:rgba(0,0,0,0.6);display:flex;justify-content:center;align-items:center;backdrop-filter:blur(4px);z-index:50;}
-.login-box{background:var(--panel);padding:2rem;border-radius:12px;display:flex;flex-direction:column;gap:1rem;min-width:280px;animation:fadeIn 0.5s ease forwards;}
-.login-box input{padding:0.75rem;border-radius:10px;border:1px solid rgba(0,0,0,0.1);}
-.login-box button{padding:0.75rem;border-radius:10px;border:none;cursor:pointer;font-weight:700;transition:0.3s;}
-.google-btn{background:#4285f4;color:#fff;display:flex;align-items:center;justify-content:center;gap:0.5rem;}
-.google-btn img{height:20px;}
-.settings-panel{position:absolute;top:0;right:-350px;width:300px;height:100%;background:var(--panel);box-shadow:-4px 0 12px var(--shadow);padding:1rem;display:flex;flex-direction:column;gap:1rem;transition:right 0.4s;}
-.settings-panel.active{right:0;}
-.settings-panel h2{margin-bottom:0.5rem;}
-.settings-panel button{padding:0.5rem;border-radius:8px;border:none;background:var(--accent);cursor:pointer;transition:0.3s;}
-.settings-panel button:hover{transform:scale(1.05);}
-img.uploaded{max-width:200px;border-radius:8px;border:1px solid rgba(0,0,0,0.05);}
-footer{padding:0.5rem;text-align:center;color:var(--muted);}
-@keyframes fadeIn{from{opacity:0;transform:scale(0.95);}to{opacity:1;transform:scale(1);}}
+* {margin:0;padding:0;box-sizing:border-box;}
+body {font-family:'Inter',sans-serif;height:100vh;display:flex;background:var(--bg);color:var(--text);}
+header {display:flex;align-items:center;justify-content:space-between;padding:1rem;background:var(--panel);box-shadow:0 2px 8px var(--shadow);}
+header h1 {font-size:1.5rem;font-weight:700;display:flex;align-items:center;gap:0.5rem;}
+header button {padding:0.5rem 1rem;border:none;border-radius:8px;background:var(--accent);cursor:pointer;transition:0.3s;}
+header button:hover {transform:scale(1.05);}
+.app {display:grid;grid-template-columns:300px 1fr;flex:1;overflow:hidden;}
+.sidebar {background:var(--panel);padding:1rem;display:flex;flex-direction:column;gap:1rem;overflow-y:auto;}
+.brand {display:flex;align-items:center;gap:0.5rem;margin-bottom:1rem;}
+.logo {width:40px;height:40px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:800;color:#2b2b2b;}
+.sidebar button {padding:0.5rem;border:none;border-radius:8px;background:var(--accent);cursor:pointer;transition:0.3s;}
+.sidebar button:hover {transform:scale(1.05);}
+.conversations {display:flex;flex-direction:column;gap:0.5rem;overflow-y:auto;flex:1;}
+.conv {padding:0.5rem;border-radius:8px;cursor:pointer;transition:0.2s;background:linear-gradient(90deg, rgba(0,0,0,0.02), transparent);}
+.conv:hover {background:linear-gradient(90deg, rgba(0,0,0,0.05), transparent);}
+.conv.active {outline:2px solid var(--accent);}
+.main {display:flex;flex-direction:column;gap:0.5rem;background:var(--bg);padding:1rem;overflow:hidden;position:relative;}
+#messages {flex:1;display:flex;flex-direction:column;gap:0.5rem;overflow-y:auto;padding-right:0.5rem;}
+.msg {max-width:70%;padding:0.75rem 1rem;border-radius:1rem;box-shadow:0 2px 8px rgba(0,0,0,0.05);opacity:0;transform:translateY(20px);animation:fadeUp 0.3s forwards;}
+.msg.user {align-self:flex-end;background:linear-gradient(90deg,#ffe37f,#fff6c6);}
+.msg.bot {align-self:flex-start;background:linear-gradient(90deg,#fff7e0,#fff);}
+@keyframes fadeUp {to {opacity:1;transform:translateY(0);}}
+#composer {display:flex;gap:0.5rem;margin-top:0.5rem;}
+#composer textarea {flex:1;padding:0.75rem;border-radius:10px;border:1px solid rgba(0,0,0,0.1);resize:none;}
+#composer button {padding:0.75rem 1rem;border:none;border-radius:10px;background:var(--accent);cursor:pointer;font-weight:700;transition:0.3s;}
+#composer button:hover {transform:scale(1.05);}
+.settings-panel {position:absolute;top:0;right:-350px;width:300px;height:100%;background:var(--panel);box-shadow:-4px 0 12px var(--shadow);padding:1rem;display:flex;flex-direction:column;gap:1rem;transition:right 0.4s;z-index:10;}
+.settings-panel.active {right:0;}
+.settings-panel h2 {margin-bottom:0.5rem;}
+.settings-panel button {padding:0.5rem;border-radius:8px;border:none;background:var(--accent);cursor:pointer;transition:0.3s;}
+.settings-panel button:hover {transform:scale(1.05);}
+.login-screen {position:absolute;inset:0;background:rgba(0,0,0,0.6);display:flex;justify-content:center;align-items:center;backdrop-filter:blur(4px);z-index:50;}
+.login-box {background:var(--panel);padding:2rem;border-radius:12px;display:flex;flex-direction:column;gap:1rem;min-width:280px;animation:fadeIn 0.5s ease forwards;}
+.login-box input {padding:0.75rem;border-radius:10px;border:1px solid rgba(0,0,0,0.1);}
+.login-box button {padding:0.75rem;border-radius:10px;border:none;cursor:pointer;font-weight:700;transition:0.3s;}
+.google-btn {background:#4285f4;color:#fff;display:flex;align-items:center;justify-content:center;gap:0.5rem;}
+.google-btn img {height:20px;}
+img.uploaded {max-width:200px;border-radius:8px;border:1px solid rgba(0,0,0,0.05);}
+@keyframes fadeIn {from{opacity:0;transform:scale(0.95);}to{opacity:1;transform:scale(1);}}
 @media(max-width:768px){.app{grid-template-columns:1fr;}.sidebar{order:2;max-height:30vh;}.main{order:1;}}
 </style>
 </head>
@@ -77,11 +69,7 @@ footer{padding:0.5rem;text-align:center;color:var(--muted);}
     </div>
     <button id="newChatBtn">+ New Chat</button>
     <div class="conversations" id="conversationsList"></div>
-    <div class="profile-panel">
-      <input type="text" id="profileName" placeholder="Your Name">
-      <button id="saveProfileBtn">Save Profile</button>
-      <button id="openSettingsBtn">Settings ⚙️</button>
-    </div>
+    <button id="openSettingsBtn">Settings ⚙️</button>
   </aside>
 
   <main class="main">
@@ -97,15 +85,8 @@ footer{padding:0.5rem;text-align:center;color:var(--muted);}
 
 <div class="settings-panel" id="settingsPanel">
   <h2>Settings</h2>
-  <label>Theme:</label>
   <button id="settingsThemeToggle">Toggle Theme</button>
-  <label>Profile Name:</label>
-  <input type="text" id="settingsProfileName">
-  <button id="settingsSaveProfile">Save Profile</button>
-  <label>Clear Chat:</label>
-  <button id="clearChatBtn">Clear All Messages</button>
-  <label>Export Chat:</label>
-  <button id="exportChatBtn">Export</button>
+  <button id="clearChatBtn">Clear Chat</button>
   <button id="closeSettingsBtn">Close</button>
 </div>
 
@@ -129,7 +110,6 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebas
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-analytics.js";
 import { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
 
-// Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyCGFij1pFUVNFP63QHxEq619c9jPnskzxY",
   authDomain: "bulbai-21f09.firebaseapp.com",
@@ -159,103 +139,43 @@ const conversationsList = document.getElementById('conversationsList');
 const messagesDiv = document.getElementById('messages');
 const sendBtn = document.getElementById('sendBtn');
 const inputMsg = document.getElementById('inputMsg');
-const profileName = document.getElementById('profileName');
-const saveProfileBtn = document.getElementById('saveProfileBtn');
 const settingsPanel = document.getElementById('settingsPanel');
 const openSettingsBtn = document.getElementById('openSettingsBtn');
 const closeSettingsBtn = document.getElementById('closeSettingsBtn');
-const settingsProfileName = document.getElementById('settingsProfileName');
-const settingsSaveProfile = document.getElementById('settingsSaveProfile');
 const clearChatBtn = document.getElementById('clearChatBtn');
 const uploadBtn = document.getElementById('uploadBtn');
 const fileInput = document.getElementById('fileInput');
-const exportChatBtn = document.getElementById('exportChatBtn');
 
 // Auth
 googleBtn.onclick = ()=>{
   const provider = new GoogleAuthProvider();
-  signInWithPopup(auth,provider)
-  .then(res=>loginScreen.style.display='none')
-  .catch(err=>alert(err.message));
+  signInWithPopup(auth,provider).then(()=>loginScreen.style.display='none').catch(e=>alert(e.message));
 };
-
 emailSignUpBtn.onclick = ()=>{
-  createUserWithEmailAndPassword(auth,emailInput.value,passwordInput.value)
-  .then(res=>loginScreen.style.display='none')
-  .catch(err=>alert(err.message));
+  createUserWithEmailAndPassword(auth,emailInput.value,passwordInput.value).then(()=>loginScreen.style.display='none').catch(e=>alert(e.message));
 };
-
 emailSignInBtn.onclick = ()=>{
-  signInWithEmailAndPassword(auth,emailInput.value,passwordInput.value)
-  .then(res=>loginScreen.style.display='none')
-  .catch(err=>alert(err.message));
+  signInWithEmailAndPassword(auth,emailInput.value,passwordInput.value).then(()=>loginScreen.style.display='none').catch(e=>alert(e.message));
 };
 
 // Theme toggle
-themeToggle.onclick = ()=>{
-  document.body.dataset.theme = document.body.dataset.theme==='light'?'dark':'light';
-  themeToggle.textContent = document.body.dataset.theme==='light'?'Dark Mode':'Light Mode';
-};
-settingsThemeToggle.onclick = ()=>themeToggle.click();
+themeToggle.onclick = ()=>{document.body.dataset.theme=document.body.dataset.theme==='light'?'dark':'light';themeToggle.textContent=document.body.dataset.theme==='light'?'Dark Mode':'Light Mode';};
+settingsThemeToggle.onclick=()=>themeToggle.click();
 
-// Chat messages
-const addMessage = (text, sender='bot')=>{
-  const div = document.createElement('div');
-  div.classList.add('msg',sender);
-  div.textContent = text;
-  messagesDiv.appendChild(div);
-  messagesDiv.scrollTop = messagesDiv.scrollHeight;
-};
+// Chat functions
+const addMessage=(text,sender='bot')=>{const d=document.createElement('div');d.classList.add('msg',sender);d.textContent=text;messagesDiv.appendChild(d);messagesDiv.scrollTop=messagesDiv.scrollHeight;};
+sendBtn.onclick=()=>{if(inputMsg.value.trim()==='')return;addMessage(inputMsg.value,'user');setTimeout(()=>addMessage("💡 This is a sample AI response", 'bot'),600);inputMsg.value='';};
+newChatBtn.onclick=()=>{messagesDiv.innerHTML='';const c=document.createElement('div');c.classList.add('conv');c.textContent=`Conversation ${conversationsList.children.length+1}`;conversationsList.appendChild(c);c.onclick=()=>{messagesDiv.innerHTML='';addMessage(`💡 Loaded ${c.textContent}`,'bot');};};
 
-// Send message
-sendBtn.onclick = ()=>{
-  if(inputMsg.value.trim()==='') return;
-  addMessage(inputMsg.value,'user');
-  setTimeout(()=>addMessage("This is a sample AI response 💡",'bot'),600);
-  inputMsg.value='';
-};
+// Settings
+openSettingsBtn.onclick=()=>settingsPanel.classList.add('active');
+closeSettingsBtn.onclick=()=>settingsPanel.classList.remove('active');
+clearChatBtn.onclick=()=>messagesDiv.innerHTML='';
 
-// New Chat
-newChatBtn.onclick = ()=>{
-  messagesDiv.innerHTML='';
-  const conv = document.createElement('div');
-  conv.classList.add('conv');
-  conv.textContent=`Conversation ${conversationsList.children.length+1}`;
-  conversationsList.appendChild(conv);
-  conv.onclick = ()=>{messagesDiv.innerHTML='';addMessage(`💡 Loaded ${conv.textContent}`,'bot');};
-};
-
-// Settings panel
-openSettingsBtn.onclick = ()=>settingsPanel.classList.add('active');
-closeSettingsBtn.onclick = ()=>settingsPanel.classList.remove('active');
-settingsSaveProfile.onclick = ()=>{alert(`Profile saved: ${settingsProfileName.value}`);};
-saveProfileBtn.onclick = ()=>{alert(`Profile saved: ${profileName.value}`);};
-
-// Clear chat
-clearChatBtn.onclick = ()=>messagesDiv.innerHTML='';
-
-// Upload image
-uploadBtn.onclick = ()=>fileInput.click();
-fileInput.onchange = ()=>{
-  const file = fileInput.files[0];
-  if(file){
-    const img = document.createElement('img');
-    img.src = URL.createObjectURL(file);
-    img.classList.add('uploaded');
-    messagesDiv.appendChild(img);
-  }
-};
-
-// Export chat
-exportChatBtn.onclick = ()=>{
-  let text = '';
-  messagesDiv.querySelectorAll('.msg').forEach(m=>text+=m.textContent+'\n');
-  const blob = new Blob([text],{type:'text/plain'});
-  const link = document.createElement('a');
-  link.href=URL.createObjectURL(blob);
-  link.download='chat.txt';
-  link.click();
-};
+// Image upload
+uploadBtn.onclick=()=>fileInput.click();
+fileInput.onchange=()=>{const f=fileInput.files[0];if(f){const img=document.createElement('img');img.src=URL.createObjectURL(f);img.classList.add('uploaded');messagesDiv.appendChild(img);messagesDiv.scrollTop=messagesDiv.scrollHeight;}};
 </script>
+
 </body>
 </html>

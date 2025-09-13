@@ -3,15 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BulbAI</title>
 <meta name="google-site-verification" content="89T27xrgDiNqC6Y5qkq2iwNjI6q4r4NjREIv2DMMjZs" />
+<title>BulbAI</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 :root {
  --bg: #ffffff;
  --panel: #ffffff;
  --accent: #f7c948;
- --accent-dark: #e6bd00;
  --text: #1f1f1f;
  --muted: #6b6b6b;
  --shadow: rgba(0,0,0,0.1);
@@ -60,8 +59,8 @@ a:hover{text-decoration:underline;}
  display:flex; justify-content:center; align-items:center; gap:0.5rem;transition:0.3s;
 }
 .button:hover{transform:scale(1.03);}
-.google-btn{background:#fff;border:1px solid #ddd;color:#000;display:flex;justify-content:center;align-items:center;}
-.google-btn img{height:20px;width:20px;margin-right:8px;}
+.google-btn{background:#fff;border:1px solid #ddd;color:#000;}
+.google-btn img{height:20px;width:20px;}
 .divider{position:relative;color:var(--muted);margin:0.5rem 0;}
 .divider::before, .divider::after{
  content:"";
@@ -75,73 +74,12 @@ a:hover{text-decoration:underline;}
 .divider::after{right:0;}
 .tryBtn{background:none;border:none;color:var(--accent);font-weight:700;text-decoration:underline;cursor:pointer;}
 
-/* MAIN APP */
-#mainApp{
+/* CHAT CONTAINER */
+#chatContainer{
  display:none;
- grid-template-columns:1fr;
+ width:100%;
  height:100vh;
- width:100%;
 }
-.main{
- display:flex;
- flex-direction:column;
- height:100%;
- width:100%;
- padding:0;
-}
-.topbar{
- display:flex;justify-content:space-between;align-items:center;
- padding:16px;
- background:var(--panel);
- border-bottom:1px solid #ddd;
-}
-.chat-window{
- flex:1;
- background:#fef8e6;
- padding:16px;
- overflow:auto;
- display:flex;
- flex-direction:column;
- gap:12px;
- scroll-behavior:smooth;
-}
-.composer{
- display:flex;
- gap:8px;
- align-items:center;
- padding:8px 16px;
- background:var(--panel);
- border-top:1px solid #ddd;
-}
-.composer input{
- flex:1;padding:12px;border-radius:12px;border:1px solid rgba(0,0,0,0.1);
-}
-.msg.user{
- background:linear-gradient(90deg,#ffe37f,#fff6c6);
- align-self:flex-end;
- padding:10px 14px;
- border-radius:14px;
- max-width:70%;
- word-wrap:break-word;
-}
-.msg.bot{
- background:linear-gradient(90deg,#fff7e0,#fff);
- align-self:flex-start;
- padding:10px 14px;
- border-radius:14px;
- max-width:70%;
- word-wrap:break-word;
-}
-
-/* PROFILE DROPDOWN */
-#userProfile{width:40px;height:40px;border-radius:50%;cursor:pointer;}
-#profileMenu{display:none;position:absolute;top:50px;right:16px;background:var(--panel);border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,0.2);overflow:hidden;min-width:160px;z-index:1000;}
-#profileMenu button{width:100%;border:none;padding:10px;background:none;cursor:pointer;text-align:left;}
-#profileMenu button:hover{background:var(--accent);color:#2b2b2b;}
-
-/* DARK MODE */
-body.dark-mode{--bg:#1f1f1f;--panel:#2b2b2b;--text:#f0f0f0;--accent:#f7c948;}
-body.dark-mode .chat-window{background:#2b2b2b;}
 </style>
 </head>
 <body>
@@ -156,153 +94,44 @@ body.dark-mode .chat-window{background:#2b2b2b;}
  <div class="login-container">
    <h1>💡 BulbAI</h1>
    <p>Sign in to continue</p>
-   <button id="googleSignInBtn" class="button google-btn">
-     <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google"> Sign in with Google
-   </button>
-   <div class="divider">OR</div>
-   <div class="input-group">
-     <input type="email" id="emailInput" placeholder="Email">
-     <input type="password" id="passwordInput" placeholder="Password">
-   </div>
-   <button id="emailSignInBtn" class="button">Sign In</button>
-   <button id="emailSignUpBtn" class="button">Sign Up</button>
-   <button id="tryBtn" class="tryBtn">Try it out</button>
+   <button id="tryBtn" class="tryBtn">Try it now</button>
  </div>
 </div>
 
-<!-- MAIN APP -->
-<div id="mainApp">
- <div class="main">
-   <div class="topbar">
-     <div id="convTitle">AI Chat</div>
-     <img id="userProfile" src="" alt="Profile">
-   </div>
-   <div id="messages" class="chat-window"></div>
-   <div class="composer">
-     <input id="prompt" placeholder="Type a message..." />
-     <button id="sendBtn" class="button">Send</button>
-   </div>
- </div>
-</div>
+<!-- CHAT CONTAINER -->
+<div id="chatContainer"></div>
 
-<!-- PROFILE DROPDOWN -->
-<div id="profileMenu">
- <button id="profileToggleTheme">Toggle Dark/Light</button>
- <button id="profileClearChats">Clear Conversations</button>
- <button id="signOutBtn">Sign Out</button>
-</div>
-
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
-
-// Firebase config
-const firebaseConfig = {
- apiKey: "AIzaSyCGFij1pFUVNFP63QHxEq619c9jPnskzxY",
- authDomain: "bulbai-21f09.firebaseapp.com",
- projectId: "bulbai-21f09",
- storageBucket: "bulbai-21f09.firebasestorage.app",
- messagingSenderId: "366775652166",
- appId: "1:366775652166:web:22db16f4f87f9a60625f47",
- measurementId: "G-G09FQQ53XP"
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-
+<script>
+// Login / Try Now
 const loginScreen = document.getElementById('loginScreen');
-const mainApp = document.getElementById('mainApp');
-const googleSignInBtn = document.getElementById('googleSignInBtn');
-const tryBtn = document.getElementById('tryBtn');
-const userProfile = document.getElementById('userProfile');
-const profileMenu = document.getElementById('profileMenu');
-const profileToggleTheme = document.getElementById('profileToggleTheme');
-const profileClearChats = document.getElementById('profileClearChats');
-const signOutBtn = document.getElementById('signOutBtn');
+const chatContainer = document.getElementById('chatContainer');
 
-auth.onAuthStateChanged(user=>{
- if(user){
-   loginScreen.style.display='none';
-   mainApp.style.display='flex';
-   userProfile.src = user.photoURL || 'https://upload.wikimedia.org/wikipedia/commons/4/4a/Logo_2013_Google.png';
- }
-});
+document.getElementById('tryBtn').onclick = () => {
+ loginScreen.style.display = 'none';
+ chatContainer.style.display = 'block';
 
-// Google login
-googleSignInBtn.onclick = async ()=>{
- const provider = new GoogleAuthProvider();
- try{
-   await signInWithPopup(auth,provider);
- }catch(e){alert(e.message);}
-}
-
-// Try button
-tryBtn.onclick = ()=>{
- loginScreen.style.display='none';
- mainApp.style.display='flex';
-}
-
-// Profile menu
-userProfile.onclick = ()=> profileMenu.style.display = profileMenu.style.display==='block'?'none':'block';
-window.onclick = e=>{
- if(!userProfile.contains(e.target) && !profileMenu.contains(e.target)){
-   profileMenu.style.display='none';
- }
-}
-profileToggleTheme.onclick = ()=>document.body.classList.toggle('dark-mode');
-profileClearChats.onclick = ()=>document.getElementById('messages').innerHTML='';
-signOutBtn.onclick = async ()=>{await signOut(auth);location.reload();}
-
-// Chat handling
-const messages = document.getElementById('messages');
-const sendBtn = document.getElementById('sendBtn');
-const prompt = document.getElementById('prompt');
-
-async function sendMessageToChatbase(message){
- const apiKey = "yato30hkcyj96s3whclhywxppb44fuf5"; // Chatbase key
- try{
-   const res = await fetch("https://api.chatbase.co/v1/query",{
-     method:"POST",
-     headers:{
-       "Content-Type":"application/json",
-       "Authorization": `Bearer ${apiKey}`
-     },
-     body:JSON.stringify({
-       model:"gpt-3.5-turbo",
-       messages:[{role:"user", content:message}],
-       max_tokens:400
+ // Load Chatbase widget
+ (function(){
+   if(!window.chatbase||window.chatbase("getState")!=="initialized"){
+     window.chatbase=(...args)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(args)};
+     window.chatbase=new Proxy(window.chatbase,{
+       get(target,prop){
+         if(prop==="q"){return target.q}
+         return(...args)=>target(prop,...args)
+       }
      })
-   });
-   const data = await res.json();
-   return data.choices?.[0]?.message?.content || "No response";
- }catch(e){
-   return "Error: failed to get response.";
- }
-}
-
-async function handleSend(){
- if(!prompt.value.trim()) return;
- const userMsg = document.createElement("div");
- userMsg.className="msg user";
- userMsg.textContent=prompt.value;
- messages.appendChild(userMsg);
- messages.scrollTop = messages.scrollHeight;
-
- const response = await sendMessageToChatbase(prompt.value);
-
- const botMsg = document.createElement("div");
- botMsg.className="msg bot";
- botMsg.textContent=response;
- messages.appendChild(botMsg);
- messages.scrollTop = messages.scrollHeight;
-
- prompt.value="";
-}
-
-sendBtn.onclick = handleSend;
-prompt.addEventListener("keypress", e=>{
- if(e.key==="Enter") handleSend();
-});
+   }
+   const onLoad=function(){
+     const script=document.createElement("script");
+     script.src="https://www.chatbase.co/embed.min.js";
+     script.id="chatbaseWidget";
+     script.domain="www.chatbase.co";
+     document.body.appendChild(script);
+   };
+   if(document.readyState==="complete"){onLoad()}
+   else{window.addEventListener("load",onLoad)}
+ })();
+};
 </script>
 
 </body>

@@ -11,7 +11,6 @@
  --bg: #ffffff;
  --panel: #ffffff;
  --accent: #f7c948;
- --accent-dark: #e6bd00;
  --text: #1f1f1f;
  --muted: #6b6b6b;
  --shadow: rgba(0,0,0,0.1);
@@ -61,7 +60,7 @@ a:hover{text-decoration:underline;}
 }
 .button:hover{transform:scale(1.03);}
 .google-btn{background:#fff;border:1px solid #ddd;color:#000;}
-.google-btn img{height:24px;width:24px;}
+.google-btn img{height:24px;width:24px;margin-right:8px;}
 .divider{position:relative;color:var(--muted);margin:0.5rem 0;}
 .divider::before, .divider::after{
  content:"";
@@ -78,29 +77,39 @@ a:hover{text-decoration:underline;}
 /* MAIN APP */
 #mainApp{
  display:none;
- grid-template-columns:320px 1fr;
  height:100vh;
  width:100%;
+ display:flex;
+ flex-direction:column;
+ align-items:center;
+ justify-content:center;
 }
-.sidebar{
- background:var(--panel);
- padding:16px;
- border-right:1px solid #ddd;
+#chatContainer{
+ width:100%;
+ max-width:700px;
+ flex:1;
  display:flex;
  flex-direction:column;
  gap:12px;
- overflow-y:auto;
 }
-.sidebar.hidden{display:none;}
-.conv-item{padding:8px;border-radius:8px;background:#fef8e6;display:flex;justify-content:space-between;cursor:pointer;}
-.conv-item:hover{background:#fff6c6;}
-.main{display:flex;flex-direction:column;gap:12px;flex:1;padding:16px;}
-.topbar{display:flex;justify-content:space-between;align-items:center;}
-.chat-window{flex:1;background:#fef8e6;border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:12px;overflow:auto;box-shadow:0 6px 18px rgba(0,0,0,0.08);scroll-behavior:smooth;}
-.composer{display:flex;gap:8px;align-items:center;}
-.composer input{flex:1;padding:12px;border-radius:12px;border:1px solid rgba(0,0,0,0.1);}
-.msg.user{background:linear-gradient(90deg,#ffe37f,#fff6c6);align-self:flex-end;padding:10px 14px;border-radius:14px;}
-.msg.bot{background:linear-gradient(90deg,#fff7e0,#fff);align-self:flex-start;padding:10px 14px;border-radius:14px;}
+#chatHeader{
+ display:flex;
+ align-items:center;
+ gap:10px;
+ padding:12px;
+ background:var(--panel);
+ border-radius:var(--radius);
+ box-shadow:0 6px 18px rgba(0,0,0,0.08);
+}
+#chatHeader img{
+ width:40px;
+ height:40px;
+ border-radius:50%;
+}
+#chatWidget{
+ flex:1;
+ min-height:500px;
+}
 
 /* PROFILE DROPDOWN */
 #userProfile{width:40px;height:40px;border-radius:50%;cursor:pointer;}
@@ -110,7 +119,6 @@ a:hover{text-decoration:underline;}
 
 /* DARK MODE */
 body.dark-mode{--bg:#1f1f1f;--panel:#2b2b2b;--text:#f0f0f0;--accent:#f7c948;}
-body.dark-mode .chat-window{background:#2b2b2b;}
 </style>
 </head>
 <body>
@@ -141,25 +149,13 @@ body.dark-mode .chat-window{background:#2b2b2b;}
 
 <!-- MAIN APP -->
 <div id="mainApp">
- <!-- SIDEBAR -->
- <div id="sidebar" class="sidebar">
-   <button id="newChatBtn" class="button">+ New Chat</button>
-   <div id="conversationsList"></div>
- </div>
-
- <!-- CHAT AREA -->
- <div class="main">
-   <div class="topbar">
-     <div id="convTitle">New Chat</div>
+ <div id="chatContainer">
+   <div id="chatHeader">
+     <img src="https://cdn-icons-png.flaticon.com/512/254/254409.png" alt="BulbAI Logo">
+     <h2>BulbAI Chat</h2>
      <img id="userProfile" src="" alt="Profile">
    </div>
-   <div id="messages" class="chat-window"></div>
-   <div class="composer">
-     <input id="prompt" placeholder="Type a message...">
-     <button id="attachBtn" class="button">+</button>
-     <input type="file" id="fileInput" style="display:none;">
-     <button id="sendBtn" class="button">Send</button>
-   </div>
+   <div id="chatWidget"></div>
  </div>
 </div>
 
@@ -200,87 +196,30 @@ const signOutBtn = document.getElementById('signOutBtn');
 auth.onAuthStateChanged(user=>{
  if(user){
    loginScreen.style.display='none';
-   mainApp.style.display='grid';
-   userProfile.src = user.photoURL || 'https://upload.wikimedia.org/wikipedia/commons/4/4a/Logo_2013_Google.png';
-   userProfile.style.display='block';
+   mainApp.style.display='flex';
+   userProfile.src = user.photoURL || 'https://cdn-icons-png.flaticon.com/512/254/254409.png';
  }
 });
 
 // GOOGLE LOGIN
 googleSignInBtn.onclick = async ()=>{
  const provider = new GoogleAuthProvider();
- try{
-   await signInWithPopup(auth,provider);
- }catch(e){alert(e.message);}
+ try{ await signInWithPopup(auth,provider); }catch(e){alert(e.message);}
 }
 
-// TRY BUTTON (Limited)
-tryBtn.onclick = ()=>{
- loginScreen.style.display='none';
- mainApp.style.display='grid';
-}
+// TRY BUTTON
+tryBtn.onclick = ()=>{ loginScreen.style.display='none'; mainApp.style.display='flex'; }
 
 // PROFILE MENU
 userProfile.onclick = ()=> profileMenu.style.display = profileMenu.style.display==='block'?'none':'block';
-window.onclick = e=>{
- if(!userProfile.contains(e.target) && !profileMenu.contains(e.target)){
-   profileMenu.style.display='none';
- }
-}
+window.onclick = e=>{ if(!userProfile.contains(e.target)&&!profileMenu.contains(e.target)){profileMenu.style.display='none'; } }
 profileToggleTheme.onclick = ()=>document.body.classList.toggle('dark-mode');
-profileClearChats.onclick = ()=>document.getElementById('messages').innerHTML='';
+profileClearChats.onclick = ()=>alert("Clear not available with widget.");
 signOutBtn.onclick = async ()=>{await signOut(auth);location.reload();}
-
-// CHAT
-const messages = document.getElementById('messages');
-const sendBtn = document.getElementById('sendBtn');
-const prompt = document.getElementById('prompt');
-const attachBtn = document.getElementById('attachBtn');
-const fileInput = document.getElementById('fileInput');
-
-attachBtn.onclick = ()=>fileInput.click();
-fileInput.onchange = e=>{
- const file = e.target.files[0];
- if(file){
-   const msg = document.createElement('div');
-   msg.className='msg user';
-   msg.textContent=`[File attached: ${file.name}]`;
-   messages.appendChild(msg);
-   messages.scrollTop = messages.scrollHeight;
- }
-}
-
-// SEND & AI REPLY VIA CHATBASE
-sendBtn.onclick = async ()=>{
- if(prompt.value.trim()==='') return;
- const userMsg = document.createElement('div');
- userMsg.className='msg user';
- userMsg.textContent=prompt.value;
- messages.appendChild(userMsg);
- messages.scrollTop = messages.scrollHeight;
-
- // Chatbase AI integration
- try{
-   window.chatbase("init", {apiKey:"yato30hkcyj96s3whclhywxppb44fuf5"});
-   const response = await window.chatbase("send", {message: prompt.value});
-   const botMsg = document.createElement('div');
-   botMsg.className='msg bot';
-   botMsg.textContent=response?.message||"No response.";
-   messages.appendChild(botMsg);
-   messages.scrollTop = messages.scrollHeight;
- }catch(err){
-   const botMsg = document.createElement('div');
-   botMsg.className='msg bot';
-   botMsg.textContent="Error connecting to AI.";
-   messages.appendChild(botMsg);
-   messages.scrollTop = messages.scrollHeight;
- }
- prompt.value='';
-};
 
 // LOAD CHATBASE WIDGET
 (function(){
- if(!window.chatbase || window.chatbase("getState")!=="initialized"){
+ if(!window.chatbase||window.chatbase("getState")!=="initialized"){
    window.chatbase=(...args)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(args)};
    window.chatbase=new Proxy(window.chatbase,{get(target,prop){
      if(prop==="q"){return target.q}
@@ -290,9 +229,9 @@ sendBtn.onclick = async ()=>{
  const onLoad=function(){
    const script=document.createElement("script");
    script.src="https://www.chatbase.co/embed.min.js";
-   script.id="W5ZOQa_6wOPIOFFfMXkIY";
+   script.id="chatbase-widget";
    script.domain="www.chatbase.co";
-   document.body.appendChild(script)
+   document.getElementById("chatWidget").appendChild(script);
  };
  if(document.readyState==="complete"){onLoad()}else{window.addEventListener("load",onLoad)}
 })();

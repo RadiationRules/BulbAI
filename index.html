@@ -179,7 +179,7 @@ body.dark-mode .chat-window{background:#2b2b2b;}
    </div>
    <div id="messages" class="chat-window"></div>
    <div class="composer">
-     <input id="prompt" placeholder="Type a message...">
+     <input id="prompt" placeholder="Type a message..." />
      <button id="sendBtn" class="button">Send</button>
    </div>
  </div>
@@ -192,7 +192,6 @@ body.dark-mode .chat-window{background:#2b2b2b;}
  <button id="signOutBtn">Sign Out</button>
 </div>
 
-<!-- FIREBASE & SCRIPT -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
@@ -229,7 +228,7 @@ auth.onAuthStateChanged(user=>{
  }
 });
 
-// GOOGLE LOGIN
+// Google login
 googleSignInBtn.onclick = async ()=>{
  const provider = new GoogleAuthProvider();
  try{
@@ -237,13 +236,13 @@ googleSignInBtn.onclick = async ()=>{
  }catch(e){alert(e.message);}
 }
 
-// TRY BUTTON (Limited)
+// Try button
 tryBtn.onclick = ()=>{
  loginScreen.style.display='none';
  mainApp.style.display='flex';
 }
 
-// PROFILE MENU
+// Profile menu
 userProfile.onclick = ()=> profileMenu.style.display = profileMenu.style.display==='block'?'none':'block';
 window.onclick = e=>{
  if(!userProfile.contains(e.target) && !profileMenu.contains(e.target)){
@@ -254,30 +253,56 @@ profileToggleTheme.onclick = ()=>document.body.classList.toggle('dark-mode');
 profileClearChats.onclick = ()=>document.getElementById('messages').innerHTML='';
 signOutBtn.onclick = async ()=>{await signOut(auth);location.reload();}
 
-// CHAT BASE WIDGET
-(function(){
- if(!window.chatbase || window.chatbase("getState")!=="initialized"){
-  window.chatbase=(...args)=>{
-    if(!window.chatbase.q){window.chatbase.q=[]}
-    window.chatbase.q.push(args)
-  };
-  window.chatbase=new Proxy(window.chatbase,{
-    get(target,prop){
-      if(prop==="q"){return target.q}
-      return (...args)=>target(prop,...args)
-    }
-  });
+// Chat handling
+const messages = document.getElementById('messages');
+const sendBtn = document.getElementById('sendBtn');
+const prompt = document.getElementById('prompt');
+
+async function sendMessageToChatbase(message){
+ const apiKey = "yato30hkcyj96s3whclhywxppb44fuf5"; // Chatbase key
+ try{
+   const res = await fetch("https://api.chatbase.co/v1/query",{
+     method:"POST",
+     headers:{
+       "Content-Type":"application/json",
+       "Authorization": `Bearer ${apiKey}`
+     },
+     body:JSON.stringify({
+       model:"gpt-3.5-turbo",
+       messages:[{role:"user", content:message}],
+       max_tokens:400
+     })
+   });
+   const data = await res.json();
+   return data.choices?.[0]?.message?.content || "No response";
+ }catch(e){
+   return "Error: failed to get response.";
  }
- const onLoad=function(){
-  const script=document.createElement("script");
-  script.src="https://www.chatbase.co/embed.min.js";
-  script.id="W5ZOQa_6wOPIOFFfMXkIY";
-  script.domain="www.chatbase.co";
-  document.body.appendChild(script)
- };
- if(document.readyState==="complete"){onLoad()}
- else{window.addEventListener("load",onLoad)}
-})();
+}
+
+async function handleSend(){
+ if(!prompt.value.trim()) return;
+ const userMsg = document.createElement("div");
+ userMsg.className="msg user";
+ userMsg.textContent=prompt.value;
+ messages.appendChild(userMsg);
+ messages.scrollTop = messages.scrollHeight;
+
+ const response = await sendMessageToChatbase(prompt.value);
+
+ const botMsg = document.createElement("div");
+ botMsg.className="msg bot";
+ botMsg.textContent=response;
+ messages.appendChild(botMsg);
+ messages.scrollTop = messages.scrollHeight;
+
+ prompt.value="";
+}
+
+sendBtn.onclick = handleSend;
+prompt.addEventListener("keypress", e=>{
+ if(e.key==="Enter") handleSend();
+});
 </script>
 
 </body>

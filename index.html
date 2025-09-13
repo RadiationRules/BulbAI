@@ -6,128 +6,151 @@
 <title>BulbAI</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg-color: #1e1e2f;
-    --chat-bg: #2a2a3f;
-    --text-color: #f5f5f5;
-    --accent-color: #ffcc00;
-    --input-bg: #1e1e2f;
-    --input-text: #ffffff;
-  }
+:root {
+  --bg-color: #1e1e2f;
+  --chat-bg: #2a2a3f;
+  --text-color: #f5f5f5;
+  --accent-color: #ffcc00;
+  --input-bg: #1e1e2f;
+  --input-text: #ffffff;
+}
 
-  [data-theme="light"] {
-    --bg-color: #f5f5f5;
-    --chat-bg: #ffffff;
-    --text-color: #1e1e2f;
-    --accent-color: #ff9900;
-    --input-bg: #e0e0e0;
-    --input-text: #1e1e2f;
-  }
+[data-theme="light"] {
+  --bg-color: #f5f5f5;
+  --chat-bg: #ffffff;
+  --text-color: #1e1e2f;
+  --accent-color: #ff9900;
+  --input-bg: #e0e0e0;
+  --input-text: #1e1e2f;
+}
 
-  body {
-    margin: 0;
-    font-family: 'Inter', sans-serif;
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    overflow: hidden;
-  }
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
 
-  header {
-    height: 60px;
-    background: var(--chat-bg);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 20px;
-    font-weight: 700;
-    font-size: 1.2rem;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-  }
+header {
+  height: 70px;
+  background: var(--chat-bg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 25px;
+  font-weight: 700;
+  font-size: 1.4rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
 
-  header button {
-    background: var(--accent-color);
-    border: none;
-    color: var(--text-color);
-    padding: 6px 12px;
-    cursor: pointer;
-    border-radius: 5px;
-    font-weight: 500;
-  }
+header button {
+  background: var(--accent-color);
+  border: none;
+  color: var(--text-color);
+  padding: 8px 15px;
+  cursor: pointer;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: 0.2s;
+}
 
-  #chat-container {
-    flex: 1;
-    background: var(--chat-bg);
-    overflow-y: auto;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
+header button:hover {
+  opacity: 0.85;
+}
 
-  .message {
-    max-width: 70%;
-    padding: 10px 15px;
-    border-radius: 15px;
-    word-wrap: break-word;
-    line-height: 1.4;
-  }
+#chat-container {
+  flex: 1;
+  background: var(--chat-bg);
+  overflow-y: auto;
+  padding: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  scroll-behavior: smooth;
+}
 
-  .user {
-    background: var(--accent-color);
-    color: var(--text-color);
-    align-self: flex-end;
-    border-bottom-right-radius: 0;
-  }
+.message {
+  max-width: 70%;
+  padding: 12px 18px;
+  border-radius: 20px;
+  word-wrap: break-word;
+  line-height: 1.5;
+  font-size: 1rem;
+}
 
-  .ai {
-    background: #3a3a5a;
-    color: #f0f0f0;
-    align-self: flex-start;
-    border-bottom-left-radius: 0;
-  }
+.user {
+  background: var(--accent-color);
+  color: var(--text-color);
+  align-self: flex-end;
+  border-bottom-right-radius: 0;
+}
 
-  #input-bar {
-    display: flex;
-    padding: 10px 20px;
-    background: var(--chat-bg);
-    gap: 10px;
-  }
+.ai {
+  background: #3a3a5a;
+  color: #f0f0f0;
+  align-self: flex-start;
+  border-bottom-left-radius: 0;
+}
 
-  #input-bar input {
-    flex: 1;
-    padding: 10px 15px;
-    border-radius: 20px;
-    border: none;
-    background: var(--input-bg);
-    color: var(--input-text);
-    font-size: 1rem;
-    outline: none;
-  }
+#input-bar {
+  display: flex;
+  padding: 15px 25px;
+  background: var(--chat-bg);
+  gap: 12px;
+  box-shadow: 0 -2px 8px rgba(0,0,0,0.2);
+}
 
-  #input-bar button {
-    background: var(--accent-color);
-    border: none;
-    color: var(--text-color);
-    padding: 10px 20px;
-    border-radius: 20px;
-    cursor: pointer;
-    font-weight: 500;
-  }
+#input-bar input {
+  flex: 1;
+  padding: 12px 18px;
+  border-radius: 25px;
+  border: none;
+  background: var(--input-bg);
+  color: var(--input-text);
+  font-size: 1rem;
+  outline: none;
+  transition: 0.2s;
+}
 
-  /* Scrollbar styling */
-  #chat-container::-webkit-scrollbar {
-    width: 8px;
-  }
-  #chat-container::-webkit-scrollbar-thumb {
-    background: var(--accent-color);
-    border-radius: 4px;
-  }
+#input-bar input:focus {
+  background: #383858;
+}
+
+#input-bar button {
+  background: var(--accent-color);
+  border: none;
+  color: var(--text-color);
+  padding: 12px 22px;
+  border-radius: 25px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: 0.2s;
+}
+
+#input-bar button:hover {
+  opacity: 0.85;
+}
+
+#chat-container::-webkit-scrollbar {
+  width: 10px;
+}
+
+#chat-container::-webkit-scrollbar-thumb {
+  background: var(--accent-color);
+  border-radius: 5px;
+}
+
+#chat-container::-webkit-scrollbar-track {
+  background: #1e1e2f;
+}
 </style>
 </head>
 <body data-theme="dark">
+
 <header>
   BulbAI
   <button id="theme-toggle">Light Mode</button>
@@ -141,69 +164,83 @@
 </div>
 
 <script>
-  const chatContainer = document.getElementById('chat-container');
-  const inputField = document.getElementById('user-input');
-  const sendBtn = document.getElementById('send-btn');
-  const themeToggle = document.getElementById('theme-toggle');
-  let theme = 'dark';
+const chatContainer = document.getElementById('chat-container');
+const inputField = document.getElementById('user-input');
+const sendBtn = document.getElementById('send-btn');
+const themeToggle = document.getElementById('theme-toggle');
+let theme = 'dark';
 
-  // Toggle dark/light theme
-  themeToggle.addEventListener('click', () => {
-    if (theme === 'dark') {
-      document.body.setAttribute('data-theme', 'light');
-      theme = 'light';
-      themeToggle.textContent = 'Dark Mode';
-    } else {
-      document.body.setAttribute('data-theme', 'dark');
-      theme = 'dark';
-      themeToggle.textContent = 'Light Mode';
-    }
-  });
-
-  // Add message
-  function addMessage(text, sender) {
-    const msg = document.createElement('div');
-    msg.classList.add('message', sender);
-    msg.textContent = text;
-    chatContainer.appendChild(msg);
-    chatContainer.scrollTop = chatContainer.scrollHeight;
+// Toggle dark/light mode
+themeToggle.addEventListener('click', () => {
+  if (theme === 'dark') {
+    document.body.setAttribute('data-theme', 'light');
+    theme = 'light';
+    themeToggle.textContent = 'Dark Mode';
+  } else {
+    document.body.setAttribute('data-theme', 'dark');
+    theme = 'dark';
+    themeToggle.textContent = 'Light Mode';
   }
+});
 
-  // Send message
-  async function sendMessage() {
-    const text = inputField.value.trim();
-    if (!text) return;
-    addMessage(text, 'user');
-    inputField.value = '';
-    
-    // Integrate Chatbase widget
-    if (window.chatbase) {
-      window.chatbase('send', { message: text });
-    }
-    
-    // Mock AI response (replace with real Chatbase AI response if needed)
-    setTimeout(() => addMessage("Thinking...", 'ai'), 200);
-    setTimeout(() => addMessage("BulbAI response to: " + text, 'ai'), 1000);
+// Add message
+function addMessage(text, sender) {
+  const msg = document.createElement('div');
+  msg.classList.add('message', sender);
+  msg.textContent = text;
+  chatContainer.appendChild(msg);
+  chatContainer.scrollTop = chatContainer.scrollHeight;
+}
+
+// Send message and get AI response
+async function sendMessage() {
+  const text = inputField.value.trim();
+  if (!text) return;
+  addMessage(text, 'user');
+  inputField.value = '';
+  addMessage('...', 'ai'); // loading
+
+  try {
+    const response = await fetch('https://api.chatbase.co/api/chat', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'yato30hkcyj96s3whclhywxppb44fuf5'
+      },
+      body: JSON.stringify({
+        model: 'gpt-3.5',
+        message: text
+      })
+    });
+
+    const data = await response.json();
+    const lastAI = document.querySelector('.message.ai:last-child');
+    if (lastAI) lastAI.textContent = data.response || 'BulbAI had no response.';
+  } catch (err) {
+    const lastAI = document.querySelector('.message.ai:last-child');
+    if (lastAI) lastAI.textContent = 'Error: Could not reach BulbAI.';
+    console.error(err);
   }
+}
 
-  sendBtn.addEventListener('click', sendMessage);
-  inputField.addEventListener('keypress', e => { if (e.key === 'Enter') sendMessage(); });
+sendBtn.addEventListener('click', sendMessage);
+inputField.addEventListener('keypress', e => { if (e.key === 'Enter') sendMessage(); });
 
-  // Initialize Chatbase widget
-  (function(){
-    if(!window.chatbase||window.chatbase("getState")!=="initialized"){
-      window.chatbase=(...arguments)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(arguments)};
-      window.chatbase=new Proxy(window.chatbase,{get(target,prop){if(prop==="q"){return target.q}return(...args)=>target(prop,...args)}});
-    }
-    const onLoad=function(){
-      const script=document.createElement("script");
-      script.src="https://www.chatbase.co/embed.min.js";
-      script.id="BulbAI_Chatbase";
-      script.domain="www.chatbase.co";
-      document.body.appendChild(script);
-    };
-    if(document.readyState==="complete"){onLoad()}else{window.addEventListener("load",onLoad)}
-  })();
+// Chatbase embed
+(function(){
+  if(!window.chatbase||window.chatbase("getState")!=="initialized"){
+    window.chatbase=(...arguments)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(arguments)};
+    window.chatbase=new Proxy(window.chatbase,{get(target,prop){if(prop==="q"){return target.q}return(...args)=>target(prop,...args)}});
+  }
+  const onLoad=function(){
+    const script=document.createElement("script");
+    script.src="https://www.chatbase.co/embed.min.js";
+    script.id="BulbAI_Chatbase";
+    script.domain="www.chatbase.co";
+    document.body.appendChild(script);
+  };
+  if(document.readyState==="complete"){onLoad()}else{window.addEventListener("load",onLoad)}
+})();
 </script>
 </body>
 </html>

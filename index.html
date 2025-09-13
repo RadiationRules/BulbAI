@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="google-site-verification" content="89T27xrgDiNqC6Y5qkq2iwNjI6q4r4NjREIv2DMMjZs" />
 <title>BulbAI</title>
+<meta name="google-site-verification" content="89T27xrgDiNqC6Y5qkq2iwNjI6q4r4NjREIv2DMMjZs" />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -40,7 +40,7 @@ a:hover{text-decoration:underline;}
  filter:blur(6px) brightness(0.5);
 }
 .login-container{
- background: rgba(255,255,255,0.85);
+ background: rgba(255,255,255,0.9);
  padding:2rem;
  border-radius:var(--radius);
  box-shadow:0 8px 24px var(--shadow);
@@ -60,8 +60,11 @@ a:hover{text-decoration:underline;}
  display:flex; justify-content:center; align-items:center; gap:0.5rem;transition:0.3s;
 }
 .button:hover{transform:scale(1.03);}
-.google-btn{background:#fff;border:1px solid #ddd;color:#000;}
-.google-btn img{height:20px;width:20px;}
+.google-btn{
+ background:#fff;border:1px solid #ddd;color:#000;justify-content:center;
+ display:flex;align-items:center;gap:8px;font-weight:500;
+}
+.google-btn img{height:22px;width:22px;border-radius:2px;}
 .divider{position:relative;color:var(--muted);margin:0.5rem 0;}
 .divider::before, .divider::after{
  content:"";
@@ -94,33 +97,97 @@ a:hover{text-decoration:underline;}
 .sidebar.hidden{display:none;}
 .conv-item{padding:8px;border-radius:8px;background:#fef8e6;display:flex;justify-content:space-between;cursor:pointer;}
 .conv-item:hover{background:#fff6c6;}
-.main{display:flex;flex-direction:column;gap:12px;flex:1;padding:16px;}
-.topbar{display:flex;justify-content:space-between;align-items:center;}
-.chat-window{flex:1;background:#fef8e6;border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:12px;overflow:auto;box-shadow:0 6px 18px rgba(0,0,0,0.08);scroll-behavior:smooth;}
-.composer{display:flex;gap:8px;align-items:center;}
-.composer input{flex:1;padding:12px;border-radius:12px;border:1px solid rgba(0,0,0,0.1);}
-.msg.user{background:linear-gradient(90deg,#ffe37f,#fff6c6);align-self:flex-end;padding:10px 14px;border-radius:14px;}
-.msg.bot{background:linear-gradient(90deg,#fff7e0,#fff);align-self:flex-start;padding:10px 14px;border-radius:14px;}
+.main{
+ display:flex;
+ flex-direction:column;
+ gap:12px;
+ flex:1;
+ height:100%;
+}
+.topbar{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ padding:0 16px;
+ height:60px;
+ background:var(--panel);
+ border-bottom:1px solid #ddd;
+ box-shadow:0 2px 6px rgba(0,0,0,0.05);
+ z-index:10;
+}
+#convTitle{
+ font-weight:700;
+ font-size:1.2rem;
+ color:var(--text);
+}
+#userProfile{
+ width:40px;
+ height:40px;
+ border-radius:50%;
+ cursor:pointer;
+ border:2px solid var(--accent);
+}
+
+/* CHAT WINDOW */
+.chat-window{
+ flex:1;
+ background:#fef8e6;
+ border-radius:12px;
+ padding:16px;
+ display:flex;
+ flex-direction:column;
+ gap:12px;
+ overflow-y:auto;
+ box-shadow:0 6px 18px rgba(0,0,0,0.08);
+ scroll-behavior:smooth;
+ margin:0 16px;
+}
+.composer{
+ display:flex;
+ gap:8px;
+ align-items:center;
+ margin:8px 16px 16px 16px;
+}
+.composer input{
+ flex:1;
+ padding:12px;
+ border-radius:12px;
+ border:1px solid rgba(0,0,0,0.1);
+ font-size:1rem;
+}
+.msg{
+ opacity:0;
+ transform: translateY(10px);
+ transition: all 0.3s ease;
+}
+.msg.show{
+ opacity:1;
+ transform: translateY(0);
+}
+.msg.user{background:linear-gradient(90deg,#ffe37f,#fff6c6);align-self:flex-end;padding:10px 14px;border-radius:14px;max-width:70%;}
+.msg.bot{background:linear-gradient(90deg,#fff7e0,#fff);align-self:flex-start;padding:10px 14px;border-radius:14px;max-width:70%;}
 
 /* PROFILE DROPDOWN */
-#userProfile{width:40px;height:40px;border-radius:50%;cursor:pointer;}
-#profileMenu{display:none;position:absolute;top:50px;right:16px;background:var(--panel);border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,0.2);overflow:hidden;min-width:160px;z-index:1000;}
+#profileMenu{display:none;position:absolute;top:70px;right:16px;background:var(--panel);border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,0.2);overflow:hidden;min-width:160px;z-index:1000;}
 #profileMenu button{width:100%;border:none;padding:10px;background:none;cursor:pointer;text-align:left;}
 #profileMenu button:hover{background:var(--accent);color:#2b2b2b;}
 
 /* DARK MODE */
-body.dark-mode{--bg:#1f1f1f;--panel:#2b2b2b;--text:#f0f0f0;--accent:#f7c948;}
+body.dark-mode{
+ --bg:#1f1f1f;
+ --panel:#2b2b2b;
+ --text:#f0f0f0;
+ --accent:#f7c948;
+}
 body.dark-mode .chat-window{background:#2b2b2b;}
 </style>
 </head>
 <body>
 
-<!-- VIDEO BACKGROUND -->
 <video id="bgVideo" autoplay muted loop playsinline>
  <source src="https://cdn.videvo.net/videvo_files/video/free/2019-08/large_watermarked/190725_01_Software_1080p_029_preview.mp4" type="video/mp4">
 </video>
 
-<!-- LOGIN SCREEN -->
 <div id="loginScreen">
  <div class="login-container">
    <h1>💡 BulbAI</h1>
@@ -139,7 +206,6 @@ body.dark-mode .chat-window{background:#2b2b2b;}
  </div>
 </div>
 
-<!-- MAIN APP -->
 <div id="mainApp">
  <div id="sidebar" class="sidebar">
    <button id="newChatBtn" class="button">+ New Chat</button>
@@ -161,19 +227,16 @@ body.dark-mode .chat-window{background:#2b2b2b;}
  </div>
 </div>
 
-<!-- PROFILE DROPDOWN -->
 <div id="profileMenu">
  <button id="profileToggleTheme">Toggle Dark/Light</button>
  <button id="profileClearChats">Clear Conversations</button>
  <button id="signOutBtn">Sign Out</button>
 </div>
 
-<!-- FIREBASE & SCRIPT -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
 
-// Firebase config
 const firebaseConfig = {
  apiKey: "AIzaSyCGFij1pFUVNFP63QHxEq619c9jPnskzxY",
  authDomain: "bulbai-21f09.firebaseapp.com",
@@ -183,7 +246,6 @@ const firebaseConfig = {
  appId: "1:366775652166:web:22db16f4f87f9a60625f47",
  measurementId: "G-G09FQQ53XP"
 };
-
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
@@ -206,72 +268,64 @@ auth.onAuthStateChanged(user=>{
  }
 });
 
-// GOOGLE LOGIN
 googleSignInBtn.onclick = async ()=>{
  const provider = new GoogleAuthProvider();
  try{ await signInWithPopup(auth,provider); }catch(e){alert(e.message);}
 }
 
-// TRY BUTTON (Limited)
 tryBtn.onclick = ()=>{
  loginScreen.style.display='none';
  mainApp.style.display='grid';
 }
 
-// PROFILE MENU
 userProfile.onclick = ()=> profileMenu.style.display = profileMenu.style.display==='block'?'none':'block';
-window.onclick = e=>{
- if(!userProfile.contains(e.target) && !profileMenu.contains(e.target)){
-   profileMenu.style.display='none';
- }
-}
+window.onclick = e=>{if(!userProfile.contains(e.target)&&!profileMenu.contains(e.target)){profileMenu.style.display='none';}}
 profileToggleTheme.onclick = ()=>document.body.classList.toggle('dark-mode');
 profileClearChats.onclick = ()=>document.getElementById('messages').innerHTML='';
 signOutBtn.onclick = async ()=>{await signOut(auth);location.reload();}
 
-// CHAT
 const messages = document.getElementById('messages');
 const sendBtn = document.getElementById('sendBtn');
 const prompt = document.getElementById('prompt');
 const attachBtn = document.getElementById('attachBtn');
 const fileInput = document.getElementById('fileInput');
 
-// Chatbase AI function
-async function sendToAI(message){
+function addMessage(el){messages.appendChild(el);setTimeout(()=>el.classList.add('show'),10);messages.scrollTop=messages.scrollHeight;}
+
+async function sendMessage(){
+ if(prompt.value.trim()==='') return;
+ const userMsg=document.createElement('div');
+ userMsg.className='msg user';
+ userMsg.textContent=prompt.value;
+ addMessage(userMsg);
+
  try{
-   const resp = await fetch('https://api.chatbase.co/v1/chat', {
+   const res=await fetch('https://api.chatbase.co/v1/conversation',{
      method:'POST',
      headers:{
        'Content-Type':'application/json',
        'Authorization':'Bearer yato30hkcyj96s3whclhywxppb44fuf5'
      },
-     body:JSON.stringify({
-       model:"gpt-3.5-turbo",
-       messages:[{role:"user", content:message}]
-     })
+     body:JSON.stringify({messages:[{type:'text',role:'user',text:prompt.value}],model:'gpt-3.5-turbo'})
    });
-   const data = await resp.json();
-   return data.choices[0].message.content;
- }catch(e){ return "Error: "+e.message; }
-}
-
-sendBtn.onclick = async ()=>{
- if(prompt.value.trim()==='') return;
- const userMsg = document.createElement('div');
- userMsg.className='msg user';
- userMsg.textContent=prompt.value;
- messages.appendChild(userMsg);
- messages.scrollTop = messages.scrollHeight;
-
- const response = await sendToAI(prompt.value);
- const botMsg = document.createElement('div');
- botMsg.className='msg bot';
- botMsg.textContent = response;
- messages.appendChild(botMsg);
- messages.scrollTop = messages.scrollHeight;
-
+   const data=await res.json();
+   const botMsg=document.createElement('div');
+   botMsg.className='msg bot';
+   botMsg.textContent=data.messages?.[0]?.text||'No response from AI.';
+   addMessage(botMsg);
+ }catch(e){
+   const botMsg=document.createElement('div');
+   botMsg.className='msg bot';
+   botMsg.textContent='Error connecting to AI: '+e.message;
+   addMessage(botMsg);
+ }
  prompt.value='';
 }
+
+sendBtn.onclick=sendMessage;
+prompt.addEventListener('keydown',e=>{
+ if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();}
+});
 
 attachBtn.onclick = ()=>fileInput.click();
 fileInput.onchange = e=>{
@@ -280,8 +334,7 @@ fileInput.onchange = e=>{
    const msg = document.createElement('div');
    msg.className='msg user';
    msg.textContent=`[Image attached: ${file.name}]`;
-   messages.appendChild(msg);
-   messages.scrollTop = messages.scrollHeight;
+   addMessage(msg);
  }
 }
 </script>

@@ -16,11 +16,14 @@
   --shadow:rgba(0,0,0,0.1);
   --radius:12px;
 }
-*{box-sizing:border-box;margin:0;padding:0;}
-body, html{height:100%;font-family:'Inter',sans-serif;background:var(--bg);}
+body, html{height:100%;margin:0;padding:0;font-family:'Inter',sans-serif;transition:0.3s;}
+*{box-sizing:border-box;}
 a{text-decoration:none;color:var(--accent);}
 a:hover{text-decoration:underline;}
-button{cursor:pointer;}
+button{cursor:pointer;transition:0.2s;}
+
+/* Dark Mode */
+body.dark{--bg:#1e1e1e;--panel:#2b2b2b;--text:#fff;--muted:#ccc;--shadow:rgba(0,0,0,0.5);}
 
 /* LOGIN SCREEN */
 #loginScreen{
@@ -33,12 +36,13 @@ button{cursor:pointer;}
   position:relative;z-index:1;background:rgba(255,255,255,0.9);padding:2rem;border-radius:var(--radius);
   width:100%;max-width:400px;display:flex;flex-direction:column;gap:1rem;text-align:center;box-shadow:0 8px 24px var(--shadow);
 }
+body.dark .login-container{background:rgba(43,43,43,0.9);}
 .login-container h1{font-size:2rem;color:var(--text);}
 .login-container p{color:var(--muted);font-size:0.9rem;}
 .input-group{display:flex;flex-direction:column;gap:0.5rem;}
-.input-group input{padding:0.75rem;border-radius:var(--radius);border:1px solid rgba(0,0,0,0.2);font-size:1rem;}
-.button{padding:0.75rem;border-radius:var(--radius);border:none;background:var(--accent);color:#2b2b2b;font-weight:700;transition:0.3s;display:flex;justify-content:center;align-items:center;gap:0.5rem;}
-.button:hover{transform:scale(1.03);}
+.input-group input{padding:0.75rem;border-radius:var(--radius);border:1px solid rgba(0,0,0,0.2);font-size:1rem;background:var(--panel);color:var(--text);}
+button.button{padding:0.75rem;border-radius:var(--radius);border:none;background:var(--accent);color:#2b2b2b;font-weight:700;display:flex;justify-content:center;align-items:center;gap:0.5rem;}
+button.button:hover{transform:scale(1.03);}
 .google-btn{background:#fff;border:1px solid #ddd;color:#000;}
 .google-btn img{height:20px;}
 .divider{position:relative;margin:0.5rem 0;color:var(--muted);}
@@ -49,18 +53,18 @@ button{cursor:pointer;}
 
 /* CHAT INTERFACE */
 #mainApp{display:none;height:100vh;width:100%;flex-direction:column;}
-.app{display:grid;grid-template-columns:320px 1fr;gap:16px;height:100%;}
-.sidebar{background:#fff;padding:16px;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,0.08);display:flex;flex-direction:column;}
+.app{display:grid;grid-template-columns:320px 1fr;gap:16px;height:100%;background:var(--bg);}
+.sidebar{background:var(--panel);padding:16px;border-radius:var(--radius);box-shadow:0 6px 18px var(--shadow);display:flex;flex-direction:column;}
 .brand{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
 .logo{width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,#f7c948,#ffd86b);display:flex;align-items:center;justify-content:center;font-weight:800;color:#2b2b2b;font-size:18px;}
 #newChatBtn{margin-bottom:16px;}
 .sidebar-footer{margin-top:16px;display:flex;gap:8px;justify-content:space-between;}
 .main{display:flex;flex-direction:column;gap:12px;}
-.topbar{display:flex;align-items:center;justify-content:space-between;padding:12px;border-radius:12px;background:#fff;box-shadow:0 6px 18px rgba(0,0,0,0.08);}
-.chat-window{flex:1;background:#fef8e6;border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:12px;overflow:auto;box-shadow:0 6px 18px rgba(0,0,0,0.08);scroll-behavior:smooth;}
-.composer{display:flex;gap:8px;align-items:center;padding:12px;border-radius:12px;background:#fff;}
-.composer input{flex:1;padding:12px;border-radius:12px;border:1px solid rgba(0,0,0,0.1);}
-.msg{max-width:72%;padding:10px 14px;border-radius:14px;box-shadow:0 6px 14px rgba(0,0,0,0.03);transform:scale(0.95);opacity:0;animation:popIn 0.25s forwards;}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:12px;border-radius:12px;background:var(--panel);box-shadow:0 6px 18px var(--shadow);}
+.chat-window{flex:1;background:var(--bg);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:12px;overflow:auto;box-shadow:0 6px 18px var(--shadow);scroll-behavior:smooth;}
+.composer{display:flex;gap:8px;align-items:center;padding:12px;border-radius:12px;background:var(--panel);}
+.composer input{flex:1;padding:12px;border-radius:12px;border:1px solid rgba(0,0,0,0.1);background:var(--panel);color:var(--text);}
+.msg{max-width:72%;padding:10px 14px;border-radius:14px;box-shadow:0 6px 14px rgba(0,0,0,0.03);transform:scale(0.95);opacity:0;animation:popIn 0.25s forwards;word-break:break-word;}
 .msg.user{background:linear-gradient(90deg,#ffe37f,#fff6c6);align-self:flex-end;}
 .msg.bot{background:linear-gradient(90deg,#fff7e0,#fff);align-self:flex-start;}
 @keyframes popIn{to{transform:scale(1);opacity:1;}}
@@ -70,6 +74,7 @@ button{cursor:pointer;}
 .typing span:nth-child(3){animation-delay:0.4s;}
 @keyframes bounce{0%,80%,100%{transform:scale(0);}40%{transform:scale(1);}}
 @keyframes pulse{0%,100%{opacity:0.8;}50%{opacity:1;}}
+
 /* Responsive */
 @media(max-width:768px){.app{grid-template-columns:1fr;}.sidebar{flex-direction:row;overflow-x:auto;}.main{margin-top:8px;}}
 </style>
@@ -102,18 +107,18 @@ button{cursor:pointer;}
 <div id="mainApp">
   <div class="app">
     <aside class="sidebar">
-      <div class="brand"><div class="logo">💡</div><div><h2>BulbAI</h2><div style="font-size:12px;color:#6b6b6b;">Your yellow assistant</div></div></div>
+      <div class="brand"><div class="logo">💡</div><div><h2>BulbAI</h2><div style="font-size:12px;color:var(--muted);">Your yellow assistant</div></div></div>
       <button id="newChatBtn" class="button">+ New Chat</button>
       <div id="conversationsList" style="flex:1;display:flex;flex-direction:column;gap:8px;overflow:auto;"></div>
       <div class="sidebar-footer">
-        <button id="themeToggle" class="button google-btn">Settings</button>
+        <button id="settingsBtn" class="button google-btn">Settings</button>
       </div>
     </aside>
     <main class="main">
       <div class="topbar">
         <div class="left">
           <div class="title" id="convTitle">New Chat</div>
-          <div class="tiny muted" id="convSubtitle" style="font-size:12px;color:#6b6b6b;">No messages yet</div>
+          <div class="tiny muted" id="convSubtitle" style="font-size:12px;color:var(--muted);">No messages yet</div>
         </div>
       </div>
       <div id="chatWindow" class="chat-window">
@@ -131,14 +136,15 @@ button{cursor:pointer;}
 
 <!-- SETTINGS MODAL -->
 <div id="modalBackdrop" class="modal-backdrop" style="position:fixed;inset:0;background:rgba(0,0,0,0.35);display:none;align-items:center;justify-content:center;z-index:50;">
-  <div class="modal" style="background:#fff;padding:18px;border-radius:12px;min-width:320px;max-width:90%;display:flex;flex-direction:column;gap:12px;">
+  <div class="modal" style="background:var(--panel);padding:18px;border-radius:12px;min-width:320px;max-width:90%;display:flex;flex-direction:column;gap:12px;">
     <h3>Settings & Utilities</h3>
     <div class="row" style="display:flex;gap:8px;align-items:center;margin-top:8px;">
-      <label class="small" style="min-width:84px;">Theme</label>
       <button id="toggleThemeBtn" class="button google-btn">Toggle Dark/Light</button>
     </div>
     <div class="row" style="display:flex;gap:8px;align-items:center;margin-top:8px;">
-      <button id="clearChatsBtn" class="button google-btn">Clear All Conversations</button>
+      <button id="renameChatBtn" class="button google-btn">Rename Current Chat</button>
+      <button id="deleteChatBtn" class="button google-btn">Delete Current Chat</button>
+      <button id="clearChatsBtn" class="button google-btn">Clear All Chats</button>
       <button id="closeModalBtn" class="button google-btn">Close</button>
     </div>
   </div>
@@ -156,7 +162,6 @@ const firebaseConfig = {
   messagingSenderId:"YOUR_SENDER_ID",
   appId:"YOUR_APP_ID"
 };
-
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
@@ -170,113 +175,70 @@ const emailInput = document.getElementById('emailInput');
 const passwordInput = document.getElementById('passwordInput');
 
 onAuthStateChanged(auth,user=>{
-  if(user){
-    loginScreen.style.display='none';
-    mainApp.style.display='flex';
-  }else{
-    loginScreen.style.display='flex';
-    mainApp.style.display='none';
-  }
+  if(user){loginScreen.style.display='none';mainApp.style.display='flex';}else{loginScreen.style.display='flex';mainApp.style.display='none';}
 });
 
-tryBtn.onclick = ()=>{loginScreen.style.display='none'; mainApp.style.display='flex';};
+tryBtn.onclick = ()=>{loginScreen.style.display='none';mainApp.style.display='flex';};
 
 googleBtn.onclick = ()=>{
   const provider=new GoogleAuthProvider();
   signInWithPopup(auth,provider).then(r=>alert(`Welcome ${r.user.displayName}`)).catch(e=>alert(e.message));
 };
 
-emailSignInBtn.onclick = ()=>{
-  signInWithEmailAndPassword(auth,emailInput.value,passwordInput.value)
-    .then(r=>alert(`Welcome ${r.user.email}`))
-    .catch(e=>alert(e.message));
-};
-
-emailSignUpBtn.onclick = ()=>{
-  createUserWithEmailAndPassword(auth,emailInput.value,passwordInput.value)
-    .then(r=>alert(`Account created: ${r.user.email}`))
-    .catch(e=>alert(e.message));
-};
+emailSignInBtn.onclick = ()=>{signInWithEmailAndPassword(auth,emailInput.value,passwordInput.value).then(r=>alert(`Welcome ${r.user.email}`)).catch(e=>alert(e.message));};
+emailSignUpBtn.onclick = ()=>{createUserWithEmailAndPassword(auth,emailInput.value,passwordInput.value).then(r=>alert(`Account created: ${r.user.email}`)).catch(e=>alert(e.message));};
 
 /* ================== Chat Logic ================== */
-const newChatBtn = document.getElementById('newChatBtn');
-const messagesEl = document.getElementById('messages');
-const promptEl = document.getElementById('prompt');
-const sendBtn = document.getElementById('sendBtn');
-const attachBtn = document.getElementById('attachBtn');
-const attachInput = document.getElementById('attachFileInput');
-const convTitle = document.getElementById('convTitle');
-const conversationsList = document.getElementById('conversationsList');
+const newChatBtn=document.getElementById('newChatBtn');
+const messagesEl=document.getElementById('messages');
+const promptEl=document.getElementById('prompt');
+const sendBtn=document.getElementById('sendBtn');
+const attachBtn=document.getElementById('attachBtn');
+const attachInput=document.getElementById('attachFileInput');
+const convTitle=document.getElementById('convTitle');
+const conversationsList=document.getElementById('conversationsList');
+
 let conversations=[];
+let currentChat='New Chat';
 
 function createMessageElement(content,type='bot'){
-  const msg = document.createElement('div');
+  const msg=document.createElement('div');
   msg.className=`msg ${type}`;
   msg.textContent=content;
   return msg;
 }
 
 function sendMessage(content){
-  const userMsg=createMessageElement(content,'user');
-  messagesEl.appendChild(userMsg);
-  messagesEl.scrollTop=messagesEl.scrollHeight;
-
-  const typing=document.createElement('div');typing.className='typing';
-  typing.innerHTML='<span></span><span></span><span></span>';
-  messagesEl.appendChild(typing);messagesEl.scrollTop=messagesEl.scrollHeight;
-
+  const userMsg=createMessageElement(content,'user');messagesEl.appendChild(userMsg);messagesEl.scrollTop=messagesEl.scrollHeight;
+  const typing=document.createElement('div');typing.className='typing';typing.innerHTML='<span></span><span></span><span></span>';messagesEl.appendChild(typing);messagesEl.scrollTop=messagesEl.scrollHeight;
   setTimeout(()=>{
     typing.remove();
-    const botMsg=createMessageElement("BulbAI response to: "+content,'bot');
-    messagesEl.appendChild(botMsg);
-    messagesEl.scrollTop=messagesEl.scrollHeight;
-    saveConversation(convTitle.textContent);
+    const botMsg=createMessageElement("BulbAI response: "+content,'bot');
+    messagesEl.appendChild(botMsg);messagesEl.scrollTop=messagesEl.scrollHeight;
+    saveConversation(currentChat);
   },1200+Math.random()*1000);
 }
 
-sendBtn.onclick = ()=>{
-  if(promptEl.value.trim()!==''){sendMessage(promptEl.value);promptEl.value='';}
-};
-
-attachBtn.onclick = ()=>attachInput.click();
-attachInput.onchange=(e)=>{
-  const file=e.target.files[0];
-  if(file && file.type.startsWith('image/')){
-    const reader=new FileReader();
-    reader.onload=function(evt){
-      const img=document.createElement('img');
-      img.src=evt.target.result;img.style.maxWidth='200px';
-      messagesEl.appendChild(img);messagesEl.scrollTop=messagesEl.scrollHeight;
-    }
-    reader.readAsDataURL(file);
-  }
-};
+sendBtn.onclick=()=>{if(promptEl.value.trim()!==''){sendMessage(promptEl.value);promptEl.value='';}};
+attachBtn.onclick=()=>attachInput.click();
+attachInput.onchange=(e)=>{const file=e.target.files[0];if(file && file.type.startsWith('image/')){const reader=new FileReader();reader.onload=function(evt){const img=document.createElement('img');img.src=evt.target.result;img.style.maxWidth='200px';messagesEl.appendChild(img);messagesEl.scrollTop=messagesEl.scrollHeight;saveConversation(currentChat);};reader.readAsDataURL(file);}}
 
 function addConversation(title){
-  const div=document.createElement('div');
-  div.textContent=title;
-  div.style.padding='8px';div.style.borderRadius='8px';div.style.background='#fef8e6';div.style.cursor='pointer';
-  div.onmouseenter=()=>div.style.background='#fff6c6';
-  div.onmouseleave=()=>div.style.background='#fef8e6';
-  div.onclick=()=>{
-    messagesEl.innerHTML='';convTitle.textContent=title;
-    const data=JSON.parse(localStorage.getItem('bulbai_conversations')||'[]');
-    const convo=data.find(d=>d.title===title);
-    if(convo)convo.messages.forEach(m=>{
-      const msgEl=createMessageElement(m.content,m.type);
-      messagesEl.appendChild(msgEl);
-    });
-  }
+  const div=document.createElement('div');div.textContent=title;div.style.padding='8px';div.style.borderRadius='8px';div.style.background='#fef8e6';div.style.cursor='pointer';
+  div.onmouseenter=()=>div.style.background='#fff6c6';div.onmouseleave=()=>div.style.background='#fef8e6';
+  div.onclick=()=>{messagesEl.innerHTML='';currentChat=title;convTitle.textContent=title;const data=JSON.parse(localStorage.getItem('bulbai_conversations')||'[]');const convo=data.find(d=>d.title===title);if(convo)convo.messages.forEach(m=>{messagesEl.appendChild(createMessageElement(m.content,m.type));});};
   conversationsList.appendChild(div);conversations.push(title);
 }
 
 newChatBtn.onclick=()=>{
   messagesEl.innerHTML='';
   const newTitle='Chat '+(conversations.length+1);
+  currentChat=newTitle;
   convTitle.textContent=newTitle;
   addConversation(newTitle);
 }
 
+/* ================= LocalStorage ================= */
 function saveConversation(title){
   let data=JSON.parse(localStorage.getItem('bulbai_conversations')||'[]');
   const msgs=Array.from(messagesEl.children).filter(el=>el.classList.contains('msg')).map(el=>({content:el.textContent,type:el.classList.contains('user')?'user':'bot'}));
@@ -289,6 +251,27 @@ function saveConversation(title){
   const saved=JSON.parse(localStorage.getItem('bulbai_conversations')||'[]');
   saved.forEach(c=>addConversation(c.title));
 })();
+
+/* ================= Settings Modal ================= */
+const modalBackdrop=document.getElementById('modalBackdrop');
+const settingsBtn=document.getElementById('settingsBtn');
+const closeModalBtn=document.getElementById('closeModalBtn');
+const toggleThemeBtn=document.getElementById('toggleThemeBtn');
+const clearChatsBtn=document.getElementById('clearChatsBtn');
+const renameChatBtn=document.getElementById('renameChatBtn');
+const deleteChatBtn=document.getElementById('deleteChatBtn');
+
+settingsBtn.onclick=()=>modalBackdrop.style.display='flex';
+closeModalBtn.onclick=()=>modalBackdrop.style.display='none';
+toggleThemeBtn.onclick=()=>document.body.classList.toggle('dark');
+clearChatsBtn.onclick=()=>{if(confirm('Clear all conversations?')){localStorage.removeItem('bulbai_conversations');conversationsList.innerHTML='';messagesEl.innerHTML='';conversations=[];currentChat='New Chat';convTitle.textContent=currentChat;}};
+renameChatBtn.onclick=()=>{
+  const newName=prompt('Enter new chat name:',currentChat);
+  if(newName){const data=JSON.parse(localStorage.getItem('bulbai_conversations')||'[]');const convo=data.find(d=>d.title===currentChat);if(convo){convo.title=newName;localStorage.setItem('bulbai_conversations',JSON.stringify(data));currentChat=newName;convTitle.textContent=newName;conversationsList.innerHTML='';data.forEach(c=>addConversation(c.title));}}
+};
+deleteChatBtn.onclick=()=>{
+  if(confirm('Delete current chat?')){let data=JSON.parse(localStorage.getItem('bulbai_conversations')||'[]');data=data.filter(d=>d.title!==currentChat);localStorage.setItem('bulbai_conversations',JSON.stringify(data));messagesEl.innerHTML='';conversationsList.innerHTML='';conversations=[];data.forEach(c=>addConversation(c.title));currentChat='New Chat';convTitle.textContent=currentChat;}
+};
 </script>
 </body>
 </html>

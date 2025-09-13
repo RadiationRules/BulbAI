@@ -23,26 +23,76 @@ a{text-decoration:none;color:var(--accent);}
 a:hover{text-decoration:underline;}
 
 /* LOGIN SCREEN */
-#loginScreen{display:flex; justify-content:center; align-items:center; height:100vh; width:100%; position:relative; overflow:hidden;}
-#bgVideo{position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; z-index:-1; filter:blur(6px) brightness(0.5);}
-.login-container{background: rgba(255,255,255,0.85); padding:2rem; border-radius:var(--radius); box-shadow:0 8px 24px var(--shadow); width:100%; max-width:400px; display:flex; flex-direction:column; gap:1rem; text-align:center;}
+#loginScreen{
+ display:flex;
+ justify-content:center;
+ align-items:center;
+ height:100vh;
+ width:100%;
+ position:relative;
+ overflow:hidden;
+}
+#bgVideo{
+ position:absolute;
+ top:0; left:0; width:100%; height:100%;
+ object-fit:cover;
+ z-index:-1;
+ filter:blur(6px) brightness(0.5);
+}
+.login-container{
+ background: rgba(255,255,255,0.85);
+ padding:2rem;
+ border-radius:var(--radius);
+ box-shadow:0 8px 24px var(--shadow);
+ width:100%;
+ max-width:400px;
+ display:flex;
+ flex-direction:column;
+ gap:1rem;
+ text-align:center;
+}
 .login-container h1{font-size:2rem; color:var(--text);}
 .login-container p{color:var(--muted); font-size:0.9rem;}
 .input-group{display:flex; flex-direction:column; gap:0.5rem;}
 .input-group input{padding:0.75rem;border-radius:var(--radius);border:1px solid rgba(0,0,0,0.1);}
-.button{padding:0.75rem;border-radius:var(--radius);border:none;background:var(--accent);color:#2b2b2b;font-weight:700;cursor:pointer; display:flex; justify-content:center; align-items:center; gap:0.5rem;transition:0.3s;}
+.button{
+ padding:0.75rem;border-radius:var(--radius);border:none;background:var(--accent);color:#2b2b2b;font-weight:700;cursor:pointer;
+ display:flex; justify-content:center; align-items:center; gap:0.5rem;transition:0.3s;
+}
 .button:hover{transform:scale(1.03);}
-.google-btn{background:#fff;border:1px solid #ddd;color:#000;}
+.google-btn{
+ background:#fff;border:1px solid #ddd;color:#000;justify-content:center;
+}
 .google-btn img{height:20px;width:20px;margin-right:8px;}
 .divider{position:relative;color:var(--muted);margin:0.5rem 0;}
-.divider::before, .divider::after{content:""; position:absolute; top:50%; width:40%; height:1px; background:var(--shadow);}
+.divider::before, .divider::after{
+ content:"";
+ position:absolute;
+ top:50%;
+ width:40%;
+ height:1px;
+ background:var(--shadow);
+}
 .divider::before{left:0;}
 .divider::after{right:0;}
 .tryBtn{background:none;border:none;color:var(--accent);font-weight:700;text-decoration:underline;cursor:pointer;}
 
 /* MAIN APP */
-#mainApp{display:none; grid-template-columns:320px 1fr; height:100vh; width:100%;}
-.sidebar{background:var(--panel); padding:16px; border-right:1px solid #ddd; display:flex; flex-direction:column; gap:12px; overflow-y:auto;}
+#mainApp{
+ display:none;
+ grid-template-columns:320px 1fr;
+ height:100vh;
+ width:100%;
+}
+.sidebar{
+ background:var(--panel);
+ padding:16px;
+ border-right:1px solid #ddd;
+ display:flex;
+ flex-direction:column;
+ gap:12px;
+ overflow-y:auto;
+}
 .sidebar.hidden{display:none;}
 .conv-item{padding:8px;border-radius:8px;background:#fef8e6;display:flex;justify-content:space-between;cursor:pointer;}
 .conv-item:hover{background:#fff6c6;}
@@ -93,10 +143,13 @@ body.dark-mode .chat-window{background:#2b2b2b;}
 
 <!-- MAIN APP -->
 <div id="mainApp">
+ <!-- SIDEBAR -->
  <div id="sidebar" class="sidebar">
    <button id="newChatBtn" class="button">+ New Chat</button>
    <div id="conversationsList"></div>
  </div>
+
+ <!-- CHAT AREA -->
  <div class="main">
    <div class="topbar">
      <div id="convTitle">New Chat</div>
@@ -112,32 +165,17 @@ body.dark-mode .chat-window{background:#2b2b2b;}
  </div>
 </div>
 
+<!-- PROFILE DROPDOWN -->
 <div id="profileMenu">
  <button id="profileToggleTheme">Toggle Dark/Light</button>
  <button id="profileClearChats">Clear Conversations</button>
  <button id="signOutBtn">Sign Out</button>
 </div>
 
-<!-- CHATBASE WIDGET -->
-<script>
-(function(){
-  if(!window.chatbase || window.chatbase("getState") !== "initialized"){
-    window.chatbase = (...args) => { if(!window.chatbase.q){window.chatbase.q=[];} window.chatbase.q.push(args); };
-    window.chatbase = new Proxy(window.chatbase,{get(target,prop){if(prop==="q"){return target.q;} return (...args)=>target(prop,...args)}});}
-  const onLoad=function(){
-    const script=document.createElement("script");
-    script.src="https://www.chatbase.co/embed.min.js";
-    script.id="chatbase-widget";
-    script.domain="www.chatbase.co";
-    document.body.appendChild(script);
-  };
-  if(document.readyState==="complete"){onLoad();}else{window.addEventListener("load",onLoad);}
-})();
-</script>
-
+<!-- FIREBASE & SCRIPT -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
 
 // Firebase config
 const firebaseConfig = {
@@ -149,6 +187,7 @@ const firebaseConfig = {
  appId: "1:366775652166:web:22db16f4f87f9a60625f47",
  measurementId: "G-G09FQQ53XP"
 };
+
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
@@ -171,42 +210,107 @@ auth.onAuthStateChanged(user=>{
  }
 });
 
+// GOOGLE LOGIN
 googleSignInBtn.onclick = async ()=>{
  const provider = new GoogleAuthProvider();
- try{ await signInWithPopup(auth,provider); } catch(e){alert(e.message);}
+ try{ await signInWithPopup(auth,provider); }catch(e){alert(e.message);}
 }
-tryBtn.onclick = ()=>{ loginScreen.style.display='none'; mainApp.style.display='grid'; }
 
+// TRY BUTTON
+tryBtn.onclick = ()=>{
+ loginScreen.style.display='none';
+ mainApp.style.display='grid';
+}
+
+// PROFILE MENU
 userProfile.onclick = ()=> profileMenu.style.display = profileMenu.style.display==='block'?'none':'block';
-window.onclick = e=>{ if(!userProfile.contains(e.target) && !profileMenu.contains(e.target)) profileMenu.style.display='none'; }
+window.onclick = e=>{
+ if(!userProfile.contains(e.target) && !profileMenu.contains(e.target)){
+   profileMenu.style.display='none';
+ }
+}
 profileToggleTheme.onclick = ()=>document.body.classList.toggle('dark-mode');
 profileClearChats.onclick = ()=>document.getElementById('messages').innerHTML='';
 signOutBtn.onclick = async ()=>{await signOut(auth);location.reload();}
 
-// CHATBOX CONNECTED TO CHATBASE
+// CHAT
 const messages = document.getElementById('messages');
 const sendBtn = document.getElementById('sendBtn');
 const prompt = document.getElementById('prompt');
+const attachBtn = document.getElementById('attachBtn');
+const fileInput = document.getElementById('fileInput');
+
+// ATTACH FILE
+attachBtn.onclick = ()=>fileInput.click();
+fileInput.onchange = e=>{
+ const file = e.target.files[0];
+ if(file){
+   const msg = document.createElement('div');
+   msg.className='msg user';
+   msg.textContent=`[Image attached: ${file.name}]`;
+   messages.appendChild(msg);
+   messages.scrollTop = messages.scrollHeight;
+ }
+}
+
+// LOAD CHATBASE WIDGET
+(function(){
+ if(!window.chatbase||window.chatbase("getState")!=="initialized"){
+   window.chatbase=(...args)=>{if(!window.chatbase.q) window.chatbase.q=[]; window.chatbase.q.push(args)};
+   window.chatbase=new Proxy(window.chatbase,{get(target,prop){if(prop==="q")return target.q; return(...args)=>target(prop,...args)}});
+ }
+ const onLoad=function(){
+   const script=document.createElement("script");
+   script.src="https://www.chatbase.co/embed.min.js";
+   script.id="chatbaseWidget";
+   document.body.appendChild(script);
+ };
+ if(document.readyState==="complete"){onLoad();}else{window.addEventListener("load",onLoad);}
+})();
+
+// SEND MESSAGE
+function sendToChatbase(text){
+ if(!window.chatbase || window.chatbase("getState")!=="initialized"){
+   console.log("Chatbase not ready yet, retrying in 500ms...");
+   setTimeout(()=>sendToChatbase(text),500);
+   return;
+ }
+ window.chatbase("sendMessage", {
+   text: text,
+   userId: "user-" + Math.floor(Math.random()*10000)
+ }).then(response=>{
+   const botMsg = document.createElement('div');
+   botMsg.className='msg bot';
+   botMsg.textContent = response.text || "AI did not respond.";
+   messages.appendChild(botMsg);
+   messages.scrollTop = messages.scrollHeight;
+ }).catch(err=>{
+   console.error("Chatbase error:", err);
+   const botMsg = document.createElement('div');
+   botMsg.className='msg bot';
+   botMsg.textContent = "AI failed to respond.";
+   messages.appendChild(botMsg);
+   messages.scrollTop = messages.scrollHeight;
+ });
+}
+
 sendBtn.onclick = ()=>{
  const text = prompt.value.trim();
  if(!text) return;
 
  const userMsg = document.createElement('div');
- userMsg.className='msg user'; userMsg.textContent=text;
+ userMsg.className='msg user';
+ userMsg.textContent=text;
  messages.appendChild(userMsg);
  messages.scrollTop = messages.scrollHeight;
+ prompt.value='';
 
- // send to chatbase
- if(window.chatbase){
-   window.chatbase("sendMessage",{text:text});
- }
-
- const botMsg = document.createElement('div');
- botMsg.className='msg bot'; botMsg.textContent='Bot: Sent to Chatbase!';
- messages.appendChild(botMsg);
- messages.scrollTop = messages.scrollHeight;
+ sendToChatbase(text);
 }
-prompt.addEventListener('keypress', e=>{ if(e.key==='Enter') sendBtn.click(); });
+
+prompt.addEventListener('keypress', e=>{
+ if(e.key==='Enter') sendBtn.click();
+});
 </script>
 </body>
 </html>

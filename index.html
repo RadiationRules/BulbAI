@@ -60,10 +60,8 @@ a:hover{text-decoration:underline;}
  display:flex; justify-content:center; align-items:center; gap:0.5rem;transition:0.3s;
 }
 .button:hover{transform:scale(1.03);}
-.google-btn{
- background:#fff;border:1px solid #ddd;color:#000;justify-content:center;
-}
-.google-btn img{height:20px;width:20px;margin-right:8px;}
+.google-btn{background:#fff;border:1px solid #ddd;color:#000;}
+.google-btn img{height:20px;width:20px;}
 .divider{position:relative;color:var(--muted);margin:0.5rem 0;}
 .divider::before, .divider::after{
  content:"";
@@ -213,10 +211,12 @@ auth.onAuthStateChanged(user=>{
 // GOOGLE LOGIN
 googleSignInBtn.onclick = async ()=>{
  const provider = new GoogleAuthProvider();
- try{ await signInWithPopup(auth,provider); }catch(e){alert(e.message);}
+ try{
+   await signInWithPopup(auth,provider);
+ }catch(e){alert(e.message);}
 }
 
-// TRY BUTTON
+// TRY BUTTON (Limited)
 tryBtn.onclick = ()=>{
  loginScreen.style.display='none';
  mainApp.style.display='grid';
@@ -240,7 +240,24 @@ const prompt = document.getElementById('prompt');
 const attachBtn = document.getElementById('attachBtn');
 const fileInput = document.getElementById('fileInput');
 
-// ATTACH FILE
+sendBtn.onclick = ()=>{
+ if(prompt.value.trim()==='') return;
+ const msg = document.createElement('div');
+ msg.className='msg user';
+ msg.textContent=prompt.value;
+ messages.appendChild(msg);
+ messages.scrollTop = messages.scrollHeight;
+ prompt.value='';
+ // demo bot reply
+ setTimeout(()=>{
+   const botMsg = document.createElement('div');
+   botMsg.className='msg bot';
+   botMsg.textContent='Bot: This is a sample reply.';
+   messages.appendChild(botMsg);
+   messages.scrollTop = messages.scrollHeight;
+ },500);
+}
+
 attachBtn.onclick = ()=>fileInput.click();
 fileInput.onchange = e=>{
  const file = e.target.files[0];
@@ -252,65 +269,34 @@ fileInput.onchange = e=>{
    messages.scrollTop = messages.scrollHeight;
  }
 }
-
-// LOAD CHATBASE WIDGET
-(function(){
- if(!window.chatbase||window.chatbase("getState")!=="initialized"){
-   window.chatbase=(...args)=>{if(!window.chatbase.q) window.chatbase.q=[]; window.chatbase.q.push(args)};
-   window.chatbase=new Proxy(window.chatbase,{get(target,prop){if(prop==="q")return target.q; return(...args)=>target(prop,...args)}});
- }
- const onLoad=function(){
-   const script=document.createElement("script");
-   script.src="https://www.chatbase.co/embed.min.js";
-   script.id="chatbaseWidget";
-   document.body.appendChild(script);
- };
- if(document.readyState==="complete"){onLoad();}else{window.addEventListener("load",onLoad);}
-})();
-
-// SEND MESSAGE
-function sendToChatbase(text){
- if(!window.chatbase || window.chatbase("getState")!=="initialized"){
-   console.log("Chatbase not ready yet, retrying in 500ms...");
-   setTimeout(()=>sendToChatbase(text),500);
-   return;
- }
- window.chatbase("sendMessage", {
-   text: text,
-   userId: "user-" + Math.floor(Math.random()*10000)
- }).then(response=>{
-   const botMsg = document.createElement('div');
-   botMsg.className='msg bot';
-   botMsg.textContent = response.text || "AI did not respond.";
-   messages.appendChild(botMsg);
-   messages.scrollTop = messages.scrollHeight;
- }).catch(err=>{
-   console.error("Chatbase error:", err);
-   const botMsg = document.createElement('div');
-   botMsg.className='msg bot';
-   botMsg.textContent = "AI failed to respond.";
-   messages.appendChild(botMsg);
-   messages.scrollTop = messages.scrollHeight;
- });
-}
-
-sendBtn.onclick = ()=>{
- const text = prompt.value.trim();
- if(!text) return;
-
- const userMsg = document.createElement('div');
- userMsg.className='msg user';
- userMsg.textContent=text;
- messages.appendChild(userMsg);
- messages.scrollTop = messages.scrollHeight;
- prompt.value='';
-
- sendToChatbase(text);
-}
-
-prompt.addEventListener('keypress', e=>{
- if(e.key==='Enter') sendBtn.click();
-});
 </script>
+
+<!-- Chatbase Widget Embed -->
+<script>
+(function(){
+    if(!window.chatbase||window.chatbase("getState")!=="initialized"){
+        window.chatbase=(...arguments)=>{
+            if(!window.chatbase.q){window.chatbase.q=[]}
+            window.chatbase.q.push(arguments)
+        };
+        window.chatbase=new Proxy(window.chatbase,{
+            get(target,prop){
+                if(prop==="q"){return target.q}
+                return(...args)=>target(prop,...args)
+            }
+        })
+    }
+    const onLoad=function(){
+        const script=document.createElement("script");
+        script.src="https://www.chatbase.co/embed.min.js";
+        script.id="W5ZOQa_6wOPIOFFfMXkIY";
+        script.domain="www.chatbase.co";
+        document.body.appendChild(script)
+    };
+    if(document.readyState==="complete"){onLoad()}
+    else{window.addEventListener("load",onLoad)}
+})();
+</script>
+
 </body>
 </html>

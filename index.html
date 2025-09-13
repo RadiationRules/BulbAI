@@ -7,126 +7,84 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #ffffff;
-  --panel: #ffffff;
-  --accent: #f7c948;
-  --accent-dark: #e6bd00;
-  --text: #1f1f1f;
-  --muted: #6b6b6b;
-  --shadow: rgba(0,0,0,0.1);
-  --radius: 12px;
+  --bg:#f8f9fa;
+  --panel:#fff;
+  --accent:#f7c948;
+  --accent-dark:#e6bd00;
+  --text:#1f1f1f;
+  --muted:#6b6b6b;
+  --shadow:rgba(0,0,0,0.1);
+  --radius:12px;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-body, html{height:100%;font-family:'Inter',sans-serif;background:var(--bg);}
+body,html{height:100%;font-family:'Inter',sans-serif;background:var(--bg);}
 a{text-decoration:none;color:var(--accent);}
 a:hover{text-decoration:underline;}
 
 /* LOGIN SCREEN */
 #loginScreen{
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  height:100vh;
-  width:100%;
-  position:relative;
-  overflow:hidden;
+  display:flex;justify-content:center;align-items:center;height:100%;width:100%;position:relative;overflow:hidden;
 }
-#bgVideo{
-  position:absolute;
-  top:0; left:0; width:100%; height:100%;
-  object-fit:cover;
-  z-index:-1;
-  filter:blur(6px) brightness(0.5);
+#loginScreen video{
+  position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:0;filter:blur(4px) brightness(0.6);
 }
 .login-container{
-  background: rgba(255,255,255,0.85);
-  padding:2rem;
-  border-radius:var(--radius);
-  box-shadow:0 8px 24px var(--shadow);
-  width:100%;
-  max-width:400px;
-  display:flex;
-  flex-direction:column;
-  gap:1rem;
-  text-align:center;
+  position:relative;z-index:1;background:var(--panel);padding:2rem;border-radius:var(--radius);box-shadow:0 8px 24px var(--shadow);width:100%;max-width:400px;display:flex;flex-direction:column;gap:1.5rem;animation:fadeIn 0.5s ease forwards;
 }
-.login-container h1{font-size:2rem; color:var(--text);}
-.login-container p{color:var(--muted); font-size:0.9rem;}
-.input-group{display:flex; flex-direction:column; gap:0.5rem;}
-.input-group input{padding:0.75rem;border-radius:var(--radius);border:1px solid rgba(0,0,0,0.1);}
-.button{
-  padding:0.75rem;border-radius:var(--radius);border:none;background:var(--accent);color:#2b2b2b;font-weight:700;cursor:pointer;
-  display:flex; justify-content:center; align-items:center; gap:0.5rem;transition:0.3s;
-}
+.login-container h1{text-align:center;font-size:2rem;color:var(--text);}
+.login-container p{text-align:center;color:var(--muted);font-size:0.9rem;}
+.input-group{display:flex;flex-direction:column;gap:0.5rem;}
+.input-group input{padding:0.75rem;border-radius:var(--radius);border:1px solid rgba(0,0,0,0.1);font-size:1rem;}
+.button{padding:0.75rem;border-radius:var(--radius);border:none;background:var(--accent);color:#2b2b2b;font-weight:700;cursor:pointer;transition:0.3s;display:flex;align-items:center;justify-content:center;gap:0.5rem;}
 .button:hover{transform:scale(1.03);}
-.google-btn{background:#fff;border:1px solid #ddd;color:#000;}
-.google-btn img{height:20px;width:20px;}
-.divider{position:relative;color:var(--muted);margin:0.5rem 0;}
-.divider::before, .divider::after{
-  content:"";
-  position:absolute;
-  top:50%;
-  width:40%;
-  height:1px;
-  background:var(--shadow);
-}
+.google-btn{background:#fff;border:1px solid #ddd;color:#000;justify-content:center;gap:8px;}
+.google-btn img{height:20px;width:20px;border-radius:2px;}
+.divider{text-align:center;color:var(--muted);margin:0.5rem 0;position:relative;}
+.divider::before,.divider::after{content:"";position:absolute;top:50%;width:40%;height:1px;background:var(--shadow);}
 .divider::before{left:0;}
 .divider::after{right:0;}
-.tryBtn{background:none;border:none;color:var(--accent);font-weight:700;text-decoration:underline;cursor:pointer;}
+#tryBtn{text-decoration:underline;font-weight:bold;background:none;border:none;color:var(--accent);cursor:pointer;}
+@keyframes fadeIn{from{opacity:0;transform:scale(0.95);}to{opacity:1;transform:scale(1);}}
+@media(max-width:500px){.login-container{padding:1.5rem;}.login-container h1{font-size:1.75rem;}.input-group input{font-size:0.95rem;}}
 
 /* MAIN APP */
-#mainApp{
-  display:none;
-  grid-template-columns:320px 1fr;
-  height:100vh;
-  width:100%;
-}
-.sidebar{
-  background:var(--panel);
-  padding:16px;
-  border-right:1px solid #ddd;
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-  overflow-y:auto;
-}
-.sidebar.hidden{display:none;}
-.conv-item{padding:8px;border-radius:8px;background:#fef8e6;display:flex;justify-content:space-between;cursor:pointer;}
-.conv-item:hover{background:#fff6c6;}
-.main{display:flex;flex-direction:column;gap:12px;flex:1;padding:16px;}
-.topbar{display:flex;justify-content:space-between;align-items:center;}
+#mainApp{display:none;height:100vh;width:100%;grid-template-columns:320px 1fr;gap:16px;overflow:hidden;}
+.sidebar{background:#fff;padding:16px;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,0.08);display:flex;flex-direction:column;transition:0.3s;}
+.sidebar .brand{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+.sidebar .brand .logo{width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,#f7c948,#ffd86b);display:flex;align-items:center;justify-content:center;font-weight:800;color:#2b2b2b;font-size:18px;}
+#newChatBtn{margin-bottom:16px;}
+.conversations-list{flex:1;overflow:auto;display:flex;flex-direction:column;gap:8px;}
+.sidebar-footer{margin-top:16px;display:flex;gap:8px;justify-content:space-between;}
+.main{display:flex;flex-direction:column;gap:12px;overflow:hidden;}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:12px;border-radius:12px;background:#fff;box-shadow:0 6px 18px rgba(0,0,0,0.08);}
 .chat-window{flex:1;background:#fef8e6;border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:12px;overflow:auto;box-shadow:0 6px 18px rgba(0,0,0,0.08);scroll-behavior:smooth;}
-.composer{display:flex;gap:8px;align-items:center;}
+.composer{display:flex;gap:8px;align-items:center;padding:12px;border-radius:12px;background:#fff;}
 .composer input{flex:1;padding:12px;border-radius:12px;border:1px solid rgba(0,0,0,0.1);}
-.msg.user{background:linear-gradient(90deg,#ffe37f,#fff6c6);align-self:flex-end;padding:10px 14px;border-radius:14px;}
-.msg.bot{background:linear-gradient(90deg,#fff7e0,#fff);align-self:flex-start;padding:10px 14px;border-radius:14px;}
+.msg.user{background:linear-gradient(90deg,#ffe37f,#fff6c6);}
+.msg.bot{background:linear-gradient(90deg,#fff7e0,#fff);}
+.msg{max-width:72%;padding:10px 14px;border-radius:14px;box-shadow:0 6px 14px rgba(0,0,0,0.03);align-self:flex-start;animation:popIn 0.25s forwards;}
+.msg.user{align-self:flex-end;}
+@keyframes popIn{to{transform:scale(1);opacity:1;}}
 
-/* PROFILE DROPDOWN */
-#userProfile{width:40px;height:40px;border-radius:50%;cursor:pointer;}
-#profileMenu{display:none;position:absolute;top:50px;right:16px;background:var(--panel);border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,0.2);overflow:hidden;min-width:160px;z-index:1000;}
-#profileMenu button{width:100%;border:none;padding:10px;background:none;cursor:pointer;text-align:left;}
-#profileMenu button:hover{background:var(--accent);color:#2b2b2b;}
-
-/* DARK MODE */
-body.dark-mode{--bg:#1f1f1f;--panel:#2b2b2b;--text:#f0f0f0;--accent:#f7c948;}
-body.dark-mode .chat-window{background:#2b2b2b;}
+/* PROFILE MENU */
+#userProfile{width:36px;height:36px;border-radius:50%;cursor:pointer;display:none;}
+#profileMenu{position:absolute;top:50px;right:20px;background:#fff;padding:12px;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,0.15);display:none;flex-direction:column;gap:8px;}
+#profileMenu button{width:100%;padding:8px;border:none;border-radius:8px;background:var(--accent);cursor:pointer;font-weight:600;}
+.dark-mode{background:#171412;color:#efeae0;}
+.dark-mode .sidebar,.dark-mode .composer,.dark-mode .chat-window{background:#171412;color:#efeae0;}
 </style>
 </head>
 <body>
 
-<!-- VIDEO BACKGROUND -->
-<video id="bgVideo" autoplay muted loop playsinline>
-  <source src="https://cdn.videvo.net/videvo_files/video/free/2019-08/large_watermarked/190725_01_Software_1080p_029_preview.mp4" type="video/mp4">
-</video>
-
-<!-- LOGIN SCREEN -->
+<!-- LOGIN -->
 <div id="loginScreen">
+  <video autoplay muted loop>
+    <source src="https://cdn.pixabay.com/vimeo/443904171/terminal-1024.mp4?width=1920&hash=eb4b1b9a96" type="video/mp4">
+  </video>
   <div class="login-container">
     <h1>💡 BulbAI</h1>
     <p>Sign in to continue</p>
-    <button id="googleSignInBtn" class="button google-btn">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google"> Sign in with Google
-    </button>
+    <button id="googleSignInBtn" class="button google-btn"><img src="https://upload.wikimedia.org/wikipedia/commons/4/4a/Logo_2013_Google.png" alt="G"> Sign in with Google</button>
     <div class="divider">OR</div>
     <div class="input-group">
       <input type="email" id="emailInput" placeholder="Email">
@@ -134,47 +92,50 @@ body.dark-mode .chat-window{background:#2b2b2b;}
     </div>
     <button id="emailSignInBtn" class="button">Sign In</button>
     <button id="emailSignUpBtn" class="button">Sign Up</button>
-    <button id="tryBtn" class="tryBtn">Try it out</button>
+    <p style="text-align:center;">Don't have an account? <button id="tryBtn">Try It Out</button></p>
   </div>
 </div>
 
 <!-- MAIN APP -->
 <div id="mainApp">
-  <!-- SIDEBAR -->
-  <div id="sidebar" class="sidebar">
-    <button id="newChatBtn" class="button">+ New Chat</button>
-    <div id="conversationsList"></div>
-  </div>
-
-  <!-- CHAT AREA -->
-  <div class="main">
-    <div class="topbar">
-      <div id="convTitle">New Chat</div>
-      <img id="userProfile" src="" alt="Profile">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="logo">💡</div>
+      <div><h2 style="font-size:16px;margin:0;">BulbAI</h2><div style="font-size:12px;color:#6b6b6b;">Your yellow assistant</div></div>
     </div>
-    <div id="messages" class="chat-window"></div>
+    <button id="newChatBtn" class="button">+ New Chat</button>
+    <div class="conversations-list" id="conversationsList"></div>
+  </aside>
+  <main class="main">
+    <div class="topbar">
+      <div class="left">
+        <div class="title" id="convTitle">New Chat</div>
+        <div class="tiny muted" id="convSubtitle" style="font-size:12px;color:#6b6b6b;">No messages yet</div>
+      </div>
+      <img id="userProfile" src="">
+    </div>
+    <div class="chat-window" id="messages"></div>
     <div class="composer">
       <input id="prompt" placeholder="Type a message...">
-      <button id="attachBtn" class="button">+</button>
+      <button id="attachBtn">+</button>
       <input type="file" id="fileInput" style="display:none;">
       <button id="sendBtn" class="button">Send</button>
     </div>
-  </div>
+  </main>
 </div>
 
-<!-- PROFILE DROPDOWN -->
+<!-- PROFILE MENU -->
 <div id="profileMenu">
-  <button id="profileToggleTheme">Toggle Dark/Light</button>
-  <button id="profileClearChats">Clear Conversations</button>
+  <button id="profileToggleTheme">Toggle Dark Mode</button>
+  <button id="profileClearChats">Clear Chats</button>
   <button id="signOutBtn">Sign Out</button>
 </div>
 
-<!-- FIREBASE & SCRIPT -->
+<!-- FIREBASE & AI SCRIPT -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
 
-// Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyCGFij1pFUVNFP63QHxEq619c9jPnskzxY",
   authDomain: "bulbai-21f09.firebaseapp.com",
@@ -197,6 +158,12 @@ const profileMenu = document.getElementById('profileMenu');
 const profileToggleTheme = document.getElementById('profileToggleTheme');
 const profileClearChats = document.getElementById('profileClearChats');
 const signOutBtn = document.getElementById('signOutBtn');
+const emailSignInBtn = document.getElementById('emailSignInBtn');
+const emailSignUpBtn = document.getElementById('emailSignUpBtn');
+const emailInput = document.getElementById('emailInput');
+const passwordInput = document.getElementById('passwordInput');
+
+let isTryMode=false;
 
 auth.onAuthStateChanged(user=>{
   if(user){
@@ -210,24 +177,33 @@ auth.onAuthStateChanged(user=>{
 // GOOGLE LOGIN
 googleSignInBtn.onclick = async ()=>{
   const provider = new GoogleAuthProvider();
+  try{await signInWithPopup(auth,provider);}
+  catch(e){alert(e.message);}
+}
+
+// EMAIL LOGIN
+emailSignInBtn.onclick = async ()=>{
   try{
-    await signInWithPopup(auth,provider);
+    await signInWithEmailAndPassword(auth,emailInput.value,passwordInput.value);
+  }catch(e){alert(e.message);}
+}
+emailSignUpBtn.onclick = async ()=>{
+  try{
+    await createUserWithEmailAndPassword(auth,emailInput.value,passwordInput.value);
   }catch(e){alert(e.message);}
 }
 
-// TRY BUTTON (Limited)
+// TRY IT OUT
 tryBtn.onclick = ()=>{
   loginScreen.style.display='none';
   mainApp.style.display='grid';
-  // optionally, disable features after limit
+  isTryMode=true;
 }
 
 // PROFILE MENU
 userProfile.onclick = ()=> profileMenu.style.display = profileMenu.style.display==='block'?'none':'block';
 window.onclick = e=>{
-  if(!userProfile.contains(e.target) && !profileMenu.contains(e.target)){
-    profileMenu.style.display='none';
-  }
+  if(!userProfile.contains(e.target) && !profileMenu.contains(e.target)){profileMenu.style.display='none';}
 }
 profileToggleTheme.onclick = ()=>document.body.classList.toggle('dark-mode');
 profileClearChats.onclick = ()=>document.getElementById('messages').innerHTML='';
@@ -240,34 +216,55 @@ const prompt = document.getElementById('prompt');
 const attachBtn = document.getElementById('attachBtn');
 const fileInput = document.getElementById('fileInput');
 
-sendBtn.onclick = ()=>{
+sendBtn.onclick = async ()=>{
   if(prompt.value.trim()==='') return;
-  const msg = document.createElement('div');
-  msg.className='msg user';
-  msg.textContent=prompt.value;
-  messages.appendChild(msg);
-  messages.scrollTop = messages.scrollHeight;
+  appendMessage(prompt.value,'user');
+  let userMessage = prompt.value;
   prompt.value='';
-  // bot reply (fake for now)
-  setTimeout(()=>{
-    const botMsg = document.createElement('div');
-    botMsg.className='msg bot';
-    botMsg.textContent='Bot: This is a sample reply.';
-    messages.appendChild(botMsg);
-    messages.scrollTop = messages.scrollHeight;
-  },500);
+
+  // AI REPLY (OpenAI)
+  appendTyping();
+  try{
+    const res = await fetch("https://api.openai.com/v1/chat/completions",{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json",
+        "Authorization":"Bearer YOUR_OPENAI_API_KEY" // <-- paste your key here
+      },
+      body:JSON.stringify({
+        model:"gpt-3.5-turbo",
+        messages:[{role:"user",content:userMessage}]
+      })
+    });
+    const data = await res.json();
+    removeTyping();
+    appendMessage(data.choices[0].message.content,'bot');
+  }catch(e){removeTyping();appendMessage("Error contacting AI.","bot");}
 }
 
 attachBtn.onclick = ()=>fileInput.click();
 fileInput.onchange = e=>{
-  const file = e.target.files[0];
-  if(file){
-    const msg = document.createElement('div');
-    msg.className='msg user';
-    msg.textContent=`[Image attached: ${file.name}]`;
-    messages.appendChild(msg);
-    messages.scrollTop = messages.scrollHeight;
-  }
+  if(e.target.files.length>0) appendMessage('📎 '+e.target.files[0].name,'user');
+}
+
+function appendMessage(text,type){
+  const div=document.createElement('div');
+  div.className='msg '+type;
+  div.textContent=text;
+  messages.appendChild(div);
+  messages.scrollTop=messages.scrollHeight;
+}
+function appendTyping(){
+  const div=document.createElement('div');
+  div.id='typing';
+  div.className='msg bot';
+  div.textContent='💡 BulbAI is typing...';
+  messages.appendChild(div);
+  messages.scrollTop=messages.scrollHeight;
+}
+function removeTyping(){
+  const t=document.getElementById('typing');
+  if(t) t.remove();
 }
 </script>
 </body>

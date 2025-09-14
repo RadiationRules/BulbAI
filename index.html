@@ -8,94 +8,45 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 :root {
- --bg: #ffffff;
- --panel: #fefefe;
- --accent: #f7c948;
- --accent-dark: #e6bd00;
- --text: #1f1f1f;
- --muted: #6b6b6b;
- --shadow: rgba(0,0,0,0.1);
- --radius: 12px;
+  --bg:#ffffff;
+  --panel:#fefefe;
+  --accent:#f7c948;
+  --accent-dark:#e6bd00;
+  --text:#1f1f1f;
+  --muted:#6b6b6b;
+  --shadow:rgba(0,0,0,0.1);
+  --radius:12px;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-body, html{height:100%;font-family:'Inter',sans-serif;background:var(--bg);}
+html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);}
 a{text-decoration:none;color:var(--accent);}
 a:hover{text-decoration:underline;}
 
 /* LOGIN SCREEN */
-#loginScreen{
- display:flex;
- justify-content:center;
- align-items:center;
- height:100vh;
- width:100%;
- position:relative;
- overflow:hidden;
-}
-#bgVideo{
- position:absolute;
- top:0; left:0; width:100%; height:100%;
- object-fit:cover;
- z-index:-1;
- filter:blur(6px) brightness(0.5);
-}
-.login-container{
- background: rgba(255,255,255,0.95);
- padding:2rem;
- border-radius:var(--radius);
- box-shadow:0 8px 24px var(--shadow);
- width:100%;
- max-width:400px;
- display:flex;
- flex-direction:column;
- gap:1rem;
- text-align:center;
-}
-.login-container h1{font-size:2rem; color:var(--text);}
-.login-container p{color:var(--muted); font-size:0.9rem;}
-.input-group{display:flex; flex-direction:column; gap:0.5rem;}
+#loginScreen{display:flex;justify-content:center;align-items:center;height:100vh;width:100%;position:relative;overflow:hidden;}
+#bgVideo{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:-1;filter:blur(6px) brightness(0.5);}
+.login-container{background:rgba(255,255,255,0.95);padding:2rem;border-radius:var(--radius);box-shadow:0 8px 24px var(--shadow);width:100%;max-width:400px;display:flex;flex-direction:column;gap:1rem;text-align:center;}
+.login-container h1{font-size:2rem;color:var(--text);}
+.login-container p{color:var(--muted);font-size:0.9rem;}
+.input-group{display:flex;flex-direction:column;gap:0.5rem;}
 .input-group input{padding:0.75rem;border-radius:var(--radius);border:1px solid rgba(0,0,0,0.1);}
-.button{
- padding:0.75rem;border-radius:var(--radius);border:none;background:var(--accent);color:#2b2b2b;font-weight:700;cursor:pointer;
- display:flex; justify-content:center; align-items:center; gap:0.5rem;transition:0.3s;
-}
+.button{padding:0.75rem;border-radius:var(--radius);border:none;background:var(--accent);color:#2b2b2b;font-weight:700;cursor:pointer;display:flex;justify-content:center;align-items:center;gap:0.5rem;transition:0.3s;}
 .button:hover{transform:scale(1.03);}
-.google-btn{background:#fff;border:1px solid #ddd;color:#000; display:flex; align-items:center; justify-content:center; gap:0.5rem;}
+.google-btn{background:#fff;border:1px solid #ddd;color:#000;display:flex;align-items:center;justify-content:center;gap:0.5rem;}
 .google-btn img{height:20px;width:20px;}
 .divider{position:relative;color:var(--muted);margin:0.5rem 0;}
-.divider::before, .divider::after{
- content:"";
- position:absolute;
- top:50%;
- width:40%;
- height:1px;
- background:var(--shadow);
-}
+.divider::before,.divider::after{content:"";position:absolute;top:50%;width:40%;height:1px;background:var(--shadow);}
 .divider::before{left:0;}
 .divider::after{right:0;}
 .tryBtn{background:none;border:none;color:var(--accent);font-weight:700;text-decoration:underline;cursor:pointer;}
 
 /* MAIN APP */
-#mainApp{
- display:none;
- grid-template-columns:280px 1fr;
- height:100vh;
- width:100%;
- overflow:hidden;
-}
-.sidebar{
- background:var(--panel);
- padding:16px;
- border-right:1px solid #ddd;
- display:flex;
- flex-direction:column;
- gap:12px;
- overflow-y:auto;
-}
+#mainApp{display:none;grid-template-columns:280px 1fr;height:100vh;width:100%;overflow:hidden;}
+.sidebar{background:var(--panel);padding:16px;border-right:1px solid #ddd;display:flex;flex-direction:column;gap:12px;overflow-y:auto;}
 .sidebar button{width:100%;}
 .conv-item{padding:10px;border-radius:var(--radius);background:#fff6c6;cursor:pointer;font-weight:500;}
 .conv-item:hover{background:#ffe37f;}
-.main{display:flex;flex-direction:column;flex:1;height:100%;}
+.main{display:flex;flex-direction:column;height:100%;}
 .topbar{display:flex;justify-content:space-between;align-items:center;padding:0 16px;height:60px;background:var(--panel);border-bottom:1px solid #ddd;box-shadow:0 2px 8px rgba(0,0,0,0.05);}
 .topbar h2{margin:0;font-size:1.2rem;color:var(--text);}
 .chat-window{flex:1;background:#fef8e6;border-radius:var(--radius);overflow-y:auto;padding:16px;box-shadow:0 6px 18px rgba(0,0,0,0.08);}
@@ -147,27 +98,24 @@ body.dark-mode .topbar{background:#2b2b2b;}
 
 <!-- MAIN APP -->
 <div id="mainApp">
- <!-- SIDEBAR -->
- <div id="sidebar" class="sidebar">
-   <button id="newChatBtn" class="button">+ New Chat</button>
-   <div id="conversationsList"></div>
- </div>
+  <div id="sidebar" class="sidebar">
+    <button id="newChatBtn" class="button">+ New Chat</button>
+    <div id="conversationsList"></div>
+  </div>
 
- <!-- CHAT AREA -->
- <div class="main">
-   <div class="topbar">
-     <h2>BulbAI Chat</h2>
-     <img id="userProfile" src="" alt="Profile">
-   </div>
-   <div id="messages" class="chat-window"></div>
-   <div class="composer">
-     <input type="text" id="prompt" placeholder="Type a message...">
-     <button id="sendBtn">Send</button>
-   </div>
- </div>
+  <div class="main">
+    <div class="topbar">
+      <h2>BulbAI Chat</h2>
+      <img id="userProfile" src="" alt="Profile">
+    </div>
+    <div id="messages" class="chat-window"></div>
+    <div class="composer">
+      <input type="text" id="prompt" placeholder="Type a message...">
+      <button id="sendBtn">Send</button>
+    </div>
+  </div>
 </div>
 
-<!-- PROFILE DROPDOWN -->
 <div id="profileMenu">
  <button id="profileToggleTheme">Toggle Dark/Light</button>
  <button id="profileClearChats">Clear Conversations</button>
@@ -191,7 +139,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-// ELEMENTS
 const loginScreen = document.getElementById('loginScreen');
 const mainApp = document.getElementById('mainApp');
 const googleSignInBtn = document.getElementById('googleSignInBtn');
@@ -206,58 +153,68 @@ const messages = document.getElementById('messages');
 const sendBtn = document.getElementById('sendBtn');
 const prompt = document.getElementById('prompt');
 
-// AUTH
 auth.onAuthStateChanged(user=>{
- if(user){
-   loginScreen.style.display='none';
-   mainApp.style.display='grid';
-   userProfile.src = user.photoURL || 'https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg';
-   userProfile.style.display='block';
- }
+  if(user){
+    loginScreen.style.display='none';
+    mainApp.style.display='grid';
+    userProfile.src = user.photoURL || 'https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg';
+  }
 });
+
+// Google Sign-in
 googleSignInBtn.onclick = async ()=>{
- const provider = new GoogleAuthProvider();
- try{await signInWithPopup(auth,provider);}catch(e){alert(e.message);}
+  const provider = new GoogleAuthProvider();
+  try{
+    const result = await signInWithPopup(auth, provider);
+    const user = result.user;
+    loginScreen.style.display='none';
+    mainApp.style.display='grid';
+    userProfile.src = user.photoURL || 'https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg';
+  }catch(e){alert(e.message);}
 }
+
+// Try button
 tryBtn.onclick = ()=>{loginScreen.style.display='none';mainApp.style.display='grid';}
+
+// Profile menu
 userProfile.onclick = ()=> profileMenu.style.display = profileMenu.style.display==='block'?'none':'block';
 window.onclick = e=>{
- if(!userProfile.contains(e.target) && !profileMenu.contains(e.target)){
-   profileMenu.style.display='none';
- }
+  if(!userProfile.contains(e.target) && !profileMenu.contains(e.target)){
+    profileMenu.style.display='none';
+  }
 }
 profileToggleTheme.onclick = ()=>document.body.classList.toggle('dark-mode');
 profileClearChats.onclick = ()=>{messages.innerHTML='';};
 signOutBtn.onclick = async ()=>{await signOut(auth);location.reload();}
 
-// SEND MESSAGE (Chatbase)
+// Send message (Chatbase)
 sendBtn.onclick = async ()=>{
- if(prompt.value.trim()==='') return;
- const userMsg = document.createElement('div');
- userMsg.className='msg user';
- userMsg.textContent = prompt.value;
- messages.appendChild(userMsg);
- messages.scrollTop = messages.scrollHeight;
+  if(prompt.value.trim()==='') return;
+  const userMsg = document.createElement('div');
+  userMsg.className='msg user';
+  userMsg.textContent = prompt.value;
+  messages.appendChild(userMsg);
+  messages.scrollTop = messages.scrollHeight;
 
- try{
-   window.chatbase("init", {apiKey:"yato30hkcyj96s3whclhywxppb44fuf5"});
-   const response = await window.chatbase("send", {message: prompt.value});
-   const botMsg = document.createElement('div');
-   botMsg.className='msg bot';
-   botMsg.textContent = response?.message||"No response.";
-   messages.appendChild(botMsg);
-   messages.scrollTop = messages.scrollHeight;
- }catch(err){
-   const botMsg = document.createElement('div');
-   botMsg.className='msg bot';
-   botMsg.textContent = "Error connecting to AI.";
-   messages.appendChild(botMsg);
-   messages.scrollTop = messages.scrollHeight;
- }
- prompt.value='';
-};
+  try{
+    window.chatbase("init", {apiKey:"yato30hkcyj96s3whclhywxppb44fuf5"});
+    const response = await window.chatbase("send", {message: prompt.value});
+    const botMsg = document.createElement('div');
+    botMsg.className='msg bot';
+    botMsg.textContent = response?.message||"No response.";
+    messages.appendChild(botMsg);
+    messages.scrollTop = messages.scrollHeight;
+  }catch(err){
+    const botMsg = document.createElement('div');
+    botMsg.className='msg bot';
+    botMsg.textContent = "Error connecting to AI.";
+    messages.appendChild(botMsg);
+    messages.scrollTop = messages.scrollHeight;
+  }
+  prompt.value='';
+}
 
-// LOAD CHATBASE WIDGET (for API)
+// Load Chatbase
 (function(){
  if(!window.chatbase || window.chatbase("getState")!=="initialized"){
    window.chatbase=(...args)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(args)};

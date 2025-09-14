@@ -9,7 +9,7 @@
 <style>
 :root {
  --bg: #ffffff;
- --panel: #ffffff;
+ --panel: #fefefe;
  --accent: #f7c948;
  --accent-dark: #e6bd00;
  --text: #1f1f1f;
@@ -40,7 +40,7 @@ a:hover{text-decoration:underline;}
  filter:blur(6px) brightness(0.5);
 }
 .login-container{
- background: rgba(255,255,255,0.85);
+ background: rgba(255,255,255,0.95);
  padding:2rem;
  border-radius:var(--radius);
  box-shadow:0 8px 24px var(--shadow);
@@ -78,9 +78,10 @@ a:hover{text-decoration:underline;}
 /* MAIN APP */
 #mainApp{
  display:none;
- grid-template-columns:320px 1fr;
+ grid-template-columns:280px 1fr;
  height:100vh;
  width:100%;
+ overflow:hidden;
 }
 .sidebar{
  background:var(--panel);
@@ -91,26 +92,26 @@ a:hover{text-decoration:underline;}
  gap:12px;
  overflow-y:auto;
 }
-.sidebar.hidden{display:none;}
-.conv-item{padding:8px;border-radius:8px;background:#fef8e6;display:flex;justify-content:space-between;cursor:pointer;}
-.conv-item:hover{background:#fff6c6;}
-.main{display:flex;flex-direction:column;gap:12px;flex:1;padding:16px;}
-.topbar{display:flex;justify-content:space-between;align-items:center;}
-.chat-window{flex:1;background:#fef8e6;border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:12px;overflow:auto;box-shadow:0 6px 18px rgba(0,0,0,0.08);scroll-behavior:smooth;}
-.composer{display:flex;gap:8px;align-items:center;}
-.composer input{flex:1;padding:12px;border-radius:12px;border:1px solid rgba(0,0,0,0.1);}
-.msg.user{background:linear-gradient(90deg,#ffe37f,#fff6c6);align-self:flex-end;padding:10px 14px;border-radius:14px;}
-.msg.bot{background:linear-gradient(90deg,#fff7e0,#fff);align-self:flex-start;padding:10px 14px;border-radius:14px;}
+.sidebar button{width:100%;}
+.conv-item{padding:10px;border-radius:var(--radius);background:#fff6c6;cursor:pointer;font-weight:500;}
+.conv-item:hover{background:#ffe37f;}
+.main{display:flex;flex-direction:column;gap:12px;flex:1;height:100%;}
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:0 16px;height:60px;background:var(--panel);border-bottom:1px solid #ddd;box-shadow:0 2px 8px rgba(0,0,0,0.05);}
+.topbar h2{margin:0;font-size:1.2rem;color:var(--text);}
+.chat-window{flex:1;border-radius:var(--radius);overflow:hidden;box-shadow:0 6px 18px rgba(0,0,0,0.08);}
+.chat-window iframe{width:100%;height:100%;border:none;}
 
 /* PROFILE DROPDOWN */
 #userProfile{width:40px;height:40px;border-radius:50%;cursor:pointer;}
-#profileMenu{display:none;position:absolute;top:50px;right:16px;background:var(--panel);border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,0.2);overflow:hidden;min-width:160px;z-index:1000;}
+#profileMenu{display:none;position:absolute;top:60px;right:16px;background:var(--panel);border-radius:var(--radius);box-shadow:0 8px 24px rgba(0,0,0,0.2);overflow:hidden;min-width:160px;z-index:1000;}
 #profileMenu button{width:100%;border:none;padding:10px;background:none;cursor:pointer;text-align:left;}
 #profileMenu button:hover{background:var(--accent);color:#2b2b2b;}
 
 /* DARK MODE */
 body.dark-mode{--bg:#1f1f1f;--panel:#2b2b2b;--text:#f0f0f0;--accent:#f7c948;}
 body.dark-mode .chat-window{background:#2b2b2b;}
+body.dark-mode .sidebar{background:#2b2b2b;}
+body.dark-mode .topbar{background:#2b2b2b;}
 </style>
 </head>
 <body>
@@ -150,15 +151,16 @@ body.dark-mode .chat-window{background:#2b2b2b;}
  <!-- CHAT AREA -->
  <div class="main">
    <div class="topbar">
-     <div id="convTitle">New Chat</div>
+     <h2>BulbAI Chat</h2>
      <img id="userProfile" src="" alt="Profile">
    </div>
-   <div id="messages" class="chat-window"></div>
-   <div class="composer">
-     <input id="prompt" placeholder="Type a message...">
-     <button id="attachBtn" class="button">+</button>
-     <input type="file" id="fileInput" style="display:none;">
-     <button id="sendBtn" class="button">Send</button>
+   <div id="messages" class="chat-window">
+     <iframe
+       src="https://www.chatbase.co/chatbot-iframe/W5ZOQa_6wOPIOFFfMXkIY"
+       width="100%"
+       style="height: 100%; min-height: 700px"
+       frameborder="0"
+     ></iframe>
    </div>
  </div>
 </div>
@@ -172,7 +174,7 @@ body.dark-mode .chat-window{background:#2b2b2b;}
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
 
 // Firebase config
 const firebaseConfig = {
@@ -206,7 +208,6 @@ auth.onAuthStateChanged(user=>{
  }
 });
 
-// GOOGLE LOGIN
 googleSignInBtn.onclick = async ()=>{
  const provider = new GoogleAuthProvider();
  try{
@@ -214,13 +215,11 @@ googleSignInBtn.onclick = async ()=>{
  }catch(e){alert(e.message);}
 }
 
-// TRY BUTTON (Limited)
 tryBtn.onclick = ()=>{
  loginScreen.style.display='none';
  mainApp.style.display='grid';
 }
 
-// PROFILE MENU
 userProfile.onclick = ()=> profileMenu.style.display = profileMenu.style.display==='block'?'none':'block';
 window.onclick = e=>{
  if(!userProfile.contains(e.target) && !profileMenu.contains(e.target)){
@@ -228,75 +227,8 @@ window.onclick = e=>{
  }
 }
 profileToggleTheme.onclick = ()=>document.body.classList.toggle('dark-mode');
-profileClearChats.onclick = ()=>document.getElementById('messages').innerHTML='';
+profileClearChats.onclick = ()=>{}; // cannot clear iframe internal chat
 signOutBtn.onclick = async ()=>{await signOut(auth);location.reload();}
-
-// CHAT
-const messages = document.getElementById('messages');
-const sendBtn = document.getElementById('sendBtn');
-const prompt = document.getElementById('prompt');
-const attachBtn = document.getElementById('attachBtn');
-const fileInput = document.getElementById('fileInput');
-
-attachBtn.onclick = ()=>fileInput.click();
-fileInput.onchange = e=>{
- const file = e.target.files[0];
- if(file){
-   const msg = document.createElement('div');
-   msg.className='msg user';
-   msg.textContent=`[File attached: ${file.name}]`;
-   messages.appendChild(msg);
-   messages.scrollTop = messages.scrollHeight;
- }
-}
-
-// SEND & AI REPLY VIA CHATBASE
-sendBtn.onclick = async ()=>{
- if(prompt.value.trim()==='') return;
- const userMsg = document.createElement('div');
- userMsg.className='msg user';
- userMsg.textContent=prompt.value;
- messages.appendChild(userMsg);
- messages.scrollTop = messages.scrollHeight;
-
- // Chatbase AI integration
- try{
-   window.chatbase("init", {apiKey:"yato30hkcyj96s3whclhywxppb44fuf5"});
-   const response = await window.chatbase("send", {message: prompt.value});
-   const botMsg = document.createElement('div');
-   botMsg.className='msg bot';
-   botMsg.textContent=response?.message||"No response.";
-   messages.appendChild(botMsg);
-   messages.scrollTop = messages.scrollHeight;
- }catch(err){
-   const botMsg = document.createElement('div');
-   botMsg.className='msg bot';
-   botMsg.textContent="Error connecting to AI.";
-   messages.appendChild(botMsg);
-   messages.scrollTop = messages.scrollHeight;
- }
- prompt.value='';
-};
-
-// LOAD CHATBASE WIDGET
-(function(){
- if(!window.chatbase || window.chatbase("getState")!=="initialized"){
-   window.chatbase=(...args)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(args)};
-   window.chatbase=new Proxy(window.chatbase,{get(target,prop){
-     if(prop==="q"){return target.q}
-     return(...args)=>target(prop,...args)
-   }})
- }
- const onLoad=function(){
-   const script=document.createElement("script");
-   script.src="https://www.chatbase.co/embed.min.js";
-   script.id="W5ZOQa_6wOPIOFFfMXkIY";
-   script.domain="www.chatbase.co";
-   document.body.appendChild(script)
- };
- if(document.readyState==="complete"){onLoad()}else{window.addEventListener("load",onLoad)}
-})();
 </script>
 </body>
 </html>
-

@@ -29,17 +29,19 @@ a{text-decoration:none;color:var(--accent);}
 .navbar button:hover{box-shadow:0 0 12px var(--accent);transform:scale(1.1);}
 
 /* HERO */
-.hero{height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:0 32px;transition:0.5s;}
-.hero h1{font-family:'Orbitron',sans-serif;font-size:4rem;color:var(--accent);text-shadow:0 0 8px var(--accent),0 0 16px var(--accent-dark);animation:glow 2s infinite alternate;transition:0.3s;}
+.hero{height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:0 32px;opacity:0;transform:translateY(50px);animation:heroFadeIn 2s forwards;}
+.hero h1{font-family:'Orbitron',sans-serif;font-size:4rem;color:var(--accent);text-shadow:0 0 8px var(--accent),0 0 16px var(--accent-dark);animation:glow 2s infinite alternate;}
 .hero p{margin-top:16px;font-size:1.5rem;color:var(--muted);max-width:700px;transition:0.3s;}
 .hero .core-features{display:flex;justify-content:center;gap:24px;margin-top:48px;flex-wrap:wrap;transition:0.5s;}
-.core-card{background:var(--panel);padding:32px;border-radius:var(--radius);flex:1 1 220px;min-width:220px;box-shadow:0 0 12px var(--shadow);transition:0.3s, transform 0.3s;text-align:center;cursor:pointer;}
-.core-card:hover{box-shadow:0 0 24px var(--accent);transform:translateY(-10px) scale(1.05);}
+.core-card{background:var(--panel);padding:32px;border-radius:var(--radius);flex:1 1 220px;min-width:220px;box-shadow:0 0 12px var(--shadow);transition:0.5s, transform 0.5s;text-align:center;cursor:pointer;}
+.core-card:hover{box-shadow:0 0 32px var(--accent);transform:translateY(-10px) scale(1.05);}
 .core-card h3{font-family:'Orbitron',sans-serif;color:var(--accent);margin-bottom:12px;transition:0.3s;}
 .core-card p{color:var(--muted);font-size:1rem;transition:0.3s;}
+.hero .try-btn{margin-top:32px;padding:14px 32px;background:linear-gradient(90deg,#00ffe0,#00b2a9);color:#000;font-weight:700;border:none;border-radius:var(--radius);cursor:pointer;transition:0.3s, transform 0.2s;animation:btnFadeIn 2s 1s forwards;opacity:0;}
+.hero .try-btn:hover{transform:scale(1.1);box-shadow:0 0 20px var(--accent);}
 
 /* CHAT SECTION */
-.chat-section{padding:64px 32px 32px 32px;display:flex;flex-direction:column;align-items:center;background:#0f0f0f;transition:0.5s;}
+.chat-section{padding:64px 32px 32px 32px;display:flex;flex-direction:column;align-items:center;background:#0f0f0f;transition:0.5s;opacity:0;transform:translateY(50px);}
 .chat-section h2{font-family:'Orbitron',sans-serif;color:var(--accent);margin-bottom:24px;transition:0.3s;}
 
 /* Sci-Fi chat background */
@@ -64,7 +66,14 @@ footer{padding:32px;text-align:center;color:var(--muted);background:#050505;font
   50%{background-position:100% 50%;}
   100%{background-position:0% 50%;}
 }
+@keyframes heroFadeIn{
+  to{opacity:1;transform:translateY(0);}
+}
+@keyframes btnFadeIn{
+  to{opacity:1;}
+}
 
+/* Section scroll reveal */
 section{opacity:0;transform:translateY(50px);transition:all 0.8s ease;}
 section.visible{opacity:1;transform:translateY(0);}
 </style>
@@ -95,11 +104,12 @@ section.visible{opacity:1;transform:translateY(0);}
       <p>Create designs and projects with AI guidance efficiently.</p>
     </div>
   </div>
+  <button class="try-btn" id="tryNowBtn">Try Now</button>
   <button class="premium-btn" id="premiumBtn">Premium Feature</button>
 </section>
 
 <!-- CHAT -->
-<section class="chat-section visible" id="chat">
+<section class="chat-section" id="chat">
   <h2>💬 Chat with BulbAI</h2>
   <div class="chat-container">
     <div class="chat-bg"></div>
@@ -130,37 +140,45 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
-// Scroll animations
-const sections = document.querySelectorAll('section');
-window.addEventListener('scroll', ()=>{
-  sections.forEach(sec=>{
-    const rect = sec.getBoundingClientRect();
-    if(rect.top < window.innerHeight - 100){
-      sec.classList.add('visible');
-    }
-  });
+// Hero fade-in on load
+window.addEventListener("load", ()=>{
+  document.querySelector(".hero").classList.add("visible");
 });
 
-// Top-right login/signup buttons
-document.getElementById('loginBtn').onclick = async ()=>{
+// Navbar buttons
+document.getElementById("loginBtn").onclick = async ()=>{
   try{
     const result = await signInWithPopup(auth, provider);
     const user = result.user;
-    alert(`Welcome back, ${user.displayName}!`);
+    window.location.href = "#chat"; // Go directly to chat
   }catch(e){alert(e.message);}
-};
-document.getElementById('signupBtn').onclick = async ()=>{
+}
+document.getElementById("signupBtn").onclick = async ()=>{
   try{
     const result = await signInWithPopup(auth, provider);
     const user = result.user;
-    alert(`Signed up as ${user.displayName}!`);
+    window.location.href = "#chat";
   }catch(e){alert(e.message);}
-};
+}
 
-// Premium button placeholder
-document.getElementById('premiumBtn').onclick = ()=>{
-  alert("Premium feature coming soon! For now, this is a placeholder.");
-};
+// Try Now scroll
+document.getElementById("tryNowBtn").onclick = ()=>{
+  document.getElementById("chat").scrollIntoView({behavior:"smooth"});
+}
+
+// Premium Button (fake)
+document.getElementById("premiumBtn").onclick = ()=>{
+  alert("Premium feature coming soon!");
+}
+
+// Scroll reveal
+const sections = document.querySelectorAll("section");
+window.addEventListener("scroll", ()=>{
+  sections.forEach(sec=>{
+    const top = sec.getBoundingClientRect().top;
+    if(top < window.innerHeight-100){sec.classList.add("visible");}
+  });
+});
 </script>
 </body>
 </html>

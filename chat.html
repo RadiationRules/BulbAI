@@ -6,62 +6,61 @@
 <title>BulbAI Chat</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0f0f1a;--accent:#00ffe0;--accent-dark:#00c0b0;--text:#fff;--radius:12px;}
-body,html{height:100%;margin:0;font-family:'Inter',sans-serif;background:var(--bg);display:flex;flex-direction:column;overflow:hidden;color:var(--text);}
-header{padding:24px;display:flex;justify-content:space-between;align-items:center;}
-header h1{color:var(--accent);opacity:0;animation:fadeInHeader 1.5s forwards;}
-@keyframes fadeInHeader{0%{opacity:0;transform:translateY(-20px);}100%{opacity:1;transform:translateY(0);}}
-
-#chat-container{position:relative;flex:1;display:flex;justify-content:center;align-items:center;opacity:0;animation:fadeInChat 1.5s forwards;}
-@keyframes fadeInChat{0%{opacity:0;transform:scale(0.95);}100%{opacity:1;transform:scale(1);}}
-
-#chat-container iframe{width:90%;height:90%;border:none;border-radius:var(--radius);box-shadow:0 0 40px var(--accent);transition:0.3s;}
-#chat-container iframe:hover{transform:scale(1.01);}
-
-.chat-bg{position:absolute;top:0;left:0;width:100%;height:100%;z-index:1;
-background:radial-gradient(circle at 30% 30%,rgba(0,255,224,0.1),transparent 70%),radial-gradient(circle at 70% 70%,rgba(0,255,224,0.15),transparent 60%);
-overflow:hidden;}
-.chat-bg::before,.chat-bg::after{
-  content:'';
-  position:absolute;width:200%;height:200%;top:-50%;left:-50%;
-  background:radial-gradient(circle, rgba(0,255,224,0.2) 0%, transparent 70%);
-  animation:rotateBG 20s linear infinite;
+:root {
+  --bg:#0d0d0d;
+  --panel:#111;
+  --accent:#0ff;
+  --accent2:#f0f;
+  --text:#fff;
+  --radius:12px;
 }
-.chat-bg::after{animation-duration:35s;opacity:0.4;}
-@keyframes rotateBG{0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}
-
-#profileMenu{display:none;position:absolute;top:80px;right:24px;background:var(--bg);border-radius:var(--radius);box-shadow:0 8px 24px rgba(0,255,224,0.2);overflow:hidden;min-width:160px;z-index:2;}
-#profileMenu button{width:100%;border:none;padding:10px;background:none;cursor:pointer;text-align:left;color:#fff;}
-#profileMenu button:hover{background:var(--accent-dark);}
-
-#userProfile{width:40px;height:40px;border-radius:50%;cursor:pointer;z-index:2;transition:0.3s;}
-#userProfile:hover{transform:scale(1.1);}
-
-#premiumBtn{position:absolute;top:16px;right:80px;padding:12px 24px;border:none;border-radius:var(--radius);cursor:pointer;background:var(--accent);color:#0f0f1a;font-weight:700;z-index:2;transition:0.3s;}
-#premiumBtn:hover{background:var(--accent-dark);transform:scale(1.05);}
+*{box-sizing:border-box;margin:0;padding:0;}
+body,html{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);}
+header{display:flex;justify-content:space-between;align-items:center;padding:20px;}
+header h1{color:var(--accent);}
+header .profile{display:flex;align-items:center;gap:10px;cursor:pointer;}
+header .profile img{width:40px;height:40px;border-radius:50%;}
+#profileMenu{display:none;position:absolute;top:70px;right:20px;background:var(--panel);border-radius:var(--radius);box-shadow:0 0 20px rgba(0,255,255,0.4);overflow:hidden;min-width:180px;z-index:100;}
+#profileMenu button{width:100%;padding:10px;border:none;background:none;color:var(--text);cursor:pointer;text-align:left;}
+#profileMenu button:hover{background:var(--accent);color:#000;}
+#chatContainer{padding:20px;height:85vh;display:flex;flex-direction:column;gap:10px;overflow-y:auto;background:linear-gradient(135deg, #0a0a0a, #1a1a1a);}
+.msg{padding:10px 14px;border-radius:14px;max-width:80%;position:relative;}
+.msg.user{align-self:flex-end;background:linear-gradient(90deg,#0ff,#0ff55);}
+.msg.bot{align-self:flex-start;background:linear-gradient(90deg,#f0f,#f055);}
+.msg pre{background:#000;color:#0ff;padding:8px;border-radius:8px;overflow-x:auto;}
+.msg button.copyBtn{position:absolute;top:5px;right:5px;padding:2px 5px;font-size:0.7rem;border:none;border-radius:4px;cursor:pointer;background:var(--accent);color:#000;}
+#composer{display:flex;gap:10px;margin-top:auto;}
+#composer input{flex:1;padding:12px;border-radius:var(--radius);border:none;}
+#composer button{padding:12px 16px;border-radius:var(--radius);border:none;background:var(--accent2);color:#000;font-weight:700;cursor:pointer;}
+#composer button:hover{transform:scale(1.05);}
 </style>
 </head>
 <body>
-<header>
-  <h1>💡 BulbAI Chat</h1>
-  <img id="userProfile" src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Profile">
-</header>
 
-<div id="chat-container">
-  <div class="chat-bg"></div>
-  <iframe src="https://www.chatbase.co/chatbot-iframe/W5ZOQa_6wOPIOFFfMXkIY"></iframe>
-  <button id="premiumBtn">Premium Feature</button>
+<header>
+  <h1>BulbAI Chat</h1>
+  <div class="profile">
+    <img id="userProfile" src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Profile">
+  </div>
   <div id="profileMenu">
     <button id="toggleTheme">Toggle Dark/Light</button>
-    <button id="clearChats">Clear Chats</button>
+    <button id="clearChat">Clear Chat</button>
     <button id="signOutBtn">Sign Out</button>
   </div>
+</header>
+
+<div id="chatContainer"></div>
+
+<div id="composer">
+  <input type="text" id="userInput" placeholder="Type a message...">
+  <button id="sendBtn">Send</button>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
 
+// Firebase
 const firebaseConfig = {
  apiKey: "AIzaSyCGFij1pFUVNFP63QHxEq619c9jPnskzxY",
  authDomain: "bulbai-21f09.firebaseapp.com",
@@ -71,27 +70,86 @@ const firebaseConfig = {
  appId: "1:366775652166:web:22db16f4f87f9a60625f47",
  measurementId: "G-G09FQQ53XP"
 };
-
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
+const chatContainer = document.getElementById('chatContainer');
+const userInput = document.getElementById('userInput');
+const sendBtn = document.getElementById('sendBtn');
 const userProfile = document.getElementById('userProfile');
 const profileMenu = document.getElementById('profileMenu');
 const toggleTheme = document.getElementById('toggleTheme');
-const clearChats = document.getElementById('clearChats');
+const clearChat = document.getElementById('clearChat');
 const signOutBtn = document.getElementById('signOutBtn');
-const premiumBtn = document.getElementById('premiumBtn');
 
-userProfile.onclick = () => profileMenu.style.display = profileMenu.style.display==='block'?'none':'block';
-window.onclick = e=>{
-  if(!userProfile.contains(e.target) && !profileMenu.contains(e.target)){
-    profileMenu.style.display='none';
+// Auth check
+onAuthStateChanged(auth,user=>{
+  if(!user) window.location.href='index.html';
+  else userProfile.src = user.photoURL || userProfile.src;
+});
+
+// Profile menu
+userProfile.onclick = ()=> profileMenu.style.display = profileMenu.style.display==='block'?'none':'block';
+window.onclick = e=>{if(!profileMenu.contains(e.target)&&!userProfile.contains(e.target)) profileMenu.style.display='none';}
+toggleTheme.onclick = ()=> document.body.classList.toggle('dark-mode');
+clearChat.onclick = ()=> chatContainer.innerHTML='';
+signOutBtn.onclick = async ()=>{await signOut(auth); window.location.href='index.html';}
+
+// Send message (Chatbase)
+sendBtn.onclick = async ()=>{
+  const msg = userInput.value.trim();
+  if(!msg) return;
+  
+  const userMsgDiv = document.createElement('div');
+  userMsgDiv.className='msg user';
+  userMsgDiv.textContent=msg;
+  chatContainer.appendChild(userMsgDiv);
+  
+  chatContainer.scrollTop = chatContainer.scrollHeight;
+  userInput.value='';
+  
+  // Chatbase request
+  try{
+    window.chatbase("init",{apiKey:"yato30hkcyj96s3whclhywxppb44fuf5"});
+    const response = await window.chatbase("send",{message:msg});
+    const botMsgDiv = document.createElement('div');
+    botMsgDiv.className='msg bot';
+    
+    if(response?.message.includes("```")){
+      botMsgDiv.innerHTML=response.message.replace(/```(.*?)```/gs,(match,p1)=>`<pre>${p1}<button class="copyBtn">Copy</button></pre>`);
+    } else botMsgDiv.textContent=response?.message||"No response.";
+    
+    chatContainer.appendChild(botMsgDiv);
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+    
+    // Copy buttons
+    botMsgDiv.querySelectorAll('.copyBtn').forEach(btn=>{
+      btn.onclick=()=>{navigator.clipboard.writeText(btn.previousSibling.textContent); alert('Copied!');};
+    });
+    
+  }catch(err){
+    const botMsgDiv = document.createElement('div');
+    botMsgDiv.className='msg bot';
+    botMsgDiv.textContent="Error connecting to AI.";
+    chatContainer.appendChild(botMsgDiv);
   }
-}
-toggleTheme.onclick = ()=>document.body.classList.toggle('dark-mode');
-clearChats.onclick = ()=>alert("Chats cleared!"); 
-signOutBtn.onclick = async ()=>{await signOut(auth); window.location.href='index.html';};
-premiumBtn.onclick = ()=>{alert("Premium Feature coming soon!");};
+};
 </script>
+
+<!-- Chatbase embed -->
+<script>
+(function(){
+ if(!window.chatbase || window.chatbase("getState")!=="initialized"){
+   window.chatbase=(...args)=>{if(!window.chatbase.q) window.chatbase.q=[];window.chatbase.q.push(args)};
+   window.chatbase=new Proxy(window.chatbase,{get(t,p){if(p==="q")return t.q;return(...args)=>t(p,...args)}});
+ }
+ const s=document.createElement("script");
+ s.src="https://www.chatbase.co/embed.min.js";
+ s.id="W5ZOQa_6wOPIOFFfMXkIY";
+ s.domain="www.chatbase.co";
+ document.body.appendChild(s);
+})();
+</script>
+
 </body>
 </html>

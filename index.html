@@ -17,20 +17,20 @@
   --radius:12px;
   --shadow: rgba(0,255,255,0.2);
 }
-
-/* GLOBAL STYLES */
 *{box-sizing:border-box;margin:0;padding:0;}
 html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);overflow:hidden;}
 a{text-decoration:none;color:var(--accent);}
 a:hover{text-decoration:underline;}
 .button{padding:0.8rem 1.5rem;border-radius:var(--radius);border:none;background:var(--accent);color:#000;font-weight:700;cursor:pointer;transition:0.3s;}
 .button:hover{background:var(--accent-dark);transform:scale(1.05);box-shadow:0 0 20px var(--accent);}
+.google-btn{display:flex;align-items:center;gap:0.5rem;background:#fff;color:#000;border:1px solid #ddd;}
+.google-btn img{width:20px;height:20px;}
 
 /* LANDING PAGE */
 #landing{
-  position:relative;width:100%;height:100vh;
+  position:fixed;width:100%;height:100vh;
   display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;
-  overflow:hidden;
+  overflow:hidden;z-index:2;
 }
 #landing video{
   position:absolute;top:0;left:0;width:100%;height:100%;
@@ -49,23 +49,27 @@ a:hover{text-decoration:underline;}
   animation:fadeIn 2s 0.5s forwards;
 }
 #landing .buttons{display:flex;gap:1rem;opacity:0;animation:fadeIn 2s 1s forwards;}
-.google-btn{display:flex;align-items:center;gap:0.5rem;background:#fff;color:#000;border:1px solid #ddd;}
-.google-btn img{width:20px;height:20px;}
+
+/* FEATURES */
+#features{display:flex;gap:2rem;justify-content:center;margin-top:2rem;}
+.feature{padding:1.5rem;border:2px solid var(--accent);border-radius:var(--radius);width:200px;transition:0.4s;cursor:pointer;}
+.feature:hover{transform:scale(1.1);box-shadow:0 0 20px var(--accent);}
+.feature h3{margin-bottom:0.5rem;}
 
 /* CHAT PAGE */
 #chatContainer{
-  display:none;width:100%;height:100vh;flex-direction:column;
+  display:none;position:fixed;top:0;left:0;width:100%;height:100vh;flex-direction:column;
+  background: linear-gradient(135deg, #000c0c, #001212);
+  overflow:hidden;z-index:1;
 }
 .topbar{
   display:flex;justify-content:space-between;align-items:center;padding:10px 20px;background:var(--panel);
   border-bottom:1px solid var(--accent);box-shadow:0 0 20px var(--accent);
 }
 #iframeWrapper{
-  flex:1;width:100%;height:100%;padding:20px;
+  flex:1;width:100%;height:calc(100% - 60px);padding:20px;
   border:2px solid var(--accent);border-radius:var(--radius);
   box-shadow:0 0 40px var(--accent);overflow:hidden;
-  animation:fadeIn 1s ease forwards;
-  background: linear-gradient(135deg, #000c0c, #001212);
 }
 
 /* PROFILE MENU */
@@ -105,15 +109,22 @@ a:hover{text-decoration:underline;}
       <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google"> Sign In
     </button>
   </div>
+  <div id="features">
+    <div class="feature"><h3>Brainstorming</h3><p>Generate new ideas instantly.</p></div>
+    <div class="feature"><h3>Coding</h3><p>Create AI-assisted code.</p></div>
+    <div class="feature"><h3>Building</h3><p>Design your projects easily.</p></div>
+  </div>
 </div>
 
-<!-- CHAT CONTAINER -->
+<!-- CHAT PAGE -->
 <div id="chatContainer">
   <div class="topbar">
     <h2>BulbAI Chat</h2>
     <img id="userProfile" src="" alt="Profile">
   </div>
-  <div id="iframeWrapper"></div>
+  <div id="iframeWrapper">
+    <iframe src="https://www.chatbase.co/chatbot-iframe/W5ZOQa_6wOPIOFFfMXkIY" width="100%" height="100%" frameborder="0"></iframe>
+  </div>
 </div>
 
 <div id="profileMenu">
@@ -137,50 +148,54 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-// DOM
 const landing = document.getElementById('landing');
 const chatContainer = document.getElementById('chatContainer');
-const tryBtn = document.getElementById('tryBtn');
 const googleSignInBtn = document.getElementById('googleSignInBtn');
+const tryBtn = document.getElementById('tryBtn');
 const userProfile = document.getElementById('userProfile');
 const profileMenu = document.getElementById('profileMenu');
 const profileToggleTheme = document.getElementById('profileToggleTheme');
 const signOutBtn = document.getElementById('signOutBtn');
-const iframeWrapper = document.getElementById('iframeWrapper');
 
-function showChat(user){
-  landing.style.display='none';
-  chatContainer.style.display='flex';
-  userProfile.src = user?.photoURL || 'https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg';
-  iframeWrapper.innerHTML = '';
-  const iframe = document.createElement('iframe');
-  iframe.src = "https://www.chatbase.co/chatbot-iframe/W5ZOQa_6wOPIOFFfMXkIY";
-  iframe.style.width="100%";
-  iframe.style.height="100%";
-  iframe.style.border="none";
-  iframeWrapper.appendChild(iframe);
-}
-
-// Google Sign In
+// Google Sign-In
 googleSignInBtn.onclick = async ()=>{
   const provider = new GoogleAuthProvider();
   try{
     const result = await signInWithPopup(auth, provider);
-    showChat(result.user);
+    const user = result.user;
+    userProfile.src = user.photoURL || 'https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg';
+    landing.style.display = 'none';
+    chatContainer.style.display = 'flex';
   }catch(e){alert(e.message);}
 }
 
-// Try button
-tryBtn.onclick = ()=>showChat(null);
+// Try Now button
+tryBtn.onclick = ()=>{
+  landing.style.display = 'none';
+  chatContainer.style.display = 'flex';
+}
 
-// Auth state
-auth.onAuthStateChanged(user=>{if(user) showChat(user);});
-
-// Profile menu
-userProfile.onclick = ()=>profileMenu.style.display = profileMenu.style.display==='block'?'none':'block';
-window.onclick = e=>{if(!userProfile.contains(e.target)&&!profileMenu.contains(e.target)) profileMenu.style.display='none';}
+// Profile menu toggle
+userProfile.onclick = ()=> profileMenu.style.display = profileMenu.style.display==='block'?'none':'block';
+window.onclick = e=>{
+  if(!userProfile.contains(e.target) && !profileMenu.contains(e.target)){
+    profileMenu.style.display='none';
+  }
+}
 profileToggleTheme.onclick = ()=>document.body.classList.toggle('dark-mode');
-signOutBtn.onclick = async ()=>{await signOut(auth);location.reload();}
+signOutBtn.onclick = async ()=>{
+  await signOut(auth);
+  location.reload();
+}
+
+// Check if user already logged in
+auth.onAuthStateChanged(user=>{
+  if(user){
+    userProfile.src = user.photoURL || 'https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg';
+    landing.style.display = 'none';
+    chatContainer.style.display = 'flex';
+  }
+});
 </script>
 </body>
 </html>

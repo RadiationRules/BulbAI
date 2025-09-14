@@ -17,7 +17,7 @@
   --radius:12px;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);}
+html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;}
 a{text-decoration:none;color:var(--accent);}
 a:hover{text-decoration:underline;}
 
@@ -31,7 +31,6 @@ a:hover{text-decoration:underline;}
   width:100%;
   padding:2rem;
   text-align:center;
-  opacity:0;
   animation:fadeIn 1.5s forwards;
 }
 #landing h1{
@@ -90,22 +89,8 @@ a:hover{text-decoration:underline;}
 }
 #tryNowBtn{margin-top:1rem;}
 
-/* AUTH & CHAT PAGE */
-#app{display:none;flex-direction:column;height:100vh;width:100%;}
-#sidebar{
-  background:var(--panel);
-  width:280px;
-  padding:16px;
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-  overflow-y:auto;
-}
-#main{
-  flex:1;
-  display:flex;
-  flex-direction:column;
-}
+/* APP PAGE */
+#app{display:none;flex-direction:column;height:100vh;width:100%;transition:all 0.5s ease;}
 #topbar{
   height:60px;
   background:var(--panel);
@@ -137,14 +122,16 @@ a:hover{text-decoration:underline;}
   text-align:left;
 }
 #profileMenu button:hover{background:var(--accent);color:#000;}
+
 #iframeContainer{
   flex:1;
-  overflow:hidden;
-  background:linear-gradient(90deg,#0a0a0a,#111111);
+  background:linear-gradient(135deg, #0f0f0f, #1a1a1a);
   display:flex;
   justify-content:center;
   align-items:center;
-  transition:all 0.5s;
+  padding:20px;
+  overflow:hidden;
+  transition:all 0.5s ease;
 }
 iframe{
   border:none;
@@ -152,6 +139,16 @@ iframe{
   height:90%;
   border-radius:var(--radius);
   box-shadow:0 0 30px rgba(0,255,255,0.3);
+  transition:transform 0.3s;
+}
+iframe:hover{transform:scale(1.01);}
+
+body.dark-mode{
+  --bg:#1a1a1a;
+  --panel:#0f0f0f;
+  --accent:#0ff;
+  --accent-dark:#00cccc;
+  --text:#f0f0f0;
 }
 @keyframes fadeIn{
   to{opacity:1;}
@@ -160,6 +157,7 @@ iframe{
 </head>
 <body>
 
+<!-- LANDING PAGE -->
 <div id="landing">
   <div id="topButtons">
     <button class="button secondary" id="loginBtn">Log In</button>
@@ -175,6 +173,7 @@ iframe{
   <button class="button" id="tryNowBtn">Try Now</button>
 </div>
 
+<!-- APP PAGE -->
 <div id="app">
   <div id="topbar">
     <h2>BulbAI Chat</h2>
@@ -191,8 +190,9 @@ iframe{
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
 
+// Firebase Config
 const firebaseConfig = {
   apiKey: "AIzaSyCGFij1pFUVNFP63QHxEq619c9jPnskzxY",
   authDomain: "bulbai-21f09.firebaseapp.com",
@@ -216,33 +216,33 @@ const profileMenu = document.getElementById("profileMenu");
 const toggleTheme = document.getElementById("toggleTheme");
 const signOutBtnEl = document.getElementById("signOutBtn");
 
-// Show chat page after login or try now
-function showChat(user){
-  landing.style.display="none";
-  appDiv.style.display="flex";
+// Show app page
+function showApp(user){
+  landing.style.display = "none";
+  appDiv.style.display = "flex";
   userProfile.src = user?.photoURL || "https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg";
 }
 
-// Try Now (anonymous)
-tryNowBtn.onclick = ()=> showChat(null);
+// Try Now
+tryNowBtn.onclick = ()=> showApp(null);
 
 // Google Auth
 loginBtn.onclick = async ()=>{
   const provider = new GoogleAuthProvider();
   try{
     const result = await signInWithPopup(auth, provider);
-    showChat(result.user);
+    showApp(result.user);
   }catch(e){alert(e.message);}
 }
 signUpBtn.onclick = async ()=>{
   const provider = new GoogleAuthProvider();
   try{
     const result = await signInWithPopup(auth, provider);
-    showChat(result.user);
+    showApp(result.user);
   }catch(e){alert(e.message);}
 }
 
-// Profile dropdown
+// Profile menu
 userProfile.onclick = ()=> profileMenu.style.display = profileMenu.style.display==='block'?'none':'block';
 window.onclick = e=>{
   if(!userProfile.contains(e.target) && !profileMenu.contains(e.target)){
@@ -254,7 +254,7 @@ signOutBtnEl.onclick = async ()=> { await signOut(auth); location.reload(); }
 
 // Firebase auth state
 auth.onAuthStateChanged(user=>{
-  if(user) showChat(user);
+  if(user) showApp(user);
 });
 </script>
 </body>

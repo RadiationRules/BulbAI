@@ -4,213 +4,237 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BulbAI</title>
+<meta name="google-site-verification" content="89T27xrgDiNqC6Y5qkq2iwNjI6q4r4NjREIv2DMMjZs" />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #ffffff;
-  --panel: #ffffff;
-  --accent: #f7c948;
-  --accent-dark: #e6bd00;
-  --text: #1f1f1f;
-  --muted: #6b6b6b;
-  --shadow: rgba(0,0,0,0.1);
-  --radius: 12px;
+ --bg: #ffffff;
+ --panel: #ffffff;
+ --accent: #f7c948;
+ --text: #1f1f1f;
+ --muted: #6b6b6b;
+ --shadow: rgba(0,0,0,0.1);
+ --radius: 12px;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-body,html{height:100%;font-family:'Inter',sans-serif;background:var(--bg);}
+body, html{height:100%;font-family:'Inter',sans-serif;background:var(--bg);}
 a{text-decoration:none;color:var(--accent);}
 a:hover{text-decoration:underline;}
+
 /* LOGIN SCREEN */
-#loginScreen {
-  display:flex;justify-content:center;align-items:center;height:100%;width:100%;position:relative;overflow:hidden;
+#loginScreen{
+ display:flex;
+ justify-content:center;
+ align-items:center;
+ height:100vh;
+ width:100%;
+ position:relative;
+ overflow:hidden;
 }
-#loginScreen video {
-  position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:-1;filter:brightness(0.35);
+#bgVideo{
+ position:absolute;
+ top:0; left:0; width:100%; height:100%;
+ object-fit:cover;
+ z-index:-1;
+ filter:blur(6px) brightness(0.5);
 }
-.login-container {
-  background: rgba(255,255,255,0.95);
-  padding:2rem;
-  border-radius: var(--radius);
-  box-shadow:0 8px 24px var(--shadow);
-  width:100%;
-  max-width:400px;
-  display:flex;flex-direction:column;gap:1.5rem;
-  animation:fadeIn 0.5s ease forwards;
-  z-index:1;
+.login-container{
+ background: rgba(255,255,255,0.85);
+ padding:2rem;
+ border-radius:var(--radius);
+ box-shadow:0 8px 24px var(--shadow);
+ width:100%;
+ max-width:400px;
+ display:flex;
+ flex-direction:column;
+ gap:1rem;
+ text-align:center;
 }
-.login-container h1{text-align:center;font-size:2rem;color:var(--text);}
-.login-container p{text-align:center;color:var(--muted);font-size:0.9rem;}
-.input-group {display:flex;flex-direction:column;gap:0.5rem;}
-.input-group input {padding:0.75rem;border-radius: var(--radius);border:1px solid rgba(0,0,0,0.1);font-size:1rem;}
-.button {padding:0.75rem;border-radius: var(--radius);border:none;background:var(--accent);color:#2b2b2b;font-weight:700;cursor:pointer;transition:0.3s;display:flex;align-items:center;justify-content:center;gap:0.5rem;}
+.login-container h1{font-size:2rem; color:var(--text);}
+.login-container p{color:var(--muted); font-size:0.9rem;}
+.input-group{display:flex; flex-direction:column; gap:0.5rem;}
+.input-group input{padding:0.75rem;border-radius:var(--radius);border:1px solid rgba(0,0,0,0.1);}
+.button{
+ padding:0.75rem;border-radius:var(--radius);border:none;background:var(--accent);color:#2b2b2b;font-weight:700;cursor:pointer;
+ display:flex; justify-content:center; align-items:center; gap:0.5rem;transition:0.3s;
+}
 .button:hover{transform:scale(1.03);}
-.google-btn {background:#fff;border:1px solid #ddd;color:#000;display:flex;align-items:center;justify-content:center;gap:8px;font-weight:500;}
-.divider{text-align:center;color:var(--muted);margin:0.5rem 0;position:relative;}
-.divider::before, .divider::after{content:"";position:absolute;top:50%;width:40%;height:1px;background:var(--shadow);}
+.google-btn{background:#fff;border:1px solid #ddd;color:#000;}
+.google-btn img{height:24px;width:24px;margin-right:8px;}
+.divider{position:relative;color:var(--muted);margin:0.5rem 0;}
+.divider::before, .divider::after{
+ content:"";
+ position:absolute;
+ top:50%;
+ width:40%;
+ height:1px;
+ background:var(--shadow);
+}
 .divider::before{left:0;}
 .divider::after{right:0;}
-.try-out{text-align:center;font-weight:700;text-decoration:underline;color:var(--accent);cursor:pointer;}
-@keyframes fadeIn{from {opacity:0; transform:scale(0.95);} to {opacity:1; transform:scale(1);}}
+.tryBtn{background:none;border:none;color:var(--accent);font-weight:700;text-decoration:underline;cursor:pointer;}
 
 /* MAIN APP */
-#mainApp{display:none;height:100vh;width:100%;flex-direction:column;}
-.app{display:grid;grid-template-columns:0 1fr;transition:0.3s;gap:16px;height:100%;padding:0;}
-.app.sidebar-open{grid-template-columns:280px 1fr;}
-.sidebar{background:#fff;padding:12px;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,0.08);display:flex;flex-direction:column;position:relative;transition:all 0.3s;}
-.brand{display:flex;align-items:center;gap:8px;margin-bottom:16px;}
-.logo{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#f7c948,#ffd86b);display:flex;align-items:center;justify-content:center;font-weight:800;color:#2b2b2b;font-size:18px;}
-.main{display:flex;flex-direction:column;gap:12px;}
-.topbar{display:flex;align-items:center;justify-content:space-between;padding:12px;border-radius:12px;background:#fff;box-shadow:0 6px 18px rgba(0,0,0,0.08);}
-#convTitle{font-weight:700;font-size:16px;}
-.chat-window{flex:1;background:#fef8e6;border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:12px;overflow:auto;box-shadow:0 6px 18px rgba(0,0,0,0.08);scroll-behavior:smooth;}
-.msg.user{background:linear-gradient(90deg,#ffe37f,#fff6c6);padding:8px;border-radius:12px;max-width:70%;align-self:flex-end;}
-.msg.bot{background:linear-gradient(90deg,#fff7e0,#fff);padding:8px;border-radius:12px;max-width:70%;align-self:flex-start;}
-.composer{display:flex;gap:8px;align-items:center;padding:12px;border-radius:12px;background:#fff;}
-.composer input{flex:1;padding:12px;border-radius:12px;border:1px solid rgba(0,0,0,0.1);}
-.composer button{transition:0.3s;cursor:pointer;}
-.composer button:hover{transform:scale(1.05);}
-.settings-panel{position:absolute;top:50px;right:-300px;width:280px;background:#fff;box-shadow:0 6px 18px rgba(0,0,0,0.1);border-radius:12px;padding:16px;transition:all 0.3s;display:flex;flex-direction:column;gap:12px;}
-.settings-panel.show{right:0;}
-.dark-mode body,#mainApp.dark-mode{background:#171412;color:#efeae0;}
-.dark-mode .chat-window{background:#2a2a2a;}
-.dark-mode .msg.user{background:#f7c94860;color:#000;}
-.dark-mode .msg.bot{background:#fff6;color:#000;}
-.sidebar-toggle{position:absolute;top:12px;left:12px;font-size:24px;cursor:pointer;z-index:10;}
+#mainApp{
+ display:none;
+ height:100vh;
+ width:100%;
+ display:flex;
+ flex-direction:column;
+ align-items:center;
+ justify-content:center;
+}
+#chatContainer{
+ width:100%;
+ max-width:700px;
+ flex:1;
+ display:flex;
+ flex-direction:column;
+ gap:12px;
+}
+#chatHeader{
+ display:flex;
+ align-items:center;
+ gap:10px;
+ padding:12px;
+ background:var(--panel);
+ border-radius:var(--radius);
+ box-shadow:0 6px 18px rgba(0,0,0,0.08);
+}
+#chatHeader img{
+ width:40px;
+ height:40px;
+ border-radius:50%;
+}
+#chatWidget{
+ flex:1;
+ min-height:500px;
+}
+
+/* PROFILE DROPDOWN */
+#userProfile{width:40px;height:40px;border-radius:50%;cursor:pointer;}
+#profileMenu{display:none;position:absolute;top:50px;right:16px;background:var(--panel);border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,0.2);overflow:hidden;min-width:160px;z-index:1000;}
+#profileMenu button{width:100%;border:none;padding:10px;background:none;cursor:pointer;text-align:left;}
+#profileMenu button:hover{background:var(--accent);color:#2b2b2b;}
+
+/* DARK MODE */
+body.dark-mode{--bg:#1f1f1f;--panel:#2b2b2b;--text:#f0f0f0;--accent:#f7c948;}
 </style>
 </head>
 <body>
 
+<!-- VIDEO BACKGROUND -->
+<video id="bgVideo" autoplay muted loop playsinline>
+ <source src="https://cdn.videvo.net/videvo_files/video/free/2019-08/large_watermarked/190725_01_Software_1080p_029_preview.mp4" type="video/mp4">
+</video>
+
 <!-- LOGIN SCREEN -->
 <div id="loginScreen">
-  <video autoplay muted loop>
-    <source src="https://cdn.videvo.net/videvo_files/video/free/2019-03/large_watermarked/190213_CodeLoop_01_preview.mp4" type="video/mp4">
-  </video>
-  <div class="login-container">
-    <h1>💡 BulbAI</h1>
-    <p>Sign in to continue</p>
-    <button id="googleSignInBtn" class="button google-btn">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/4/4a/Logo_2013_Google.png" style="height:20px;"> Sign in with Google
-    </button>
-    <div class="divider">OR</div>
-    <div class="input-group">
-      <input type="email" id="emailInput" placeholder="Email">
-      <input type="password" id="passwordInput" placeholder="Password">
-    </div>
-    <button id="emailSignInBtn" class="button">Sign In</button>
-    <button id="emailSignUpBtn" class="button">Sign Up</button>
-    <p class="try-out" id="tryOutBtn">Try it out without signing in</p>
-  </div>
+ <div class="login-container">
+   <h1>💡 BulbAI</h1>
+   <p>Sign in to continue</p>
+   <button id="googleSignInBtn" class="button google-btn">
+     <img src="https://upload.wikimedia.org/wikipedia/commons/4/4a/Logo_2013_Google.png" alt="Google"> Sign in with Google
+   </button>
+   <div class="divider">OR</div>
+   <div class="input-group">
+     <input type="email" id="emailInput" placeholder="Email">
+     <input type="password" id="passwordInput" placeholder="Password">
+   </div>
+   <button id="emailSignInBtn" class="button">Sign In</button>
+   <button id="emailSignUpBtn" class="button">Sign Up</button>
+   <button id="tryBtn" class="tryBtn">Try it out</button>
+ </div>
 </div>
 
 <!-- MAIN APP -->
 <div id="mainApp">
-  <span class="sidebar-toggle" id="sidebarToggle">☰</span>
-  <div class="app" id="appContainer">
-    <aside class="sidebar" id="sidebar">
-      <div class="brand">
-        <div class="logo">💡</div>
-        <div>
-          <div style="font-weight:700;">BulbAI</div>
-          <div style="font-size:12px;color:#6b6b6b;">Your yellow assistant</div>
-        </div>
-      </div>
-      <button id="newChatBtn" class="button">+ New Chat</button>
-      <div id="conversationsList" style="flex:1;overflow:auto;display:flex;flex-direction:column;gap:8px;"></div>
-      <img id="userProfile" src="https://i.ibb.co/2NwXcMz/lightbulb.png" style="width:36px;height:36px;border-radius:50%;cursor:pointer;margin-top:16px;">
-    </aside>
-    <main class="main">
-      <div class="topbar">
-        <div id="convTitle">New Chat</div>
-      </div>
-      <div class="chat-window" id="messages"></div>
-      <div class="composer">
-        <button id="attachBtn">📎</button>
-        <input id="prompt" placeholder="Type a message...">
-        <button id="sendBtn">Send</button>
-        <input type="file" id="fileInput" accept="image/*" style="display:none;">
-      </div>
-    </main>
-  </div>
-  <div class="settings-panel" id="settingsPanel">
-    <h3>Settings</h3>
-    <button id="toggleDarkMode" class="button google-btn">Toggle Dark Mode</button>
-    <button id="clearChats" class="button google-btn">Clear Chats</button>
-    <button id="signOutBtn" class="button google-btn">Sign Out</button>
-  </div>
+ <div id="chatContainer">
+   <div id="chatHeader">
+     <img src="https://cdn-icons-png.flaticon.com/512/254/254409.png" alt="BulbAI Logo">
+     <h2>BulbAI Chat</h2>
+     <img id="userProfile" src="" alt="Profile">
+   </div>
+   <div id="chatWidget"></div>
+ </div>
+</div>
+
+<!-- PROFILE DROPDOWN -->
+<div id="profileMenu">
+ <button id="profileToggleTheme">Toggle Dark/Light</button>
+ <button id="profileClearChats">Clear Conversations</button>
+ <button id="signOutBtn">Sign Out</button>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
 
+// Firebase config
 const firebaseConfig = {
-  apiKey: "AIzaSyCGFij1pFUVNFP63QHxEq619c9jPnskzxY",
-  authDomain: "bulbai-21f09.firebaseapp.com",
-  projectId: "bulbai-21f09",
-  storageBucket: "bulbai-21f09.firebasestorage.app",
-  messagingSenderId: "366775652166",
-  appId: "1:366775652166:web:22db16f4f87f9a60625f47",
-  measurementId: "G-G09FQQ53XP"
+ apiKey: "AIzaSyCGFij1pFUVNFP63QHxEq619c9jPnskzxY",
+ authDomain: "bulbai-21f09.firebaseapp.com",
+ projectId: "bulbai-21f09",
+ storageBucket: "bulbai-21f09.firebasestorage.app",
+ messagingSenderId: "366775652166",
+ appId: "1:366775652166:web:22db16f4f87f9a60625f47",
+ measurementId: "G-G09FQQ53XP"
 };
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-// Elements
-const loginScreenEl=document.getElementById('loginScreen');
-const mainAppEl=document.getElementById('mainApp');
-const googleBtn=document.getElementById('googleSignInBtn');
-const emailSignInBtn=document.getElementById('emailSignInBtn');
-const emailSignUpBtn=document.getElementById('emailSignUpBtn');
-const tryOutBtn=document.getElementById('tryOutBtn');
+const loginScreen = document.getElementById('loginScreen');
+const mainApp = document.getElementById('mainApp');
+const googleSignInBtn = document.getElementById('googleSignInBtn');
+const tryBtn = document.getElementById('tryBtn');
+const userProfile = document.getElementById('userProfile');
+const profileMenu = document.getElementById('profileMenu');
+const profileToggleTheme = document.getElementById('profileToggleTheme');
+const profileClearChats = document.getElementById('profileClearChats');
+const signOutBtn = document.getElementById('signOutBtn');
 
-function showMain(photo){
-  loginScreenEl.style.display='none';
-  mainAppEl.style.display='flex';
-  if(photo)document.getElementById('userProfile').src=photo;
+auth.onAuthStateChanged(user=>{
+ if(user){
+   loginScreen.style.display='none';
+   mainApp.style.display='flex';
+   userProfile.src = user.photoURL || 'https://cdn-icons-png.flaticon.com/512/254/254409.png';
+ }
+});
+
+// GOOGLE LOGIN
+googleSignInBtn.onclick = async ()=>{
+ const provider = new GoogleAuthProvider();
+ try{ await signInWithPopup(auth,provider); }catch(e){alert(e.message);}
 }
 
-// Sign-In
-googleBtn.onclick=()=>{signInWithPopup(auth,new GoogleAuthProvider()).then(res=>showMain(res.user.photoURL)).catch(err=>alert(err.message));};
-emailSignInBtn.onclick=()=>signInWithEmailAndPassword(auth,document.getElementById('emailInput').value,document.getElementById('passwordInput').value).then(()=>showMain(null)).catch(err=>alert(err.message));
-emailSignUpBtn.onclick=()=>createUserWithEmailAndPassword(auth,document.getElementById('emailInput').value,document.getElementById('passwordInput').value).then(()=>showMain(null)).catch(err=>alert(err.message));
-tryOutBtn.onclick=()=>showMain(null);
+// TRY BUTTON
+tryBtn.onclick = ()=>{ loginScreen.style.display='none'; mainApp.style.display='flex'; }
 
-// Chat functionality
-const messagesEl=document.getElementById('messages');
-const promptEl=document.getElementById('prompt');
-const sendBtn=document.getElementById('sendBtn');
-const attachBtn=document.getElementById('attachBtn');
-const fileInput=document.getElementById('fileInput');
-const newChatBtn=document.getElementById('newChatBtn');
-const convTitle=document.getElementById('convTitle');
-const settingsPanel=document.getElementById('settingsPanel');
-const userProfile=document.getElementById('userProfile');
-const sidebarToggle=document.getElementById('sidebarToggle');
-const appContainer=document.getElementById('appContainer');
+// PROFILE MENU
+userProfile.onclick = ()=> profileMenu.style.display = profileMenu.style.display==='block'?'none':'block';
+window.onclick = e=>{ if(!userProfile.contains(e.target)&&!profileMenu.contains(e.target)){profileMenu.style.display='none'; } }
+profileToggleTheme.onclick = ()=>document.body.classList.toggle('dark-mode');
+profileClearChats.onclick = ()=>alert("Clear not available with widget.");
+signOutBtn.onclick = async ()=>{await signOut(auth);location.reload();}
 
-function addMessage(content,type,isImage=false){
-  const div=document.createElement('div');div.className='msg '+type;
-  if(isImage){const img=document.createElement('img');img.src=content;img.style.maxWidth='200px';img.style.borderRadius='12px';div.appendChild(img);}
-  else div.textContent=content;
-  messagesEl.appendChild(div);div.scrollIntoView({behavior:'smooth'});
-  if(type==='user'){setTimeout(()=>{const botMsg=document.createElement('div');botMsg.className='msg bot';botMsg.textContent='BulbAI: '+content.split('').reverse().join('');messagesEl.appendChild(botMsg);botMsg.scrollIntoView({behavior:'smooth'});},1000+Math.random()*800);}
-}
-
-// Send message
-sendBtn.onclick=()=>{const val=promptEl.value.trim();if(val){addMessage(val,'user');promptEl.value='';}};
-// Send message on Enter key (Shift+Enter = newline)
-promptEl.addEventListener('keydown', e => {if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendBtn.click();}});
-
-attachBtn.onclick=()=>fileInput.click();
-fileInput.onchange=(e)=>{if(e.target.files.length>0){const url=URL.createObjectURL(e.target.files[0]);addMessage(url,'user',true);}};
-newChatBtn.onclick=()=>{messagesEl.innerHTML='';convTitle.textContent='New Chat';};
-userProfile.onclick=()=>settingsPanel.classList.toggle('show');
-document.getElementById('toggleDarkMode').onclick=()=>{document.body.classList.toggle('dark-mode');mainAppEl.classList.toggle('dark-mode');};
-document.getElementById('clearChats').onclick=()=>{messagesEl.innerHTML='';};
-document.getElementById('signOutBtn').onclick=()=>{signOut(auth).then(()=>{mainAppEl.style.display='none';loginScreenEl.style.display='flex';});};
-
-// Sidebar toggle
-sidebarToggle.onclick=()=>{appContainer.classList.toggle('sidebar-open');};
+// LOAD CHATBASE WIDGET
+(function(){
+ if(!window.chatbase||window.chatbase("getState")!=="initialized"){
+   window.chatbase=(...args)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(args)};
+   window.chatbase=new Proxy(window.chatbase,{get(target,prop){
+     if(prop==="q"){return target.q}
+     return(...args)=>target(prop,...args)
+   }})
+ }
+ const onLoad=function(){
+   const script=document.createElement("script");
+   script.src="https://www.chatbase.co/embed.min.js";
+   script.id="chatbase-widget";
+   script.domain="www.chatbase.co";
+   document.getElementById("chatWidget").appendChild(script);
+ };
+ if(document.readyState==="complete"){onLoad()}else{window.addEventListener("load",onLoad)}
+})();
 </script>
 </body>
 </html>

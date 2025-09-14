@@ -5,121 +5,194 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BulbAI</title>
 <meta name="google-site-verification" content="89T27xrgDiNqC6Y5qkq2iwNjI6q4r4NjREIv2DMMjZs" />
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg:#0a0a0a;
-  --panel:#111;
-  --accent:#39ff14;
-  --accent-dark:#00ff99;
+  --bg:#0d0d0d;
+  --panel:#1a1a1a;
+  --accent:#0ff;
+  --accent-dark:#00cccc;
   --text:#f0f0f0;
-  --muted:#888;
-  --shadow:rgba(0,255,20,0.2);
-  --radius:14px;
+  --muted:#999;
+  --radius:12px;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);}
-body{overflow:hidden;}
+html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;}
 a{text-decoration:none;color:var(--accent);}
-button{cursor:pointer;transition:all 0.3s ease;}
-
-/* NAV */
-nav{
-  width:100%;position:fixed;top:0;left:0;padding:16px 32px;display:flex;justify-content:flex-end;gap:12px;z-index:999;
-}
-nav button{
-  background:var(--accent);color:#000;padding:10px 18px;border:none;border-radius:var(--radius);font-weight:700;
-  box-shadow:0 0 10px var(--accent);
-}
-nav button:hover{box-shadow:0 0 25px var(--accent);transform:scale(1.05);}
-nav button.secondary{background:none;color:var(--accent);border:1px solid var(--accent);}
+a:hover{text-decoration:underline;}
 
 /* LANDING PAGE */
-#landing{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;height:100vh;width:100%;position:relative;z-index:1;}
-#landing h1{font-family:'Orbitron',sans-serif;font-size:4rem;color:var(--accent);text-shadow:0 0 20px var(--accent);margin-bottom:20px;opacity:0;animation:fadeInUp 1s forwards 0.3s;}
-#landing p{font-size:1.5rem;color:var(--muted);margin-bottom:40px;opacity:0;animation:fadeInUp 1s forwards 0.6s;}
-#landing .features{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;}
-.feature-card{
-  background:var(--panel);border:1px solid var(--accent-dark);border-radius:var(--radius);
-  padding:30px 40px;min-width:220px;text-align:center;transition:0.4s;box-shadow:0 0 10px rgba(0,255,20,0.1);opacity:0;
-  animation:fadeInUp 1s forwards;
+#landing{
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  width:100%;
+  padding:2rem;
+  text-align:center;
+  animation:fadeIn 1.5s forwards;
 }
-.feature-card:hover{transform:scale(1.05);box-shadow:0 0 25px var(--accent);}
-.feature-card h3{font-family:'Orbitron',sans-serif;color:var(--accent);margin-bottom:10px;}
-.feature-card p{color:var(--muted);font-size:1rem;}
-#tryNowBtn{margin-top:40px;padding:14px 28px;font-size:1.2rem;border-radius:var(--radius);border:none;background:var(--accent);color:#000;box-shadow:0 0 20px var(--accent);opacity:0;animation:fadeInUp 1s forwards 1s;}
-#tryNowBtn:hover{transform:scale(1.05);box-shadow:0 0 35px var(--accent);}
+#landing h1{
+  font-size:4rem;
+  color:var(--accent);
+  margin-bottom:1rem;
+}
+#landing p{
+  font-size:1.2rem;
+  max-width:800px;
+  margin-bottom:2rem;
+  color:var(--muted);
+}
+.features{
+  display:flex;
+  gap:2rem;
+  flex-wrap:wrap;
+  justify-content:center;
+  margin-bottom:2rem;
+}
+.feature{
+  background:var(--panel);
+  padding:2rem;
+  border-radius:var(--radius);
+  width:220px;
+  transition:all 0.3s ease;
+  cursor:pointer;
+  box-shadow:0 4px 20px rgba(0,255,255,0.2);
+}
+.feature:hover{
+  transform:scale(1.1);
+  box-shadow:0 8px 40px rgba(0,255,255,0.4);
+}
+#topButtons{
+  position:absolute;
+  top:20px;
+  right:20px;
+  display:flex;
+  gap:1rem;
+}
+.button{
+  background:var(--accent);
+  color:#000;
+  border:none;
+  padding:0.6rem 1.2rem;
+  border-radius:var(--radius);
+  font-weight:700;
+  cursor:pointer;
+  transition:0.3s;
+}
+.button:hover{transform:scale(1.05);}
+.button.secondary{
+  background:none;
+  border:1px solid var(--accent);
+  color:var(--accent);
+}
+#tryNowBtn{margin-top:1rem;}
 
-/* FADE ANIMATIONS */
-@keyframes fadeInUp{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
-
-/* CHAT PAGE */
-#chatPage{display:none;flex-direction:column;height:100vh;width:100%;background:#000;color:#fff;z-index:0;}
-#chatHeader{display:flex;justify-content:space-between;align-items:center;padding:16px 32px;background:rgba(0,0,0,0.6);box-shadow:0 0 20px var(--accent);}
-#chatHeader h2{font-family:'Orbitron',sans-serif;color:var(--accent);}
-#chatHeader #userProfile{width:50px;height:50px;border-radius:50%;cursor:pointer;border:2px solid var(--accent);}
-#chatFrameContainer{flex:1;position:relative;}
-#chatFrame{width:100%;height:100%;border:none;border-radius:var(--radius);}
-
-/* PROFILE MENU */
-#profileMenu{display:none;position:absolute;top:70px;right:40px;background:var(--panel);border-radius:var(--radius);box-shadow:0 0 30px var(--accent);min-width:180px;overflow:hidden;z-index:1000;}
-#profileMenu button{width:100%;border:none;padding:12px;background:none;color:var(--text);cursor:pointer;text-align:left;}
+/* APP PAGE */
+#app{display:none;flex-direction:column;height:100vh;width:100%;transition:all 0.5s ease;}
+#topbar{
+  height:60px;
+  background:var(--panel);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:0 16px;
+  box-shadow:0 2px 10px rgba(0,255,255,0.2);
+}
+#userProfile{width:40px;height:40px;border-radius:50%;cursor:pointer;}
+#profileMenu{
+  display:none;
+  position:absolute;
+  top:60px;
+  right:16px;
+  background:var(--panel);
+  border-radius:var(--radius);
+  box-shadow:0 8px 24px rgba(0,255,255,0.3);
+  overflow:hidden;
+  min-width:160px;
+  z-index:1000;
+}
+#profileMenu button{
+  width:100%;
+  border:none;
+  padding:10px;
+  background:none;
+  cursor:pointer;
+  text-align:left;
+}
 #profileMenu button:hover{background:var(--accent);color:#000;}
 
-/* DARK MODE */
-body.dark-mode{--bg:#111;--panel:#222;--text:#f0f0f0;--accent:#39ff14;--accent-dark:#00ff99;}
+#iframeContainer{
+  flex:1;
+  background:linear-gradient(135deg, #0f0f0f, #1a1a1a);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
+  overflow:hidden;
+  transition:all 0.5s ease;
+}
+iframe{
+  border:none;
+  width:95%;
+  height:90%;
+  border-radius:var(--radius);
+  box-shadow:0 0 30px rgba(0,255,255,0.3);
+  transition:transform 0.3s;
+}
+iframe:hover{transform:scale(1.01);}
+
+body.dark-mode{
+  --bg:#1a1a1a;
+  --panel:#0f0f0f;
+  --accent:#0ff;
+  --accent-dark:#00cccc;
+  --text:#f0f0f0;
+}
+@keyframes fadeIn{
+  to{opacity:1;}
+}
 </style>
 </head>
 <body>
 
-<!-- NAV -->
-<nav>
-  <button id="loginBtn" class="secondary">Log In</button>
-  <button id="signupBtn">Sign Up</button>
-</nav>
-
 <!-- LANDING PAGE -->
 <div id="landing">
-  <h1>💡 BulbAI</h1>
-  <p>Your AI Assistant for Brainstorming, Coding & Building</p>
-  <div class="features">
-    <div class="feature-card" style="animation-delay:0.8s;">
-      <h3>Brainstorming</h3>
-      <p>Generate creative ideas instantly.</p>
-    </div>
-    <div class="feature-card" style="animation-delay:1s;">
-      <h3>Coding</h3>
-      <p>Write, debug, and learn code faster.</p>
-    </div>
-    <div class="feature-card" style="animation-delay:1.2s;">
-      <h3>Building</h3>
-      <p>Plan, design, and implement projects.</p>
-    </div>
+  <div id="topButtons">
+    <button class="button secondary" id="loginBtn">Log In</button>
+    <button class="button" id="signUpBtn">Sign Up</button>
   </div>
-  <button id="tryNowBtn">Try Now</button>
+  <h1>💡 BulbAI</h1>
+  <p>The AI platform for Brainstorming, Coding, and Building. Unlock your creativity and power your ideas with cutting-edge AI tools.</p>
+  <div class="features">
+    <div class="feature">Brainstorming</div>
+    <div class="feature">Coding</div>
+    <div class="feature">Building</div>
+  </div>
+  <button class="button" id="tryNowBtn">Try Now</button>
 </div>
 
-<!-- CHAT PAGE -->
-<div id="chatPage">
-  <div id="chatHeader">
+<!-- APP PAGE -->
+<div id="app">
+  <div id="topbar">
     <h2>BulbAI Chat</h2>
     <img id="userProfile" src="" alt="Profile">
   </div>
-  <div id="chatFrameContainer">
-    <iframe id="chatFrame" src="https://www.chatbase.co/chatbot-iframe/W5ZOQa_6wOPIOFFfMXkIY"></iframe>
+  <div id="iframeContainer">
+    <iframe src="https://www.chatbase.co/chatbot-iframe/W5ZOQa_6wOPIOFFfMXkIY"></iframe>
   </div>
-</div>
-
-<!-- PROFILE MENU -->
-<div id="profileMenu">
-  <button id="toggleThemeBtn">Toggle Dark/Light Mode</button>
-  <button id="signOutBtn">Sign Out</button>
+  <div id="profileMenu">
+    <button id="toggleTheme">Toggle Dark/Light</button>
+    <button id="signOutBtn">Sign Out</button>
+  </div>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
 
+// Firebase Config
 const firebaseConfig = {
   apiKey: "AIzaSyCGFij1pFUVNFP63QHxEq619c9jPnskzxY",
   authDomain: "bulbai-21f09.firebaseapp.com",
@@ -132,52 +205,57 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-// DOM
-const landing=document.getElementById('landing');
-const chatPage=document.getElementById('chatPage');
-const tryNowBtn=document.getElementById('tryNowBtn');
-const loginBtn=document.getElementById('loginBtn');
-const signupBtn=document.getElementById('signupBtn');
-const userProfile=document.getElementById('userProfile');
-const profileMenu=document.getElementById('profileMenu');
-const toggleThemeBtn=document.getElementById('toggleThemeBtn');
-const signOutBtn=document.getElementById('signOutBtn');
+// Elements
+const landing = document.getElementById("landing");
+const appDiv = document.getElementById("app");
+const tryNowBtn = document.getElementById("tryNowBtn");
+const loginBtn = document.getElementById("loginBtn");
+const signUpBtn = document.getElementById("signUpBtn");
+const userProfile = document.getElementById("userProfile");
+const profileMenu = document.getElementById("profileMenu");
+const toggleTheme = document.getElementById("toggleTheme");
+const signOutBtnEl = document.getElementById("signOutBtn");
 
-// Auth
-auth.onAuthStateChanged(user=>{
-  if(user){
-    landing.style.display='none';
-    chatPage.style.display='flex';
-    userProfile.src=user.photoURL || 'https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg';
-  }
-});
+// Show app page
+function showApp(user){
+  landing.style.display = "none";
+  appDiv.style.display = "flex";
+  userProfile.src = user?.photoURL || "https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg";
+}
 
-// Google login
+// Try Now
+tryNowBtn.onclick = ()=> showApp(null);
+
+// Google Auth
 loginBtn.onclick = async ()=>{
   const provider = new GoogleAuthProvider();
   try{
     const result = await signInWithPopup(auth, provider);
-    const user = result.user;
-    landing.style.display='none';
-    chatPage.style.display='flex';
-    userProfile.src = user.photoURL || 'https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg';
+    showApp(result.user);
   }catch(e){alert(e.message);}
-};
-signupBtn.onclick=loginBtn.onclick;
-
-// Try Now button
-tryNowBtn.onclick=()=>{landing.style.display='none';chatPage.style.display='flex';};
+}
+signUpBtn.onclick = async ()=>{
+  const provider = new GoogleAuthProvider();
+  try{
+    const result = await signInWithPopup(auth, provider);
+    showApp(result.user);
+  }catch(e){alert(e.message);}
+}
 
 // Profile menu
-userProfile.onclick=()=>profileMenu.style.display=(profileMenu.style.display==='block')?'none':'block';
-window.onclick=e=>{
-  if(!userProfile.contains(e.target)&&!profileMenu.contains(e.target)){
+userProfile.onclick = ()=> profileMenu.style.display = profileMenu.style.display==='block'?'none':'block';
+window.onclick = e=>{
+  if(!userProfile.contains(e.target) && !profileMenu.contains(e.target)){
     profileMenu.style.display='none';
   }
-};
-toggleThemeBtn.onclick=()=>document.body.classList.toggle('dark-mode');
-signOutBtn.onclick=async()=>{await signOut(auth);location.reload();};
-</script>
+}
+toggleTheme.onclick = ()=> document.body.classList.toggle("dark-mode");
+signOutBtnEl.onclick = async ()=> { await signOut(auth); location.reload(); }
 
+// Firebase auth state
+auth.onAuthStateChanged(user=>{
+  if(user) showApp(user);
+});
+</script>
 </body>
 </html>

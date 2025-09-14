@@ -5,165 +5,116 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BulbAI</title>
 <meta name="google-site-verification" content="89T27xrgDiNqC6Y5qkq2iwNjI6q4r4NjREIv2DMMjZs" />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 :root {
   --bg:#0a0a0a;
   --panel:#111;
-  --accent:#0ff;
-  --accent-dark:#0cc;
-  --text:#fff;
-  --muted:#aaa;
+  --accent:#00ffe0;
+  --accent-dark:#00b2a9;
+  --text:#f0f0f0;
+  --muted:#999;
   --radius:12px;
-  --shadow:rgba(0,255,255,0.2);
+  --shadow:rgba(0,255,224,0.3);
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-body,html{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);}
+body, html{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);scroll-behavior:smooth;}
 a{text-decoration:none;color:var(--accent);}
-a:hover{text-decoration:underline;}
 
-/* LANDING PAGE */
-#landingPage{
- display:flex;
- flex-direction:column;
- align-items:center;
- justify-content:center;
- height:100vh;
- text-align:center;
- padding:0 1rem;
- background:linear-gradient(135deg,#0ff,#00f);
- color:#fff;
+/* NAVBAR */
+.navbar{position:fixed;top:0;left:0;width:100%;display:flex;justify-content:flex-end;align-items:center;padding:16px 32px;background:rgba(0,0,0,0.7);backdrop-filter:blur(10px);z-index:1000;transition:0.3s;}
+.navbar button{margin-left:12px;padding:8px 16px;border-radius:var(--radius);border:none;font-weight:700;cursor:pointer;transition:0.3s, transform 0.2s;}
+.navbar .login-btn{background:none;border:2px solid var(--accent);color:var(--accent);}
+.navbar .signup-btn{background:var(--accent);color:#000;}
+.navbar button:hover{box-shadow:0 0 12px var(--accent);transform:scale(1.1);}
+
+/* HERO */
+.hero{height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:0 32px;transition:0.5s;}
+.hero h1{font-family:'Orbitron',sans-serif;font-size:4rem;color:var(--accent);text-shadow:0 0 8px var(--accent),0 0 16px var(--accent-dark);animation:glow 2s infinite alternate;transition:0.3s;}
+.hero p{margin-top:16px;font-size:1.5rem;color:var(--muted);max-width:700px;transition:0.3s;}
+.hero .core-features{display:flex;justify-content:center;gap:24px;margin-top:48px;flex-wrap:wrap;transition:0.5s;}
+.core-card{background:var(--panel);padding:32px;border-radius:var(--radius);flex:1 1 220px;min-width:220px;box-shadow:0 0 12px var(--shadow);transition:0.3s, transform 0.3s;text-align:center;cursor:pointer;}
+.core-card:hover{box-shadow:0 0 24px var(--accent);transform:translateY(-10px) scale(1.05);}
+.core-card h3{font-family:'Orbitron',sans-serif;color:var(--accent);margin-bottom:12px;transition:0.3s;}
+.core-card p{color:var(--muted);font-size:1rem;transition:0.3s;}
+
+/* CHAT SECTION */
+.chat-section{padding:64px 32px 32px 32px;display:flex;flex-direction:column;align-items:center;background:#0f0f0f;transition:0.5s;}
+.chat-section h2{font-family:'Orbitron',sans-serif;color:var(--accent);margin-bottom:24px;transition:0.3s;}
+
+/* Sci-Fi chat background */
+.chat-container{position:relative;width:100%;max-width:1000px;height:700px;border-radius:var(--radius);overflow:hidden;box-shadow:0 0 24px var(--shadow);margin-bottom:32px;}
+.chat-bg{position:absolute;top:0;left:0;width:100%;height:100%;background:linear-gradient(270deg, #00ffe0, #ff00ff, #00b2a9, #ff00ff);background-size:800% 800%;animation:bgAnim 20s linear infinite;}
+.chat-iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none;border-radius:var(--radius);z-index:1;transition:0.3s;}
+
+/* PREMIUM BUTTON */
+.premium-btn{padding:12px 24px;background:linear-gradient(90deg,#ff00ff,#00ffff);color:#000;font-weight:700;border:none;border-radius:var(--radius);cursor:pointer;transition:0.3s, transform 0.2s;}
+.premium-btn:hover{transform:scale(1.1);box-shadow:0 0 20px #ff00ff,0 0 20px #00ffff;}
+
+/* FOOTER */
+footer{padding:32px;text-align:center;color:var(--muted);background:#050505;font-size:0.9rem;transition:0.3s;}
+
+/* ANIMATIONS */
+@keyframes glow{
+  0%{text-shadow:0 0 8px var(--accent),0 0 16px var(--accent-dark);}
+  100%{text-shadow:0 0 16px var(--accent),0 0 32px var(--accent-dark);}
 }
-#landingPage h1{
- font-size:3rem;
- text-shadow:0 0 10px #0ff,0 0 20px #0ff;
-}
-#landingPage p{
- margin:1rem 0 2rem;
- font-size:1.2rem;
- color:#ddd;
-}
-.landing-btn{
- padding:1rem 2rem;
- margin:0.5rem;
- border:none;
- border-radius:var(--radius);
- cursor:pointer;
- font-weight:700;
- font-size:1rem;
- background:linear-gradient(90deg,#0ff,#0cc);
- color:#000;
- text-shadow:0 0 5px #000;
- transition:0.3s;
-}
-.landing-btn:hover{
- transform:scale(1.05);
- box-shadow:0 0 15px #0ff;
+@keyframes bgAnim{
+  0%{background-position:0% 50%;}
+  50%{background-position:100% 50%;}
+  100%{background-position:0% 50%;}
 }
 
-/* LOGIN SCREEN */
-#loginScreen{display:none;justify-content:center;align-items:center;height:100vh;width:100%;position:relative;overflow:hidden;}
-#bgVideo{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:-1;filter:blur(6px) brightness(0.5);}
-.login-container{background:rgba(0,0,0,0.85);padding:2rem;border-radius:var(--radius);box-shadow:0 0 20px var(--shadow);width:100%;max-width:400px;display:flex;flex-direction:column;gap:1rem;text-align:center;}
-.login-container h1{font-size:2rem;color:var(--text);}
-.login-container p{color:var(--muted);font-size:0.9rem;}
-.input-group{display:flex;flex-direction:column;gap:0.5rem;}
-.input-group input{padding:0.75rem;border-radius:var(--radius);border:1px solid rgba(255,255,255,0.1);background:#222;color:#fff;}
-.button{padding:0.75rem;border-radius:var(--radius);border:none;background:var(--accent);color:#000;font-weight:700;cursor:pointer;display:flex;justify-content:center;align-items:center;gap:0.5rem;transition:0.3s;}
-.button:hover{transform:scale(1.03);}
-.google-btn{background:#000;border:1px solid #0ff;color:#0ff;display:flex;align-items:center;justify-content:center;gap:0.5rem;}
-.google-btn img{height:20px;width:20px;}
-.divider{position:relative;color:var(--muted);margin:0.5rem 0;}
-.divider::before,.divider::after{content:"";position:absolute;top:50%;width:40%;height:1px;background:var(--shadow);}
-.divider::before{left:0;}
-.divider::after{right:0;}
-.tryBtn{background:none;border:none;color:var(--accent);font-weight:700;text-decoration:underline;cursor:pointer;}
-
-/* MAIN APP */
-#mainApp{display:none;height:100vh;width:100%;overflow:hidden;display:flex;}
-.sidebar{background:#111;width:280px;display:flex;flex-direction:column;gap:12px;padding:16px;overflow-y:auto;}
-.sidebar button{width:100%;padding:10px;border-radius:var(--radius);border:none;background:linear-gradient(90deg,#0ff,#0cc);color:#000;font-weight:700;cursor:pointer;}
-.sidebar button:hover{box-shadow:0 0 10px #0ff;}
-.conv-item{padding:10px;border-radius:var(--radius);background:#111;color:#0ff;cursor:pointer;}
-.conv-item:hover{background:#0cc;}
-.main{flex:1;display:flex;flex-direction:column;}
-.topbar{display:flex;justify-content:space-between;align-items:center;padding:0 16px;height:60px;background:#111;border-bottom:1px solid #0ff;}
-.topbar h2{margin:0;font-size:1.2rem;color:#0ff;}
-.chat-window{flex:1;overflow:hidden;}
-.composer{display:none;} /* not needed with iframe */
-
-/* PROFILE DROPDOWN */
-#userProfile{width:40px;height:40px;border-radius:50%;cursor:pointer;}
-#profileMenu{display:none;position:absolute;top:60px;right:16px;background:#111;border-radius:var(--radius);box-shadow:0 0 20px #0ff;overflow:hidden;min-width:160px;z-index:1000;}
-#profileMenu button{width:100%;border:none;padding:10px;background:none;cursor:pointer;text-align:left;color:#0ff;font-weight:700;}
-#profileMenu button:hover{background:#0cc;color:#000;}
-
-/* DARK MODE */
-body.dark-mode{--bg:#000;--panel:#111;--text:#0ff;--accent:#0ff;}
+section{opacity:0;transform:translateY(50px);transition:all 0.8s ease;}
+section.visible{opacity:1;transform:translateY(0);}
 </style>
 </head>
 <body>
 
-<!-- LANDING PAGE -->
-<div id="landingPage">
+<!-- NAVBAR -->
+<div class="navbar">
+  <button class="login-btn" id="loginBtn">Log In</button>
+  <button class="signup-btn" id="signupBtn">Sign Up</button>
+</div>
+
+<!-- HERO -->
+<section class="hero visible">
   <h1>💡 BulbAI</h1>
-  <p>Smart AI for Building, Coding & Brainstorming</p>
-  <button class="landing-btn" id="tryLandingBtn">Try it Out</button>
-  <button class="landing-btn" id="signUpLandingBtn">Sign Up</button>
-  <button class="landing-btn" id="premiumBtn">Premium</button>
-</div>
-
-<!-- LOGIN SCREEN -->
-<div id="loginScreen">
- <div class="login-container">
-   <h1>💡 BulbAI</h1>
-   <p>Sign in to continue</p>
-   <button id="googleSignInBtn" class="button google-btn">
-     <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google"> Sign in with Google
-   </button>
-   <div class="divider">OR</div>
-   <div class="input-group">
-     <input type="email" id="emailInput" placeholder="Email">
-     <input type="password" id="passwordInput" placeholder="Password">
-   </div>
-   <button id="emailSignInBtn" class="button">Sign In</button>
-   <button id="emailSignUpBtn" class="button">Sign Up</button>
-   <button id="tryBtn" class="tryBtn">Try it out</button>
- </div>
-</div>
-
-<!-- MAIN APP -->
-<div id="mainApp">
-  <div class="sidebar">
-    <button id="newChatBtn">+ New Chat</button>
-    <div id="conversationsList"></div>
-  </div>
-
-  <div class="main">
-    <div class="topbar">
-      <h2>BulbAI Chat</h2>
-      <img id="userProfile" src="" alt="Profile">
+  <p>Your AI assistant for Brainstorming, Coding & Building projects with ease and creativity.</p>
+  <div class="core-features">
+    <div class="core-card">
+      <h3>Brainstorming</h3>
+      <p>Generate ideas, plans, and creative solutions for any project.</p>
     </div>
-    <div id="messages" class="chat-window">
-      <iframe
-        id="chatIframe"
-        src="https://www.chatbase.co/chatbot-iframe/W5ZOQa_6wOPIOFFfMXkIY"
-        width="100%"
-        style="height:100%;min-height:600px;border:none;"
-      ></iframe>
+    <div class="core-card">
+      <h3>Coding</h3>
+      <p>Write, debug, and get AI-assisted programming solutions.</p>
+    </div>
+    <div class="core-card">
+      <h3>Building</h3>
+      <p>Create designs and projects with AI guidance efficiently.</p>
     </div>
   </div>
-</div>
+  <button class="premium-btn" id="premiumBtn">Premium Feature</button>
+</section>
 
-<div id="profileMenu">
- <button id="profileToggleTheme">Toggle Dark/Light</button>
- <button id="profileClearChats">Clear Conversations</button>
- <button id="signOutBtn">Sign Out</button>
-</div>
+<!-- CHAT -->
+<section class="chat-section visible" id="chat">
+  <h2>💬 Chat with BulbAI</h2>
+  <div class="chat-container">
+    <div class="chat-bg"></div>
+    <iframe class="chat-iframe" src="https://www.chatbase.co/chatbot-iframe/W5ZOQa_6wOPIOFFfMXkIY"></iframe>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  &copy; 2025 BulbAI | Neon Sci-Fi Design
+</footer>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
 
 // Firebase config
 const firebaseConfig = {
@@ -177,73 +128,38 @@ const firebaseConfig = {
 };
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const provider = new GoogleAuthProvider();
 
-const landingPage = document.getElementById('landingPage');
-const tryLandingBtn = document.getElementById('tryLandingBtn');
-const signUpLandingBtn = document.getElementById('signUpLandingBtn');
-const premiumBtn = document.getElementById('premiumBtn');
-const loginScreen = document.getElementById('loginScreen');
-const mainApp = document.getElementById('mainApp');
-const googleSignInBtn = document.getElementById('googleSignInBtn');
-const tryBtn = document.getElementById('tryBtn');
-const userProfile = document.getElementById('userProfile');
-const profileMenu = document.getElementById('profileMenu');
-const profileToggleTheme = document.getElementById('profileToggleTheme');
-const profileClearChats = document.getElementById('profileClearChats');
-const signOutBtn = document.getElementById('signOutBtn');
-const conversationsList = document.getElementById('conversationsList');
-const newChatBtn = document.getElementById('newChatBtn');
-
-let chatCount = 0;
-
-// Landing buttons
-tryLandingBtn.onclick = ()=>{landingPage.style.display='none';loginScreen.style.display='flex';}
-signUpLandingBtn.onclick = ()=>{landingPage.style.display='none';loginScreen.style.display='flex';}
-premiumBtn.onclick = ()=>{alert("Premium feature coming soon!");}
-
-// Google Login
-auth.onAuthStateChanged(user=>{
-  if(user){
-    loginScreen.style.display='none';
-    landingPage.style.display='none';
-    mainApp.style.display='flex';
-    userProfile.src = user.photoURL || 'https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg';
-  }
+// Scroll animations
+const sections = document.querySelectorAll('section');
+window.addEventListener('scroll', ()=>{
+  sections.forEach(sec=>{
+    const rect = sec.getBoundingClientRect();
+    if(rect.top < window.innerHeight - 100){
+      sec.classList.add('visible');
+    }
+  });
 });
-googleSignInBtn.onclick = async ()=>{
-  const provider = new GoogleAuthProvider();
+
+// Top-right login/signup buttons
+document.getElementById('loginBtn').onclick = async ()=>{
   try{
     const result = await signInWithPopup(auth, provider);
     const user = result.user;
-    loginScreen.style.display='none';
-    landingPage.style.display='none';
-    mainApp.style.display='flex';
-    userProfile.src = user.photoURL || 'https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg';
+    alert(`Welcome back, ${user.displayName}!`);
   }catch(e){alert(e.message);}
-}
+};
+document.getElementById('signupBtn').onclick = async ()=>{
+  try{
+    const result = await signInWithPopup(auth, provider);
+    const user = result.user;
+    alert(`Signed up as ${user.displayName}!`);
+  }catch(e){alert(e.message);}
+};
 
-// Try button
-tryBtn.onclick = ()=>{loginScreen.style.display='none';mainApp.style.display='flex';}
-
-// Profile menu
-userProfile.onclick = ()=> profileMenu.style.display = profileMenu.style.display==='block'?'none':'block';
-window.onclick = e=>{
-  if(!userProfile.contains(e.target) && !profileMenu.contains(e.target)){
-    profileMenu.style.display='none';
-  }
-}
-profileToggleTheme.onclick = ()=>document.body.classList.toggle('dark-mode');
-profileClearChats.onclick = ()=>{conversationsList.innerHTML='';};
-signOutBtn.onclick = async ()=>{await signOut(auth);location.reload();}
-
-// New Chat logic
-newChatBtn.onclick = ()=>{
-  chatCount++;
-  const conv = document.createElement('div');
-  conv.className='conv-item';
-  conv.textContent=`Chat ${chatCount}`;
-  conv.onclick = ()=>{document.getElementById('chatIframe').src='https://www.chatbase.co/chatbot-iframe/W5ZOQa_6wOPIOFFfMXkIY';};
-  conversationsList.appendChild(conv);
+// Premium button placeholder
+document.getElementById('premiumBtn').onclick = ()=>{
+  alert("Premium feature coming soon! For now, this is a placeholder.");
 };
 </script>
 </body>

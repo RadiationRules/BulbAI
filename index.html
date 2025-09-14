@@ -22,11 +22,13 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
 a{text-decoration:none;color:var(--accent);}
 a:hover{text-decoration:underline;}
 
+
 /* ANIMATIONS */
 .fade-in{opacity:0;animation:fadeIn 1.5s forwards;}
 @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
 .hover-expand{transition:all 0.3s ease;}
 .hover-expand:hover{transform:scale(1.05);}
+
 
 /* LOGIN SCREEN */
 #loginScreen{display:flex;justify-content:center;align-items:center;height:100vh;width:100%;position:relative;overflow:hidden;}
@@ -46,6 +48,7 @@ a:hover{text-decoration:underline;}
 .divider::after{right:0;}
 .tryBtn{background:none;border:none;color:var(--accent);font-weight:700;text-decoration:underline;cursor:pointer;}
 
+
 /* MAIN APP */
 #mainApp{display:none;grid-template-columns:300px 1fr;height:100vh;width:100%;overflow:hidden;}
 .sidebar{background:var(--panel);padding:16px;border-right:1px solid #333;display:flex;flex-direction:column;gap:12px;overflow-y:auto;}
@@ -61,11 +64,13 @@ a:hover{text-decoration:underline;}
 .composer button{padding:12px 16px;border-radius:12px;border:none;background:var(--accent);color:#000;font-weight:700;cursor:pointer;}
 .composer button:hover{transform:scale(1.05);}
 
+
 /* PROFILE DROPDOWN */
 #userProfile{width:40px;height:40px;border-radius:50%;cursor:pointer;}
 #profileMenu{display:none;position:absolute;top:60px;right:16px;background:var(--panel);border-radius:var(--radius);box-shadow:0 8px 24px rgba(0,0,0,0.5);overflow:hidden;min-width:180px;z-index:1000;}
 #profileMenu button{width:100%;border:none;padding:10px;background:none;cursor:pointer;text-align:left;}
 #profileMenu button:hover{background:var(--accent);color:#000;}
+
 
 /* FEATURE CARDS */
 .features{display:flex;justify-content:space-around;align-items:center;gap:16px;margin-top:40px;flex-wrap:wrap;}
@@ -74,6 +79,7 @@ a:hover{text-decoration:underline;}
 .feature-card h3{color:var(--accent);margin-bottom:10px;}
 .feature-card p{color:var(--muted);font-size:0.9rem;}
 
+
 /* DARK MODE */
 body.dark-mode{--bg:#0b0b0b;--panel:#1f1f1f;--text:#fff;--accent:#00f6ff;}
 body.dark-mode .chat-window{background:#121212;}
@@ -81,10 +87,12 @@ body.dark-mode .chat-window{background:#121212;}
 </head>
 <body>
 
+
 <!-- VIDEO BACKGROUND -->
 <video id="bgVideo" autoplay muted loop playsinline>
 <source src="https://cdn.videvo.net/videvo_files/video/free/2019-08/large_watermarked/190725_01_Software_1080p_029_preview.mp4" type="video/mp4">
 </video>
+
 
 <!-- LOGIN SCREEN -->
 <div id="loginScreen">
@@ -105,12 +113,14 @@ body.dark-mode .chat-window{background:#121212;}
  </div>
 </div>
 
+
 <!-- MAIN APP -->
 <div id="mainApp">
   <div id="sidebar" class="sidebar">
     <button id="newChatBtn" class="button">+ New Chat</button>
     <div id="conversationsList"></div>
   </div>
+
 
   <div class="main">
     <div class="topbar">
@@ -127,15 +137,18 @@ body.dark-mode .chat-window{background:#121212;}
   </div>
 </div>
 
+
 <div id="profileMenu">
  <button id="profileToggleTheme">Toggle Dark/Light</button>
  <button id="profileClearChats">Clear Conversations</button>
  <button id="signOutBtn">Sign Out</button>
 </div>
 
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+
 
 const firebaseConfig = {
  apiKey: "AIzaSyCGFij1pFUVNFP63QHxEq619c9jPnskzxY",
@@ -148,6 +161,7 @@ const firebaseConfig = {
 };
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+
 
 const loginScreen = document.getElementById('loginScreen');
 const mainApp = document.getElementById('mainApp');
@@ -163,6 +177,7 @@ const sendBtn = document.getElementById('sendBtn');
 const prompt = document.getElementById('prompt');
 const chatIframe = document.getElementById('chatIframe');
 
+
 // Auth state change
 auth.onAuthStateChanged(user=>{
   if(user){
@@ -173,6 +188,7 @@ auth.onAuthStateChanged(user=>{
     chatIframe.style.display='block';
   }
 });
+
 
 // Google login
 googleSignInBtn.onclick = async ()=>{
@@ -188,12 +204,14 @@ googleSignInBtn.onclick = async ()=>{
  }catch(e){alert(e.message);}
 }
 
+
 tryBtn.onclick = ()=>{loginScreen.style.display='none';mainApp.style.display='grid'; chatIframe.src = 'https://www.chatbase.co/chatbot-iframe/W5ZOQa_6wOPIOFFfMXkIY'; chatIframe.style.display='block';}
 userProfile.onclick = ()=> profileMenu.style.display = profileMenu.style.display==='block'?'none':'block';
 window.onclick = e=>{if(!userProfile.contains(e.target) && !profileMenu.contains(e.target)){profileMenu.style.display='none';}}
 profileToggleTheme.onclick = ()=>document.body.classList.toggle('dark-mode');
 profileClearChats.onclick = ()=>{messages.innerHTML='';};
 signOutBtn.onclick = async ()=>{await signOut(auth);location.reload();}
+
 
 // Send message (placeholder)
 sendBtn.onclick = ()=>{
@@ -208,3 +226,8 @@ sendBtn.onclick = ()=>{
 </script>
 </body>
 </html>
+
+
+
+
+

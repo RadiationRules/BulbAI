@@ -4,22 +4,50 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BulbAI</title>
-<meta name="google-site-verification" content="89T27xrgDiNqC6Y5qkq2iwNjI6q4r4NjREIv2DMMjZs" />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
   --bg:#0d0d0d;
   --panel:#151515;
-  --accent:#0ff;
-  --accent-dark:#00cccc;
-  --text:#f0f0f0;
+  --text:#fff;
   --muted:#aaa;
-  --radius:14px;
+  --radius:16px;
 }
-*{box-sizing:border-box;margin:0;padding:0;}
-html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;}
-a{text-decoration:none;color:var(--accent);}
-a:hover{text-decoration:underline;}
+
+/* Reset */
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);overflow:hidden;}
+
+/* Background grid */
+body::before {
+  content:"";
+  position:fixed;
+  top:0;left:0;
+  width:100%;height:100%;
+  background-image:
+    linear-gradient(90deg, rgba(255,0,255,0.15) 1px, transparent 1px),
+    linear-gradient(rgba(0,255,255,0.15) 1px, transparent 1px);
+  background-size:40px 40px;
+  animation:scrollGrid 15s linear infinite;
+  z-index:-1;
+}
+@keyframes scrollGrid {
+  from {background-position:0 0;}
+  to {background-position:40px 40px;}
+}
+
+/* Gradient animation */
+@keyframes gradientShift {
+  0% {border-color:#ff00ff;}
+  33% {border-color:#00ffff;}
+  66% {border-color:#a020f0;}
+  100% {border-color:#ff00ff;}
+}
+@keyframes glow {
+  0% {text-shadow:0 0 10px #ff00ff;}
+  50% {text-shadow:0 0 25px #00ffff;}
+  100% {text-shadow:0 0 15px #a020f0;}
+}
 
 /* LANDING PAGE */
 #landing{
@@ -28,105 +56,74 @@ a:hover{text-decoration:underline;}
   justify-content:center;
   align-items:center;
   height:100vh;
-  width:100%;
-  padding:2rem;
   text-align:center;
-  animation:fadeInUp 1.5s forwards;
+  padding:1rem;
 }
 #landing h1{
-  font-size:4.2rem;
-  color:var(--accent);
-  margin-bottom:1rem;
-  text-shadow:0 0 25px var(--accent-dark), 0 0 50px var(--accent);
-  animation:glowPulse 3s infinite alternate;
-  letter-spacing:2px;
+  font-size:3.2rem;
+  margin-bottom:0.7rem;
+  animation:glow 3s infinite alternate;
 }
 #landing p{
-  font-size:1.3rem;
-  max-width:850px;
-  margin-bottom:2.5rem;
+  font-size:1.2rem;
+  margin-bottom:3rem;
   color:var(--muted);
-  line-height:1.7;
-}
-
-/* Features */
-.features{
-  display:flex;
-  gap:2rem;
-  flex-wrap:wrap;
-  justify-content:center;
-  margin-bottom:2.5rem;
-}
-.feature{
-  background:var(--panel);
-  padding:2rem;
-  border-radius:var(--radius);
-  width:280px;
-  transition:all 0.4s ease;
-  cursor:pointer;
-  box-shadow:0 0 25px rgba(0,255,255,0.15);
-  position:relative;
-  overflow:hidden;
-  border:1px solid rgba(0,255,255,0.3);
-}
-.feature:hover{
-  transform:translateY(-12px) scale(1.05);
-  box-shadow:0 0 40px rgba(0,255,255,0.7);
-}
-.feature::before{
-  content:"";
-  position:absolute;
-  top:-100%;
-  left:0;
-  width:100%;
-  height:100%;
-  background:linear-gradient(180deg, transparent, rgba(0,255,255,0.2), transparent);
-  transition:top 0.6s;
-}
-.feature:hover::before{top:100%;}
-.feature h3{
-  color:var(--accent);
-  margin-bottom:0.6rem;
-  font-size:1.4rem;
-}
-.feature p{
-  color:var(--muted);
-  font-size:0.95rem;
-  line-height:1.5;
 }
 
 /* Buttons */
+.button{
+  background:none;
+  color:#fff;
+  padding:0.9rem 1.8rem;
+  border-radius:var(--radius);
+  border:3px solid #ff00ff;
+  font-weight:700;
+  font-size:1rem;
+  cursor:pointer;
+  margin:0.5rem;
+  animation:gradientShift 6s linear infinite;
+}
+.button:hover{
+  background:rgba(255,255,255,0.08);
+  transform:scale(1.05);
+  transition:0.3s;
+}
+#bigCTA{
+  font-size:1.4rem;
+  padding:1.2rem 2.5rem;
+  margin-top:1rem;
+}
+
+/* Top right buttons */
 #topButtons{
   position:absolute;
   top:20px;
   right:20px;
   display:flex;
-  gap:1rem;
-}
-.button{
-  background:var(--accent);
-  color:#000;
-  border:none;
-  padding:0.6rem 1.3rem;
-  border-radius:var(--radius);
-  font-weight:700;
-  cursor:pointer;
-  transition:0.3s;
-}
-.button:hover{transform:scale(1.08);}
-.button.secondary{
-  background:none;
-  border:1px solid var(--accent);
-  color:var(--accent);
-}
-#tryNowBtn{
-  margin-top:1.5rem;
-  font-size:1.1rem;
-  box-shadow:0 0 25px rgba(0,255,255,0.4);
+  gap:0.8rem;
 }
 
+/* Features */
+.features{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:1rem;
+  max-width:1000px;
+}
+.feature{
+  background:var(--panel);
+  padding:1.4rem;
+  border-radius:var(--radius);
+  width:260px;
+  border:3px solid #ff00ff;
+  animation:gradientShift 6s linear infinite;
+}
+.feature h3{margin-bottom:0.4rem;font-size:1.2rem;}
+.feature p{font-size:0.9rem;color:var(--muted);}
+
 /* APP PAGE */
-#app{display:none;flex-direction:column;height:100vh;width:100%;}
+#app{display:none;flex-direction:column;height:100vh;}
 #topbar{
   height:60px;
   background:var(--panel);
@@ -134,78 +131,51 @@ a:hover{text-decoration:underline;}
   justify-content:space-between;
   align-items:center;
   padding:0 16px;
-  box-shadow:0 2px 12px rgba(0,255,255,0.3);
-  animation:slideDown 1s ease forwards;
+  border-bottom:3px solid #ff00ff;
+  animation:gradientShift 6s linear infinite;
 }
-#topbar h2{color:var(--accent);}
+#topbar h2{font-size:1.2rem;}
 #userProfile{
-  width:42px;
-  height:42px;
+  width:40px;
+  height:40px;
   border-radius:50%;
+  border:2px solid #ff00ff;
   cursor:pointer;
-  border:2px solid var(--accent);
-  transition:transform 0.3s;
+  animation:gradientShift 6s linear infinite;
 }
-#userProfile:hover{transform:scale(1.1);}
-#profileMenu{
-  display:none;
-  position:absolute;
-  top:70px;
-  right:16px;
-  background:var(--panel);
-  border-radius:var(--radius);
-  box-shadow:0 8px 24px rgba(0,255,255,0.3);
-  overflow:hidden;
-  min-width:170px;
-  z-index:1000;
-  animation:fadeIn 0.5s;
-}
-#profileMenu button{
-  width:100%;
-  border:none;
-  padding:12px;
-  background:none;
-  cursor:pointer;
-  text-align:left;
-  color:var(--text);
-}
-#profileMenu button:hover{
-  background:var(--accent);
-  color:#000;
-}
-
 #iframeContainer{
   flex:1;
-  background:radial-gradient(circle at center, #0f2027, #203a43, #2c5364);
   display:flex;
   justify-content:center;
   align-items:center;
-  padding:20px;
-  overflow:hidden;
+  padding:10px;
 }
 iframe{
+  width:100%;
+  height:100%;
   border:none;
-  width:94%;
-  height:88%;
   border-radius:var(--radius);
-  box-shadow:0 0 35px rgba(0,255,255,0.4);
-  transition:transform 0.4s;
-}
-iframe:hover{transform:scale(1.015);}
-
-body.dark-mode{
-  --bg:#1a1a1a;
-  --panel:#0f0f0f;
-  --accent:#0ff;
-  --accent-dark:#00cccc;
-  --text:#f0f0f0;
 }
 
-/* Animations */
-@keyframes fadeInUp{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
-@keyframes slideDown{from{transform:translateY(-60px);}to{transform:translateY(0);}}
-@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
-@keyframes glowPulse{from{text-shadow:0 0 15px var(--accent-dark);}to{text-shadow:0 0 40px var(--accent);}}
+/* SIGNUP PAGE */
+#signupPage{
+  display:none;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  text-align:center;
+}
+#signupPage h2{margin-bottom:1rem;}
+.inputBox{
+  background:#111;
+  border:2px solid #ff00ff;
+  padding:0.8rem;
+  border-radius:var(--radius);
+  width:250px;
+  margin:0.4rem 0;
+  color:#fff;
+}
 </style>
 </head>
 <body>
@@ -213,115 +183,73 @@ body.dark-mode{
 <!-- LANDING PAGE -->
 <div id="landing">
   <div id="topButtons">
-    <button class="button secondary" id="loginBtn">Log In</button>
+    <button class="button" id="loginBtn">Log In</button>
     <button class="button" id="signUpBtn">Sign Up</button>
   </div>
   <h1>BulbAI</h1>
-  <p>
-    Welcome to <strong>BulbAI</strong> — the futuristic platform built for creators, coders, and innovators.  
-    Harness the power of advanced AI to brainstorm groundbreaking ideas, write clean code faster,  
-    and build next-gen projects with style. Step into a neon world of creativity.
-  </p>
+  <p>Your futuristic AI companion — fast, simple, powerful.</p>
+  <button class="button" id="bigCTA">Get Started</button>
   <div class="features">
-    <div class="feature">
-      <h3>⚡ Brainstorm Smarter</h3>
-      <p>Generate fresh, innovative concepts instantly with AI-driven brainstorming tools designed to inspire.</p>
-    </div>
-    <div class="feature">
-      <h3>💻 AI-Powered Coding</h3>
-      <p>Write, debug, and optimize code faster than ever. Your AI assistant helps at every step.</p>
-    </div>
-    <div class="feature">
-      <h3>🚀 Build & Launch</h3>
-      <p>From prototype to product — accelerate your workflow and bring your ideas to life seamlessly.</p>
-    </div>
+    <div class="feature"><h3>⚡ Ideas</h3><p>Brainstorm instantly.</p></div>
+    <div class="feature"><h3>💻 Code</h3><p>Write & debug faster.</p></div>
+    <div class="feature"><h3>🚀 Build</h3><p>Turn concepts into reality.</p></div>
   </div>
-  <button class="button" id="tryNowBtn">Enter BulbAI</button>
+</div>
+
+<!-- SIGNUP PAGE -->
+<div id="signupPage">
+  <h2>Create Your Account</h2>
+  <input class="inputBox" type="text" placeholder="Email">
+  <input class="inputBox" type="password" placeholder="Password">
+  <button class="button">Sign Up</button>
+  <p style="margin-top:1rem;color:var(--muted)">Already have an account? <a href="#" id="gotoLogin">Log In</a></p>
 </div>
 
 <!-- APP PAGE -->
 <div id="app">
   <div id="topbar">
     <h2>BulbAI Chat</h2>
-    <img id="userProfile" src="" alt="Profile">
+    <img id="userProfile" src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg">
   </div>
   <div id="iframeContainer">
     <iframe src="https://www.chatbase.co/chatbot-iframe/W5ZOQa_6wOPIOFFfMXkIY"></iframe>
   </div>
-  <div id="profileMenu">
-    <button id="toggleTheme">Toggle Dark/Light</button>
-    <button id="signOutBtn">Sign Out</button>
-  </div>
 </div>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
-
-// Firebase Config
-const firebaseConfig = {
-  apiKey: "AIzaSyCGFij1pFUVNFP63QHxEq619c9jPnskzxY",
-  authDomain: "bulbai-21f09.firebaseapp.com",
-  projectId: "bulbai-21f09",
-  storageBucket: "bulbai-21f09.firebasestorage.app",
-  messagingSenderId: "366775652166",
-  appId: "1:366775652166:web:22db16f4f87f9a60625f47",
-  measurementId: "G-G09FQQ53XP"
-};
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-
+<script>
 // Elements
-const landing = document.getElementById("landing");
-const appDiv = document.getElementById("app");
-const tryNowBtn = document.getElementById("tryNowBtn");
-const loginBtn = document.getElementById("loginBtn");
-const signUpBtn = document.getElementById("signUpBtn");
-const userProfile = document.getElementById("userProfile");
-const profileMenu = document.getElementById("profileMenu");
-const toggleTheme = document.getElementById("toggleTheme");
-const signOutBtnEl = document.getElementById("signOutBtn");
+const landing=document.getElementById("landing");
+const app=document.getElementById("app");
+const signupPage=document.getElementById("signupPage");
+const bigCTA=document.getElementById("bigCTA");
+const signUpBtn=document.getElementById("signUpBtn");
+const loginBtn=document.getElementById("loginBtn");
+const gotoLogin=document.getElementById("gotoLogin");
 
-// Show app page
-function showApp(user){
-  landing.style.display = "none";
-  appDiv.style.display = "flex";
-  userProfile.src = user?.photoURL || "https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg";
-}
+// Show signup when Get Started clicked
+bigCTA.onclick=()=>{
+  landing.style.display="none";
+  signupPage.style.display="flex";
+};
 
-// Try Now
-tryNowBtn.onclick = ()=> showApp(null);
+// Top right sign up
+signUpBtn.onclick=()=>{
+  landing.style.display="none";
+  signupPage.style.display="flex";
+};
 
-// Google Auth
-loginBtn.onclick = async ()=>{
-  const provider = new GoogleAuthProvider();
-  try{
-    const result = await signInWithPopup(auth, provider);
-    showApp(result.user);
-  }catch(e){alert(e.message);}
-}
-signUpBtn.onclick = async ()=>{
-  const provider = new GoogleAuthProvider();
-  try{
-    const result = await signInWithPopup(auth, provider);
-    showApp(result.user);
-  }catch(e){alert(e.message);}
-}
+// (placeholder) login just opens app
+loginBtn.onclick=()=>{
+  landing.style.display="none";
+  app.style.display="flex";
+};
 
-// Profile menu
-userProfile.onclick = ()=> profileMenu.style.display = profileMenu.style.display==='block'?'none':'block';
-window.onclick = e=>{
-  if(!userProfile.contains(e.target) && !profileMenu.contains(e.target)){
-    profileMenu.style.display='none';
-  }
-}
-toggleTheme.onclick = ()=> document.body.classList.toggle("dark-mode");
-signOutBtnEl.onclick = async ()=> { await signOut(auth); location.reload(); }
-
-// Firebase auth state
-auth.onAuthStateChanged(user=>{
-  if(user) showApp(user);
-});
+// Switch from signup to login (demo -> app)
+gotoLogin.onclick=(e)=>{
+  e.preventDefault();
+  signupPage.style.display="none";
+  app.style.display="flex";
+};
 </script>
 </body>
 </html>

@@ -9,12 +9,12 @@
 <style>
 :root {
   --bg:#0d0d0d;
-  --panel:#1a1a1a;
+  --panel:#151515;
   --accent:#0ff;
   --accent-dark:#00cccc;
   --text:#f0f0f0;
-  --muted:#999;
-  --radius:12px;
+  --muted:#aaa;
+  --radius:14px;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;}
@@ -31,17 +31,19 @@ a:hover{text-decoration:underline;}
   width:100%;
   padding:2rem;
   text-align:center;
-  animation:fadeIn 1.5s forwards;
+  animation:fadeInUp 1.5s forwards;
 }
 #landing h1{
-  font-size:4rem;
+  font-size:4.5rem;
   color:var(--accent);
   margin-bottom:1rem;
+  text-shadow:0 0 20px var(--accent-dark);
+  animation:glowPulse 3s infinite alternate;
 }
 #landing p{
-  font-size:1.2rem;
+  font-size:1.25rem;
   max-width:800px;
-  margin-bottom:2rem;
+  margin-bottom:2.5rem;
   color:var(--muted);
 }
 .features{
@@ -49,21 +51,35 @@ a:hover{text-decoration:underline;}
   gap:2rem;
   flex-wrap:wrap;
   justify-content:center;
-  margin-bottom:2rem;
+  margin-bottom:2.5rem;
 }
 .feature{
   background:var(--panel);
   padding:2rem;
   border-radius:var(--radius);
   width:220px;
-  transition:all 0.3s ease;
+  transition:all 0.4s ease;
   cursor:pointer;
-  box-shadow:0 4px 20px rgba(0,255,255,0.2);
+  box-shadow:0 0 15px rgba(0,255,255,0.15);
+  position:relative;
+  overflow:hidden;
 }
 .feature:hover{
-  transform:scale(1.1);
-  box-shadow:0 8px 40px rgba(0,255,255,0.4);
+  transform:scale(1.12);
+  box-shadow:0 0 30px rgba(0,255,255,0.5);
 }
+.feature::before{
+  content:"";
+  position:absolute;
+  top:-100%;
+  left:0;
+  width:100%;
+  height:100%;
+  background:linear-gradient(180deg, transparent, rgba(0,255,255,0.2), transparent);
+  transition:top 0.5s;
+}
+.feature:hover::before{top:100%;}
+
 #topButtons{
   position:absolute;
   top:20px;
@@ -75,22 +91,26 @@ a:hover{text-decoration:underline;}
   background:var(--accent);
   color:#000;
   border:none;
-  padding:0.6rem 1.2rem;
+  padding:0.6rem 1.3rem;
   border-radius:var(--radius);
   font-weight:700;
   cursor:pointer;
   transition:0.3s;
 }
-.button:hover{transform:scale(1.05);}
+.button:hover{transform:scale(1.08);}
 .button.secondary{
   background:none;
   border:1px solid var(--accent);
   color:var(--accent);
 }
-#tryNowBtn{margin-top:1rem;}
+#tryNowBtn{
+  margin-top:1rem;
+  font-size:1.1rem;
+  box-shadow:0 0 20px rgba(0,255,255,0.3);
+}
 
 /* APP PAGE */
-#app{display:none;flex-direction:column;height:100vh;width:100%;transition:all 0.5s ease;}
+#app{display:none;flex-direction:column;height:100vh;width:100%;}
 #topbar{
   height:60px;
   background:var(--panel);
@@ -98,50 +118,64 @@ a:hover{text-decoration:underline;}
   justify-content:space-between;
   align-items:center;
   padding:0 16px;
-  box-shadow:0 2px 10px rgba(0,255,255,0.2);
+  box-shadow:0 2px 12px rgba(0,255,255,0.3);
+  animation:slideDown 1s ease forwards;
 }
-#userProfile{width:40px;height:40px;border-radius:50%;cursor:pointer;}
+#topbar h2{color:var(--accent);}
+#userProfile{
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  cursor:pointer;
+  border:2px solid var(--accent);
+  transition:transform 0.3s;
+}
+#userProfile:hover{transform:scale(1.1);}
 #profileMenu{
   display:none;
   position:absolute;
-  top:60px;
+  top:70px;
   right:16px;
   background:var(--panel);
   border-radius:var(--radius);
   box-shadow:0 8px 24px rgba(0,255,255,0.3);
   overflow:hidden;
-  min-width:160px;
+  min-width:170px;
   z-index:1000;
+  animation:fadeIn 0.5s;
 }
 #profileMenu button{
   width:100%;
   border:none;
-  padding:10px;
+  padding:12px;
   background:none;
   cursor:pointer;
   text-align:left;
+  color:var(--text);
 }
-#profileMenu button:hover{background:var(--accent);color:#000;}
+#profileMenu button:hover{
+  background:var(--accent);
+  color:#000;
+}
 
 #iframeContainer{
   flex:1;
-  background:linear-gradient(135deg, #0f0f0f, #1a1a1a);
+  background:radial-gradient(circle at center, #0f2027, #203a43, #2c5364);
   display:flex;
   justify-content:center;
   align-items:center;
   padding:20px;
   overflow:hidden;
-  transition:all 0.5s ease;
 }
 iframe{
   border:none;
-  width:95%;
-  height:90%;
+  width:94%;
+  height:88%;
   border-radius:var(--radius);
-  box-shadow:0 0 30px rgba(0,255,255,0.3);
-  transition:transform 0.3s;
+  box-shadow:0 0 35px rgba(0,255,255,0.4);
+  transition:transform 0.4s;
 }
-iframe:hover{transform:scale(1.01);}
+iframe:hover{transform:scale(1.015);}
 
 body.dark-mode{
   --bg:#1a1a1a;
@@ -150,9 +184,12 @@ body.dark-mode{
   --accent-dark:#00cccc;
   --text:#f0f0f0;
 }
-@keyframes fadeIn{
-  to{opacity:1;}
-}
+
+/* Animations */
+@keyframes fadeInUp{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
+@keyframes slideDown{from{transform:translateY(-60px);}to{transform:translateY(0);}}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+@keyframes glowPulse{from{text-shadow:0 0 10px var(--accent-dark);}to{text-shadow:0 0 25px var(--accent);}}
 </style>
 </head>
 <body>
@@ -170,7 +207,7 @@ body.dark-mode{
     <div class="feature">Coding</div>
     <div class="feature">Building</div>
   </div>
-  <button class="button" id="tryNowBtn">Try Now</button>
+  <button class="button" id="tryNowBtn">🚀 Try Now</button>
 </div>
 
 <!-- APP PAGE -->

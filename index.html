@@ -34,18 +34,22 @@ a:hover{text-decoration:underline;}
   animation:fadeInUp 1.5s forwards;
 }
 #landing h1{
-  font-size:4.5rem;
+  font-size:4.2rem;
   color:var(--accent);
   margin-bottom:1rem;
-  text-shadow:0 0 20px var(--accent-dark);
+  text-shadow:0 0 25px var(--accent-dark), 0 0 50px var(--accent);
   animation:glowPulse 3s infinite alternate;
+  letter-spacing:2px;
 }
 #landing p{
-  font-size:1.25rem;
-  max-width:800px;
+  font-size:1.3rem;
+  max-width:850px;
   margin-bottom:2.5rem;
   color:var(--muted);
+  line-height:1.7;
 }
+
+/* Features */
 .features{
   display:flex;
   gap:2rem;
@@ -57,16 +61,17 @@ a:hover{text-decoration:underline;}
   background:var(--panel);
   padding:2rem;
   border-radius:var(--radius);
-  width:220px;
+  width:280px;
   transition:all 0.4s ease;
   cursor:pointer;
-  box-shadow:0 0 15px rgba(0,255,255,0.15);
+  box-shadow:0 0 25px rgba(0,255,255,0.15);
   position:relative;
   overflow:hidden;
+  border:1px solid rgba(0,255,255,0.3);
 }
 .feature:hover{
-  transform:scale(1.12);
-  box-shadow:0 0 30px rgba(0,255,255,0.5);
+  transform:translateY(-12px) scale(1.05);
+  box-shadow:0 0 40px rgba(0,255,255,0.7);
 }
 .feature::before{
   content:"";
@@ -76,10 +81,21 @@ a:hover{text-decoration:underline;}
   width:100%;
   height:100%;
   background:linear-gradient(180deg, transparent, rgba(0,255,255,0.2), transparent);
-  transition:top 0.5s;
+  transition:top 0.6s;
 }
 .feature:hover::before{top:100%;}
+.feature h3{
+  color:var(--accent);
+  margin-bottom:0.6rem;
+  font-size:1.4rem;
+}
+.feature p{
+  color:var(--muted);
+  font-size:0.95rem;
+  line-height:1.5;
+}
 
+/* Buttons */
 #topButtons{
   position:absolute;
   top:20px;
@@ -104,9 +120,9 @@ a:hover{text-decoration:underline;}
   color:var(--accent);
 }
 #tryNowBtn{
-  margin-top:1rem;
+  margin-top:1.5rem;
   font-size:1.1rem;
-  box-shadow:0 0 20px rgba(0,255,255,0.3);
+  box-shadow:0 0 25px rgba(0,255,255,0.4);
 }
 
 /* APP PAGE */
@@ -189,7 +205,7 @@ body.dark-mode{
 @keyframes fadeInUp{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
 @keyframes slideDown{from{transform:translateY(-60px);}to{transform:translateY(0);}}
 @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
-@keyframes glowPulse{from{text-shadow:0 0 10px var(--accent-dark);}to{text-shadow:0 0 25px var(--accent);}}
+@keyframes glowPulse{from{text-shadow:0 0 15px var(--accent-dark);}to{text-shadow:0 0 40px var(--accent);}}
 </style>
 </head>
 <body>
@@ -200,14 +216,27 @@ body.dark-mode{
     <button class="button secondary" id="loginBtn">Log In</button>
     <button class="button" id="signUpBtn">Sign Up</button>
   </div>
-  <h1>💡 BulbAI</h1>
-  <p>The AI platform for Brainstorming, Coding, and Building. Unlock your creativity and power your ideas with cutting-edge AI tools.</p>
+  <h1>BulbAI</h1>
+  <p>
+    Welcome to <strong>BulbAI</strong> — the futuristic platform built for creators, coders, and innovators.  
+    Harness the power of advanced AI to brainstorm groundbreaking ideas, write clean code faster,  
+    and build next-gen projects with style. Step into a neon world of creativity.
+  </p>
   <div class="features">
-    <div class="feature">Brainstorming</div>
-    <div class="feature">Coding</div>
-    <div class="feature">Building</div>
+    <div class="feature">
+      <h3>⚡ Brainstorm Smarter</h3>
+      <p>Generate fresh, innovative concepts instantly with AI-driven brainstorming tools designed to inspire.</p>
+    </div>
+    <div class="feature">
+      <h3>💻 AI-Powered Coding</h3>
+      <p>Write, debug, and optimize code faster than ever. Your AI assistant helps at every step.</p>
+    </div>
+    <div class="feature">
+      <h3>🚀 Build & Launch</h3>
+      <p>From prototype to product — accelerate your workflow and bring your ideas to life seamlessly.</p>
+    </div>
   </div>
-  <button class="button" id="tryNowBtn">🚀 Try Now</button>
+  <button class="button" id="tryNowBtn">Enter BulbAI</button>
 </div>
 
 <!-- APP PAGE -->

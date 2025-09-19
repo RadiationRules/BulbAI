@@ -129,11 +129,15 @@ body.dark, .dark body, .dark {
 }
 .nav-links li a {
   color: #fff;
-  font-weight: 500;
-  transition: color 0.2s;
+  font-weight: 700;
+  font-size: 1.1em;
+  letter-spacing: 0.2px;
+  transition: color 0.2s, text-shadow 0.2s;
+  text-shadow: 0 1px 4px #23272f44;
 }
 .nav-links li a:hover {
-  color: #646cff;
+  color: #FFD600;
+  text-shadow: 0 2px 8px #FFD60044;
 }
 .logo {
   font-size: 1.7rem;
@@ -169,14 +173,15 @@ button:active {
   transform: scale(0.97);
 }
 .card, .project-card, .community-card {
-  background: rgba(35,39,47,0.98);
+  background: rgba(36,40,60,0.85);
   border-radius: 18px;
-  box-shadow: 0 4px 32px #646cff22, 0 1.5px 8px #FFD60022;
+  box-shadow: 0 8px 32px #FFD60022, 0 2px 8px #646cff22;
   padding: 2rem;
   margin: 1rem 0;
   border: 1.5px solid #23272f;
   position: relative;
   overflow: hidden;
+  backdrop-filter: blur(12px);
 }
 .card::before, .project-card::before, .community-card::before {
   content: '';
@@ -187,8 +192,9 @@ button:active {
   pointer-events: none;
 }
 .card:hover, .project-card:hover, .community-card:hover {
-  box-shadow: 0 8px 48px #FFD60033, 0 2px 16px #646cff33;
+  box-shadow: 0 16px 48px #FFD60044, 0 4px 16px #646cff44;
   border-color: #FFD600;
+  background: rgba(36,40,60,0.95);
 }
 
 /* Responsive */

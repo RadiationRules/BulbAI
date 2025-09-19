@@ -32,17 +32,21 @@ const SettingsPanel = () => {
   };
 
   return (
-    <div className="settings-panel">
-      <h2>Settings</h2>
-      <label>
-        <input type="checkbox" name="darkMode" checked={settings.darkMode} onChange={handleChange} />
-        Dark Mode
-      </label>
-      <label>
-        <input type="checkbox" name="notifications" checked={settings.notifications} onChange={handleChange} />
-        Enable Notifications
-      </label>
-      <button onClick={handleSave}>Save Settings</button>
+    <div className="settings-panel card" style={{maxWidth: 420, margin: '2rem auto', boxShadow: '0 8px 32px #FFD60033'}}>
+      <h2 style={{fontWeight: 700, color: '#646cff', marginBottom: 24}}>Settings</h2>
+      <div style={{display: 'flex', flexDirection: 'column', gap: 18}}>
+        <label style={{fontWeight: 600, fontSize: 18, display: 'flex', alignItems: 'center', gap: 10}}>
+          <input type="checkbox" name="darkMode" checked={settings.darkMode} onChange={handleChange} style={{transform: 'scale(1.2)'}} />
+          Dark Mode
+        </label>
+        <label style={{fontWeight: 600, fontSize: 18, display: 'flex', alignItems: 'center', gap: 10}}>
+          <input type="checkbox" name="notifications" checked={settings.notifications} onChange={handleChange} style={{transform: 'scale(1.2)'}} />
+          Enable Notifications
+        </label>
+        <button onClick={handleSave} style={{marginTop: 18, fontWeight: 700, fontSize: 18, background: 'linear-gradient(90deg,#646cff,#FFD600)', color: '#23272f', boxShadow: '0 2px 8px #FFD60033'}}>
+          Save Settings
+        </button>
+      </div>
     </div>
   );
 };
